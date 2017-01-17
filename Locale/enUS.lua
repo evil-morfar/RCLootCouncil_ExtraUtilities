@@ -8,8 +8,7 @@ if not L then return end
 
 L["Artifact Traits"] = true
 L["Class"] = true
-L["extra_util_desc"] = "These are the individual settings for RCLootCouncil - Extra Utilities |cFF87CEFAv %s |r.\n"..
-      "Note: these settings are not shared with the group, so each council member can have different settings."
+L["extra_util_desc"] = "These are the individual settings for RCLootCouncil - Extra Utilities |cFF87CEFAv %s |r.\nNote: these settings are not shared with the group, so each council member can have different settings."
 L["Extra Utilities Columns"] = true
 L["Forged"] = true
 L["ilvl Decimals"] = true
