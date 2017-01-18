@@ -30,13 +30,13 @@ function EU:OnInitialize()
       profile = {
          columns = {
             traits =          { enabled = true, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
-            upgrades =        { enabled = true, pos = 11, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
+            upgrades =        { enabled = true, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
             pawn =            { enabled = false, pos = 11, width = 40, func = self.SetCellPawn,     name = "Pawn"},
             sockets =         { enabled = true, pos = 11, width = 45, func = self.SetCellSocket,   name = LE["Sockets"]},
          -- setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},
             titanforged =     { enabled = true, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
             legendaries =     { enabled = true, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
-            ilvlUpgrade =     { enabled = true, pos = 14, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
+            ilvlUpgrade =     { enabled = true, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -114,7 +114,16 @@ function EU:UpdateColumn(name, bool)
       end
    end
    if bool then
-      tinsert(self.votingFrame.scrollCols, col.pos,
+      local pos = 0
+      if col.pos < 0 then
+         pos = #self.votingFrame.scrollCols + col.pos -- col.pos is negative, so add it for the desired effect
+      elseif col.pos > #self.votingFrame.scrollCols then
+         pos = #self.votingFrame.scrollCols
+      else
+         pos = col.pos
+      end
+      addon:Debug("Putting", name, "at", pos)
+      tinsert(self.votingFrame.scrollCols, pos,
          {name = col.name, align = "CENTER", width = col.width, DoCellUpdate = col.func, colName = name, sortNext = col.sortNext }
       )
    else
