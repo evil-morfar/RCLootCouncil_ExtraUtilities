@@ -131,8 +131,7 @@ function EU:UpdateColumn(name, bool)
    end
    if self.votingFrame.frame then -- We might need to recreate it
       addon:Debug("Resetting votingFrame.frame")
-      self.votingFrame.frame = nil
-      self.votingFrame.frame = self.votingFrame:GetFrame()
+      self.votingFrame.frame.UpdateSt()
    end
 end
 
