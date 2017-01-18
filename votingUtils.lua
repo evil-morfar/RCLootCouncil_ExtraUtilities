@@ -29,14 +29,14 @@ function EU:OnInitialize()
    self.defaults = {
       profile = {
          columns = {
-            traits =          { enabled = true, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
-            upgrades =        { enabled = true, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
+            traits =          { enabled = false, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
+            upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
             pawn =            { enabled = false, pos = 11, width = 40, func = self.SetCellPawn,     name = "Pawn"},
-            sockets =         { enabled = true, pos = 11, width = 45, func = self.SetCellSocket,   name = LE["Sockets"]},
+            sockets =         { enabled = false, pos = 11, width = 45, func = self.SetCellSocket,   name = LE["Sockets"]},
          -- setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},
-            titanforged =     { enabled = true, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
-            legendaries =     { enabled = true, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
-            ilvlUpgrade =     { enabled = true, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
+            titanforged =     { enabled = false, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
+            legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
+            ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -122,7 +122,6 @@ function EU:UpdateColumn(name, bool)
       else
          pos = col.pos
       end
-      addon:Debug("Putting", name, "at", pos)
       tinsert(self.votingFrame.scrollCols, pos,
          {name = col.name, align = "CENTER", width = col.width, DoCellUpdate = col.func, colName = name, sortNext = col.sortNext }
       )
@@ -130,7 +129,6 @@ function EU:UpdateColumn(name, bool)
       self.votingFrame:RemoveColumn(name)
    end
    if self.votingFrame.frame then -- We might need to recreate it
-      addon:Debug("Resetting votingFrame.frame")
       self.votingFrame.frame.UpdateSt()
    end
 end
