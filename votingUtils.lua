@@ -26,7 +26,7 @@ function EU:OnInitialize()
    self:RegisterComm("RCLootCouncil")
    self.version = GetAddOnMetadata("RCLootCouncil_ExtraUtilities", "Version")
 
-   local defaults = {
+   self.defaults = {
       profile = {
          columns = {
             traits =          { enabled = true, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
@@ -49,7 +49,7 @@ function EU:OnInitialize()
       }
    }
 
-   addon.db:RegisterNamespace("ExtraUtilities", defaults)
+   addon.db:RegisterNamespace("ExtraUtilities", self.defaults)
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
    self:OptionsTable()
    self:Enable()

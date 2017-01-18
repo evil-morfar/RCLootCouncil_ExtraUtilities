@@ -87,18 +87,61 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_ilvlupgrades_desc"],
                      },
+                     header = {
+                        order = -1,
+                        name = "",
+                        type = "header",
+                     },
+                     reset = {
+                        name = L["Reset to default"],
+                        order = -1,
+                        --width = "full",
+                        type = "execute",
+                        confirm = true,
+                        func = function()
+                           if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+                           for k in pairs(self.db.columns) do
+                              self.db.columns[k] = self.defaults.profile.columns[k]
+                              -- Now apply the changes
+                              self:UpdateColumn(k, self.db.columns[k].enabled)
+                           end
+                        end,
+                     },
                   },
                },
                normalColumns = {
                   name = LE["RCLootCouncil Columns"],
-                  order = 2,
+                  order = 3,
                   type = "group",
                   inline = true,
-                  args = {}, -- Created further down
+                  args = {
+                     -- Created further down
+                     header = {
+                        name = "",
+                        order = -1,
+                        type = "header",
+                     },
+                     reset = {
+                        name = L["Reset to default"],
+                        order = -1,
+                        --width = "full",
+                        type = "execute",
+                        confirm = true,
+                        func = function()
+                           if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+                           for k in pairs(self.db.normalColumns) do
+                              self.db.normalColumns[k] = self.defaults.profile.normalColumns[k]
+                              -- Now apply the changes
+                              self:UpdateColumn(k, self.db.normalColumns[k].enabled)
+                           end
+                        end,
+                     },
+                  },
                },
+
                otherOptions = {
                   name = LE["Other"],
-                  order = 3,
+                  order = 5,
                   type = "group",
                   inline = true,
                   args = {
