@@ -9,18 +9,23 @@
    Pawn integration
    ----------------
    Noteable functions:
-      PawnGetItemValue()
+      PawnGetItemValue(Item, ItemLevel, SocketBonus, ScaleName, DebugMessages, NoNormalization)
          -- PawnUICurrentScale (global) should be useable as a scale
       PawnGetAllItemValues()
+
+      PawnGetSingleValueFromItem(Item, ScaleName) -- Returns the score from a selected scale
+      PawnRecalculateItemValuesIfNecessary(Item, NoNormalization) -- Returns scores from every enabled scale
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
-local EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0")
+local EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
 
 local playerData = {} -- Table containing all EU data received, format playerData["playerName"] = {...}
+local lootTable = {}
+local session = 0
 
 function EU:OnInitialize()
    self:RegisterComm("RCLootCouncil")
@@ -31,7 +36,7 @@ function EU:OnInitialize()
          columns = {
             traits =          { enabled = false, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
             upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
-            pawn =            { enabled = false, pos = 11, width = 40, func = self.SetCellPawn,     name = "Pawn"},
+            pawn =            { enabled = true, pos = -3, width = 50, func = self.SetCellPawn,     name = "Pawn"},
             sockets =         { enabled = false, pos = 11, width = 45, func = self.SetCellSocket,   name = LE["Sockets"]},
          -- setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},
             titanforged =     { enabled = false, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
@@ -65,6 +70,9 @@ function EU:OnEnable()
       self.originalCols[k] = v
    end
 
+   -- Hook SwitchSession() so we know which session we're on
+   self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
+
    -- Setup our columns
    for colName, v in pairs(self.db.columns) do
       if v.enabled then self:UpdateColumn(colName, true) end
@@ -90,6 +98,8 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          if command == "lootTable" then
             -- We received the lootTable, so send out required info
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
+            -- And grap a copy
+            lootTable = unpack(data)
 
          elseif command == "extraUtilData" then
             -- We received our EU data
@@ -198,7 +208,20 @@ end
 ---------------------------------------------
 function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText(playerData[name] and playerData[name].pawn or L["None"])
+   -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
+   -- We'll calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
+   local score
+   addon:Debug("lootTable", lootTable, session)
+   if lootTable[session] and lootTable[session].pawnCreated then
+      score = EU.votingFrame:GetCandidateData(session, name, "pawn")
+   elseif lootTable[session] then
+      local class = EU.votingFrame:GetCandidateData(session, name, "class")
+      score = PawnGetSingleValueFromItem(PawnGetItemData(lootTable[session].link), "Discipline") -- TODO
+      addon:Print("Getting scored:", score)
+      EU.votingFrame:SetCandidateData(session, name, "pawn", score)
+      lootTable[session].pawnCreated = true
+   end
+   frame.text:SetText(addon.round(score,1) or L["None"])
 end
 
 function EU.SetCellForged(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
@@ -208,31 +231,42 @@ end
 
 function EU.SetCellTraits(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText(playerData[name] and playerData[name].traits or 0)
+   local val = playerData[name] and playerData[name].traits or 0
+   frame.text:SetText(val)
+   data[realrow].cols[column].value = val
 end
 
 function EU.SetCellPieces(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText(playerData[name] and playerData[name].setPieces or 0)
+   local val = playerData[name] and playerData[name].setPieces or 0
+   frame.text:SetText(val)
+   data[realrow].cols[column].value = val
 end
 
 function EU.SetCellSocket(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText(playerData[name] and playerData[name].sockets or 0)
+   local val = playerData[name] and playerData[name].sockets or 0
+   frame.text:SetText(val)
+   data[realrow].cols[column].value = val
 end
 
 function EU.SetCellUpgrades(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText(playerData[name] and playerData[name].upgrades or 0)
+   local val = playerData[name] and playerData[name].upgrades or 0
+   frame.text:SetText(val)
+   data[realrow].cols[column].value = val
 end
 
 function EU.SetCellLegend(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText("|cffff8000"..(playerData[name] and playerData[name].legend or 0))
---   frame.text:SetTextColor(255,128,0,1) -- Legendary Orange
+   local val = "|cffff8000"..(playerData[name] and playerData[name].legend or 0)
+   frame.text:SetText(val)
+   data[realrow].cols[column].value = val
 end
 
 function EU.SetCellIlvlUpg(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText(playerData[name] and playerData[name].upgradeIlvl or 0)
+   local val = playerData[name] and playerData[name].upgradeIlvl or 0
+   frame.text:SetText(val)
+   data[realrow].cols[column].value = val
 end
