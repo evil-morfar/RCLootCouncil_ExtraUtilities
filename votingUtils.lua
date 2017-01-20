@@ -295,6 +295,11 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    end
    data[realrow].cols[column].value = score or 0
    frame.text:SetText(score and addon.round(score,1) or L["None"])
+   if score then
+      frame.text:SetTextColor(1,1,1,1)
+   else
+      frame.text:SetTextColor(0.7, 0.7,0.7,1)
+   end
 end
 
 function EU.SetCellForged(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
