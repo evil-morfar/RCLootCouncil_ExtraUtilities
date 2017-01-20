@@ -42,6 +42,7 @@ function EU:OnInitialize()
             titanforged =     { enabled = false, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
             legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
             ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
+            spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -349,4 +350,19 @@ function EU.SetCellIlvlUpg(rowFrame, frame, data, cols, row, realrow, column, fS
    local val = playerData[name] and playerData[name].upgradeIlvl or 0
    frame.text:SetText(val)
    data[realrow].cols[column].value = val
+end
+
+function EU.SetCellSpecIcon(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+   local name = data[realrow].name
+	local specID = playerData[name] and playerData[name].specID
+   addon:Debug(specID)
+   local icon
+   if specID then
+      icon = select(4,GetSpecializationInfoByID(specID))
+   end
+	if icon then
+		frame:SetNormalTexture(icon);
+	else -- if there's no class
+		frame:SetNormalTexture("Interface/ICONS/INV_Sigil_Thorim.png")
+	end
 end

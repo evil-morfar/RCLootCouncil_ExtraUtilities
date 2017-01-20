@@ -86,6 +86,12 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_ilvlupgrades_desc"],
                      },
+                     spec = {
+                        name = "Spec Icon",
+                        order = 9,
+                        type = "toggle",
+                        desc = "Enables a column showing the candidates' specialization.",
+                     },
                      header = {
                         order = -1,
                         name = "",

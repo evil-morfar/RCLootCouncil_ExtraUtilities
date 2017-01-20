@@ -6,3 +6,6 @@
 * **Pawn**
  * Pawn scores are now enabled.
  * Have a look at the Pawn section in the options menu to customize which scales are being used.
+
+* **Spec Icon**
+ * Added a new column showing the candidates' specialization.
