@@ -174,6 +174,9 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             -- We received our EU data
             local name, data = unpack(data)
             playerData[name] = data
+
+         elseif command == "extraUtilDataRequest" then
+            addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
          end
       end
    end
@@ -214,8 +217,7 @@ end
 
 function EU:BuildData()
    local forged,_,sockets, upgrades, legend, ilvl = self:GetEquippedItemData()
-   return { -- Data is placeholder for now
-      --pawn = 304,
+   return {
       forged = forged,
       traits = select(6,C_ArtifactUI.GetEquippedArtifactInfo()),
       --setPieces = 0,
@@ -265,7 +267,6 @@ function EU:GetEquippedItemData()
                   end
                end
             end
-
          end
       end
    end
@@ -355,7 +356,6 @@ end
 function EU.SetCellSpecIcon(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
 	local specID = playerData[name] and playerData[name].specID
-   addon:Debug(specID)
    local icon
    if specID then
       icon = select(4,GetSpecializationInfoByID(specID))
