@@ -36,7 +36,6 @@ function EU:OptionsTable()
                         order = 1,
                         type = "toggle",
                         desc = LE["opt_pawn_desc"],
-                        disabled = true,
                         set = function(info, val)
                            if PawnVersion then
                               self:ColSet(info,val)
@@ -157,6 +156,30 @@ function EU:OptionsTable()
                }
             },
          },
+         pawnOptions = {
+            order = 2,
+            type = "group",
+            name = "Pawn",
+            desc = "Pawn specific options",
+            disabled = function() return not PawnVersion end,
+            childGroups = "tab",
+            args = {
+               desc = {
+                  name = "Here you can change the Pawn scales RCLootCouncil uses.\nYou should do a /reload if you recently created a new scale.",
+                  type = "description",
+                  order = 1,
+               },
+               scalesGroup = {
+                  order = 2,
+                  type = "group",
+                  --inline = true,
+                  name = "Scales",
+                  childGroups = "tree",
+                  args = {
+                  },
+               },
+            },
+         },
       },
    }
    -- Create the normalColumns
@@ -177,9 +200,10 @@ function EU:OptionsTable()
       }
    end
 
+   options = self:CreatePawnScaleOptions(options)
 
    LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("RCLootCouncil - Extra Utilities", options)
-   LibStub("AceConfigDialog-3.0"):AddToBlizOptions("RCLootCouncil - Extra Utilities", "Extra Utilities", "RCLootCouncil")
+   self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("RCLootCouncil - Extra Utilities", "Extra Utilities", "RCLootCouncil")
 end
 
 function EU:ColSet(info, val)
@@ -189,4 +213,54 @@ function EU:ColSet(info, val)
 end
 function EU:ColGet(info)
    return self.db.columns[info[#info]].enabled
+end
+
+-- Seperate Pawn scales for sanity
+function EU:CreatePawnScaleOptions(options)
+   if not PawnVersion then return options end -- Just in case
+   local scales = {}
+   for k in pairs(PawnCommon.Scales) do
+      scales[k] = k
+   end
+   local i = 1
+   for class, opt in pairs(self.db.pawn) do
+      local c = addon:GetClassColor(class)
+      local hex = "|cFF"..addon:RGBToHex(c.r,c.g,c.b)
+      options.args.pawnOptions.args.scalesGroup.args[class] = {
+         order = i,
+         type = "group",
+         name = hex..LOCALIZED_CLASS_NAMES_MALE[class],
+         args = {},
+      }
+      local j = 0
+      for specID, scale in pairs(opt) do
+         local _, name, description, icon = GetSpecializationInfoByID(specID)
+         options.args.pawnOptions.args.scalesGroup.args[class].args[""..specID] = {
+            order = j * 2 + 1,
+            name = hex..name,
+            type = "description",
+            fontSize = "large",
+            image = icon,
+            imageWidth = 26,
+            imageHeight = 26,
+         }
+         options.args.pawnOptions.args.scalesGroup.args[class].args[specID.."scale"] = {
+            order = j * 2 + 2,
+            type = "select",
+            name = "",
+            style = "dropdown",
+            width = "full",
+            values = scales,
+            get = function() return self.db.pawn[class][specID] end,
+            set = function(info, key) self.db.pawn[class][specID] = key end,
+         }
+         j = j + 1
+      end
+      i = i + 1
+   end
+
+
+
+
+   return options
 end

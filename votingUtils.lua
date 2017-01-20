@@ -18,7 +18,7 @@
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
-local EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0")
+EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
@@ -36,7 +36,7 @@ function EU:OnInitialize()
          columns = {
             traits =          { enabled = false, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
             upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
-            pawn =            { enabled = true, pos = -3, width = 50, func = self.SetCellPawn,     name = "Pawn"},
+            pawn =            { enabled = false, pos = -3, width = 50, func = self.SetCellPawn,     name = "Pawn"},
             sockets =         { enabled = false, pos = 11, width = 45, func = self.SetCellSocket,   name = LE["Sockets"]},
          -- setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},
             titanforged =     { enabled = false, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
@@ -50,6 +50,68 @@ function EU:OnInitialize()
             ilvl =   { enabled = true, name = L.ilvl},
             diff =   { enabled = true, name = L.Diff},
             roll =   { enabled = true, name = L.Roll},
+         },
+         pawn = { -- Default Pawn scales
+            WARRIOR = {
+               [71] = '"MrRobot":WARRIOR1', -- Arms
+               [72] = '"MrRobot":WARRIOR2', -- Fury
+               [73] = '"MrRobot":WARRIOR3', -- Protection
+            },
+         	DEATHKNIGHT = {
+               [250] = '"MrRobot":DEATHKNIGHT1', -- Blood
+               [251] = '"MrRobot":DEATHKNIGHT2', -- Frost
+               [252] = '"MrRobot":DEATHKNIGHT3', -- Unholy
+            },
+         	PALADIN = {
+               [65] = '"MrRobot":PALADIN1', -- Holy
+               [66] = '"MrRobot":PALADIN2', -- Protection
+               [70] = '"MrRobot":PALADIN3', -- Retribution
+            },
+         	MONK = {
+               [268] = '"MrRobot":MONK1', -- Brewmaster
+               [269] = '"MrRobot":MONK2', -- Windwalker
+               [270] = '"MrRobot":MONK3', -- Mistweaver
+            },
+         	PRIEST = {
+               [256] = '"MrRobot":PRIEST1', -- Discipline
+               [257] = '"MrRobot":PRIEST2', -- Holy
+               [258] = '"MrRobot":PRIEST3', -- Shadow
+            },
+         	SHAMAN = {
+               [262] = '"MrRobot":SHAMAN1', -- Elemental
+               [263] = '"MrRobot":SHAMAN2', -- Enhancement
+               [264] = '"MrRobot":SHAMAN3', -- Restoration
+            },
+         	DRUID = {
+               [102] = '"MrRobot":DRUID1', -- Balance
+               [103] = '"MrRobot":DRUID2', -- Feral
+               [104] = '"MrRobot":DRUID3', -- Guardian
+               [105] = '"MrRobot":DRUID4', -- Restoration
+            },
+         	ROGUE = {
+               [259] = '"MrRobot":ROGUE1', -- Assassination
+               [260] = '"MrRobot":ROGUE2', -- Outlaw
+               [261] = '"MrRobot":ROGUE3', -- Subtlety
+            },
+         	MAGE = {
+               [62] = '"MrRobot":MAGE1', -- Arcane
+               [63] = '"MrRobot":MAGE2', -- Fire
+               [64] = '"MrRobot":MAGE3', -- Frost
+            },
+         	WARLOCK = {
+               [265] = '"MrRobot":WARLOCK1', -- Affliction
+               [266] = '"MrRobot":WARLOCK2', -- Demonology
+               [267] = '"MrRobot":WARLOCK3', -- Destruction
+            },
+         	HUNTER = {
+               [253] = '"MrRobot":HUNTER1', -- Beast Mastery
+               [254] = '"MrRobot":HUNTER2', -- Marksmanship
+               [255] = '"MrRobot":HUNTER3', -- Survival
+            },
+         	DEMONHUNTER = {
+               [577] = '"MrRobot":DEMONHUNTER1', -- Havoc
+               [581] = '"MrRobot":DEMONHUNTER2', -- Vengeance
+            },
          }
       }
    }
@@ -58,6 +120,12 @@ function EU:OnInitialize()
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
    self:OptionsTable()
    self:Enable()
+   addon:CustomChatCmd(self, "OpenOptions", "EU", "eu")
+end
+
+function EU:OpenOptions()
+   InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
+   InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
 end
 
 function EU:OnEnable()
@@ -154,6 +222,7 @@ function EU:BuildData()
       upgrades = upgrades,
       legend = legend,
       upgradeIlvl = ilvl,
+      specID = (GetSpecializationInfo(GetSpecialization())),
    }
 end
 
@@ -211,22 +280,28 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
    -- We'll calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
    local score
-   addon:Debug("lootTable", lootTable, session)
    if lootTable[session] and lootTable[session].pawnCreated then
       score = EU.votingFrame:GetCandidateData(session, name, "pawn")
-   elseif lootTable[session] then
+   elseif lootTable[session] and lootTable[session].link then
       local class = EU.votingFrame:GetCandidateData(session, name, "class")
-      score = PawnGetSingleValueFromItem(PawnGetItemData(lootTable[session].link), "Discipline") -- TODO
-      addon:Print("Getting scored:", score)
-      EU.votingFrame:SetCandidateData(session, name, "pawn", score)
-      lootTable[session].pawnCreated = true
+      local specID = playerData[name] and playerData[name].specID
+      local item = PawnGetItemData(lootTable[session].link)
+      if class and specID and item then
+         score = PawnGetSingleValueFromItem(item, EU.db.pawn[class][specID])
+         addon:Debug("Getting scored:", score)
+         EU.votingFrame:SetCandidateData(session, name, "pawn", score)
+         lootTable[session].pawnCreated = true
+      end
    end
-   frame.text:SetText(addon.round(score,1) or L["None"])
+   data[realrow].cols[column].value = score or 0
+   frame.text:SetText(score and addon.round(score,1) or L["None"])
 end
 
 function EU.SetCellForged(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   frame.text:SetText(playerData[name] and playerData[name].forged or 0)
+   local val = playerData[name] and playerData[name].forged or 0
+   frame.text:SetText(val)
+   data[realrow].cols[column].value = val
 end
 
 function EU.SetCellTraits(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
