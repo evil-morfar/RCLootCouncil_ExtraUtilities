@@ -170,7 +170,6 @@ function EU:OptionsTable()
             disabled = function() return not PawnVersion end,
             childGroups = "tab",
             args = {
-
                scalesGroup = {
                   order = 2,
                   type = "group",
