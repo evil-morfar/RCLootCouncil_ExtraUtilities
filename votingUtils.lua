@@ -18,7 +18,7 @@
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
-EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0")
+EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
@@ -42,7 +42,7 @@ function EU:OnInitialize()
             titanforged =     { enabled = false, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
             legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
             ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
-            spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = "S"},
+            spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -122,6 +122,7 @@ function EU:OnInitialize()
    self:OptionsTable()
    self:Enable()
    addon:CustomChatCmd(self, "OpenOptions", "EU", "eu")
+   self:RegisterEvent("BONUS_ROLL_RESULT", "BONUS_ROLL_RESULT")
 end
 
 function EU:OpenOptions()
@@ -181,6 +182,11 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          end
       end
    end
+end
+
+-- TODO
+function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, rewardQuantity, rewardSpecID)
+   addon:Debug("BONUS_ROLL_RESULT", rewardType, rewardLink, rewardQuantity, rewardSpecID)
 end
 
 function EU:UpdateColumn(name, bool)
@@ -302,7 +308,6 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
       end
    end
    data[realrow].cols[column].value = score or 0
-   addon:Debug("score", score, type(score))
    frame.text:SetText(score and addon.round(score,1) or L["None"])
    if score then
       frame.text:SetTextColor(1,1,1,1)

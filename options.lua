@@ -87,10 +87,10 @@ function EU:OptionsTable()
                         desc = LE["opt_ilvlupgrades_desc"],
                      },
                      spec = {
-                        name = "Spec Icon",
+                        name = LE["Spec Icon"],
                         order = 9,
                         type = "toggle",
-                        desc = "Enables a column showing the candidates' specialization.",
+                        desc = LE["opt_specIcon_desc"],
                      },
                      header = {
                         order = -1,
@@ -166,22 +166,23 @@ function EU:OptionsTable()
             order = 2,
             type = "group",
             name = "Pawn",
-            desc = "Pawn specific options",
+            desc = LE["Pawn specific options"],
             disabled = function() return not PawnVersion end,
             childGroups = "tab",
             args = {
-               desc = {
-                  name = "Here you can change the Pawn scales RCLootCouncil uses.\nYou should do a /reload if you recently created a new scale.",
-                  type = "description",
-                  order = 1,
-               },
+
                scalesGroup = {
                   order = 2,
                   type = "group",
                   --inline = true,
-                  name = "Scales",
+                  name = LE["Scales"],
                   childGroups = "tree",
                   args = {
+                     desc = {
+                        name = LE["opt_scalesGroup_desc"],
+                        type = "description",
+                        order = 0,
+                     },
                   },
                },
             },
