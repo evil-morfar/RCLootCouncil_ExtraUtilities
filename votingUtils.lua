@@ -42,7 +42,7 @@ function EU:OnInitialize()
             titanforged =     { enabled = false, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
             legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
             ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
-            spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
+            spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = "S"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -174,6 +174,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             -- We received our EU data
             local name, data = unpack(data)
             playerData[name] = data
+            addon:Debug("Received EUData", data.specID)
 
          elseif command == "extraUtilDataRequest" then
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
@@ -192,6 +193,7 @@ function EU:UpdateColumn(name, bool)
             -- We got it!
             col = v
             col.pos = k
+            col.func = v.DoCellUpdate
          end
       end
    end
@@ -282,20 +284,25 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
    -- We'll calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
    local score
-   if lootTable[session] and lootTable[session].pawnCreated then
+   if playerData[name] and playerData[name][session] and playerData[name][session].pawn then
       score = EU.votingFrame:GetCandidateData(session, name, "pawn")
+
    elseif lootTable[session] and lootTable[session].link then
       local class = EU.votingFrame:GetCandidateData(session, name, "class")
       local specID = playerData[name] and playerData[name].specID
-      local item = PawnGetItemData(lootTable[session].link)
-      if class and specID and item then
-         score = PawnGetSingleValueFromItem(item, EU.db.pawn[class][specID])
-         addon:Debug("Getting scored:", score)
-         EU.votingFrame:SetCandidateData(session, name, "pawn", score)
-         lootTable[session].pawnCreated = true
+      if specID then -- SpecID might not be received yet, so don't bother checking further
+         local item = PawnGetItemData(lootTable[session].link)
+         if class and specID and item then
+            -- Try and force NormalizationFactor
+            PawnCommon.Scales[EU.db.pawn[class][specID]].NormalizationFactor = 1
+            score = PawnGetSingleValueFromItem(item, EU.db.pawn[class][specID])
+            EU.votingFrame:SetCandidateData(session, name, "pawn", score)
+            playerData[name][session] = {pawn = score}
+         end
       end
    end
    data[realrow].cols[column].value = score or 0
+   addon:Debug("score", score, type(score))
    frame.text:SetText(score and addon.round(score,1) or L["None"])
    if score then
       frame.text:SetTextColor(1,1,1,1)
