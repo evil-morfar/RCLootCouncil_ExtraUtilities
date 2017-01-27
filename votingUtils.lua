@@ -185,8 +185,14 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
 end
 
 -- TODO
-function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, rewardQuantity, rewardSpecID)
-   addon:Debug("BONUS_ROLL_RESULT", rewardType, rewardLink, rewardQuantity, rewardSpecID)
+function EU:BONUS_ROLL_RESULT(event, ...)--rewardType, rewardLink, rewardQuantity, rewardSpecID)
+   --addon:Debug("BONUS_ROLL_RESULT", rewardType, rewardLink, rewardQuantity, rewardSpecID)
+   addon:Debug(event, ...)
+   --[[ Results:
+      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0)
+      BONUS_ROLL_RESULT (item) (|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r) (1) (257)
+      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0)
+   ]]
 end
 
 function EU:UpdateColumn(name, bool)
