@@ -268,9 +268,6 @@ function EU:GetEquippedItemData()
    local forgedTable = {
       [3336] = "Warforged",
       [3337] = "Titanforged",   }
-   local legendaries = { -- NOTE Really not sure about these, but I haven't seen a Legendary without one of these bonusIDs
-      [1811] = true,
-      [3458] = true,   }
 
    local titanforged, setPieces, sockets, legend = 0, 0, 0, 0
    local upgradeIlvl, upg, upgMax = 0, 0, 0
@@ -287,18 +284,18 @@ function EU:GetEquippedItemData()
             local color, itemType, itemID, enchantID, gemID1, gemID2, gemID3, gemID4, suffixID, uniqueID, linkLevel,
    	 		specializationID, upgradeTypeID, upgradeID, instanceDifficultyID, numBonuses, bonusIDs = addon:DecodeItemLink(link)
 
+            if color == "ff8000" then
+               legend = legend + 1
+            end
+
             if (gemID1 > 0 or gemID2 > 0) and i ~= 16 then -- Avoid artifact as it has relics in its' gemIDs
                sockets = sockets + 1
             end
-
+            
             if numBonuses > 0 then
                for _, v in ipairs(bonusIDs) do
                   if forgedTable[v] then
                      titanforged = titanforged + 1
-                  end
-                  if legendaries[v] then
-                     legend = legend + 1
-                     break -- Just in case the same legendary have multiple of the checked bonusIDs
                   end
                end
             end
