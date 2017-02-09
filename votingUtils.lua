@@ -26,6 +26,7 @@ local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
 local playerData = {} -- Table containing all EU data received, format playerData["playerName"] = {...}
 local lootTable = {}
 local session = 0
+local guildInfo = {}
 
 function EU:OnInitialize()
    self:RegisterComm("RCLootCouncil")
@@ -43,7 +44,8 @@ function EU:OnInitialize()
             legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
             ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
-            bonus =           { enabled = false, pos = -8, width = 20, func = self.SetCellBonusRoll, name = "Bonus"},
+            bonus =           { enabled = false, pos = -8, width = 40, func = self.SetCellBonusRoll, name = "Bonus"},
+            guildNotes =      { enabled = false, pos = -1, width = 40, func = self.SetCellGuildNote, name = "GuildNote"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -172,6 +174,11 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             -- And grap a copy
             lootTable = unpack(data)
 
+            --(Re)calculate guild info if we need it
+            if self.db.columns.guildNotes.enabled then
+               self:UpdateGuildInfo()
+            end
+
          elseif command == "extraUtilData" then
             -- We received our EU data
             local name, data = unpack(data)
@@ -201,6 +208,11 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
+
+      Tests:
+      /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "artifact_power", "|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r")
+      /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "item", "|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r")
+
    ]]
 end
 
@@ -295,6 +307,15 @@ function EU:GetEquippedItemData()
    end
 
    return titanforged, setPieces, sockets, upg.."/"..upgMax, legend, upgradeIlvl
+end
+
+function EU:UpdateGuildInfo()
+   addon:Debug("EU:UpdateGuildInfo")
+   GuildRoster()
+   for i = 1, GetNumGuildMembers() do
+      local name, _, _, _, _, _, note, officernote = GetGuildRosterInfo(i)
+      guildInfo[name] = {note, officernote}
+   end
 end
 
 ---------------------------------------------
@@ -406,26 +427,47 @@ end
 
 function EU.SetCellBonusRoll(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
+   local f = frame.bonusBtn or CreateFrame("Button", nil, frame)
+	f:SetSize(table.rowHeight, table.rowHeight)
+	f:SetPoint("CENTER", frame, "CENTER")
    if playerData[name] and playerData[name].bonusType then
       local type, link = playerData[name].bonusType, playerData[name].bonusLink
       if type == "item" or type == "artifact_power" then
          local texture = select(10, GetItemInfo(link))
-   		frame:SetNormalTexture(texture)
-   		frame:SetScript("OnEnter", function() addon:CreateHypertip(link) end)
-   		frame:SetScript("OnLeave", function() addon:HideTooltip() end)
-   		frame:SetScript("OnClick", function()
+   		f:SetNormalTexture(texture)
+   		f:SetScript("OnEnter", function() addon:CreateHypertip(link) end)
+   		f:SetScript("OnLeave", function() addon:HideTooltip() end)
+   		f:SetScript("OnClick", function()
    			if IsModifiedClick() then
    			   HandleModifiedItemClick(link);
    	      end
    		end)
-   		frame:Show()
-
+   		f:Show()
       else
-         frame:SetScript("OnEnter", function() addon:CreateTooltip("Gold", type, link) end)
+         f:SetScript("OnEnter", function() addon:CreateTooltip("Gold", type, link) end)
          addon:Debug("BonusRoll was gold", type, link)
       end
    else
-      frame:Hide()
-      frame:SetScript("OnEnter", nil)
+      f:Hide()
+      f:SetScript("OnEnter", nil)
    end
+   frame.bonusBtn = f
+end
+
+function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+   local name = data[realrow].name
+   local f = frame.noteBtn or CreateFrame("Button", nil, frame)
+	f:SetSize(table.rowHeight, table.rowHeight)
+	f:SetPoint("CENTER", frame, "CENTER")
+   if guildInfo and guildInfo[name] then
+      f:SetNormalTexture("Interface/BUTTONS/UI-GuildButton-PublicNote-Up.png")
+		f:SetScript("OnEnter", function() addon:CreateTooltip(L["Note"], guildInfo[name][1], " ", "Officer Note", guildInfo[name][2])	end)
+		f:SetScript("OnLeave", function() addon:HideTooltip() end)
+		data[realrow].cols[column].value = 1 -- Set value for sorting compability
+   else
+      f:SetScript("OnEnter", nil)
+		f:SetNormalTexture("Interface/BUTTONS/UI-GuildButton-PublicNote-Disabled.png")
+		data[realrow].cols[column].value = 0
+   end
+   frame.noteBtn = f
 end

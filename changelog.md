@@ -1,6 +1,9 @@
 * **Bonus Roll**
  * Added a new column showing the candidates' bonus roll, if any.
 
+* **Guild Notes**
+ * Added a new column showing a candidates guild notes, if accessible.
+
 ### v0.2.0
 ---
 * **Sorting**

@@ -92,6 +92,18 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_specIcon_desc"],
                      },
+                     bonus = {
+                        name = "Bonus Rolls",
+                        order = 10,
+                        type = "toggle",
+                        desc = "Enables bonus rolls",
+                     },
+                     guildNotes = {
+                        name = "Guild Notes",
+                        order = 11,
+                        type = "toggle",
+                        desc = "Enables Guild and Officer notes."
+                     },
                      header = {
                         order = -1,
                         name = "",
