@@ -43,6 +43,7 @@ function EU:OnInitialize()
             legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
             ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
+            bonus =           { enabled = false, pos = -8, width = 20, func = self.SetCellBonusRoll, name = "Bonus"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -122,7 +123,7 @@ function EU:OnInitialize()
    self:OptionsTable()
    self:Enable()
    addon:CustomChatCmd(self, "OpenOptions", "EU", "eu")
-   self:RegisterEvent("BONUS_ROLL_RESULT", "BONUS_ROLL_RESULT")
+   self:RegisterEvent("BONUS_ROLL_RESULT")
 end
 
 function EU:OpenOptions()
@@ -178,13 +179,19 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
 
          elseif command == "extraUtilDataRequest" then
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
+
+         elseif command == "EUBonusRoll" then
+            local name, type, link = unpack(data)
+            playerData[name].bonusType = type
+            playerData[name].bonusLink = link
          end
       end
    end
 end
 
 -- TODO
-function EU:BONUS_ROLL_RESULT(event, ...)--rewardType, rewardLink, rewardQuantity, rewardSpecID)
+function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantity, rewardSpecID)
+   addon:SendCommand("group", "EUBonusRoll", addon.playerName, rewardType, rewardLink)
    --addon:Debug("BONUS_ROLL_RESULT", rewardType, rewardLink, rewardQuantity, rewardSpecID)
    addon:Debug(event, ...)
    --[[ Results:
@@ -395,4 +402,30 @@ function EU.SetCellSpecIcon(rowFrame, frame, data, cols, row, realrow, column, f
 	else -- if there's no class
 		frame:SetNormalTexture("Interface/ICONS/INV_Sigil_Thorim.png")
 	end
+end
+
+function EU.SetCellBonusRoll(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+   local name = data[realrow].name
+   if playerData[name] and playerData[name].bonusType then
+      local type, link = playerData[name].bonusType, playerData[name].bonusLink
+      if type == "item" or type == "artifact_power" then
+         local texture = select(10, GetItemInfo(link))
+   		frame:SetNormalTexture(texture)
+   		frame:SetScript("OnEnter", function() addon:CreateHypertip(link) end)
+   		frame:SetScript("OnLeave", function() addon:HideTooltip() end)
+   		frame:SetScript("OnClick", function()
+   			if IsModifiedClick() then
+   			   HandleModifiedItemClick(link);
+   	      end
+   		end)
+   		frame:Show()
+
+      else
+         frame:SetScript("OnEnter", function() addon:CreateTooltip("Gold", type, link) end)
+         addon:Debug("BonusRoll was gold", type, link)
+      end
+   else
+      frame:Hide()
+      frame:SetScript("OnEnter", nil)
+   end
 end

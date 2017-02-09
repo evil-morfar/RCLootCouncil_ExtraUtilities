@@ -1,3 +1,6 @@
+* **Bonus Roll**
+ * Added a new column showing the candidates' bonus roll, if any.
+
 ### v0.2.0
 ---
 * **Sorting**
