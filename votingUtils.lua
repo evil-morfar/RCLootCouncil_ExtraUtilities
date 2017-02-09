@@ -175,7 +175,6 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             -- We received our EU data
             local name, data = unpack(data)
             playerData[name] = data
-            addon:Debug("Received EUData", data.specID)
 
          elseif command == "extraUtilDataRequest" then
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
@@ -192,6 +191,9 @@ function EU:BONUS_ROLL_RESULT(event, ...)--rewardType, rewardLink, rewardQuantit
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0)
       BONUS_ROLL_RESULT (item) (|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r) (1) (257)
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0)
+      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
+      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
+      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
    ]]
 end
 
