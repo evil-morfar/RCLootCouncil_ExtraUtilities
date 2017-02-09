@@ -7,14 +7,19 @@ if not L then return end
 
 
 L["Artifact Traits"] = true
+L["Bonus"] = true
+L["Bonus Rolls"] = true
 L["Class"] = true
 L["extra_util_desc"] = "RCLootCouncil - Extra Utilities |cFF87CEFAv %s |r.\nNote: these settings are not shared with the group, so each council member can have different settings."
 L["Extra Utilities Columns"] = true
 L["Forged"] = true
+L["GuildNote"] = true
+L["Guild Notes"] = true
 L["ilvl Decimals"] = true
 L["ilvl Upg."] = true
 L["ilvl Upgrades"] = true
 L["Legendaries"] = true
+L["Officer Note"] = true
 L["Other"] = true
 L["Pawn specific options"] = true
 L["RCLootCouncil Columns"] = true
@@ -34,6 +39,8 @@ L["opt_setpieces_desc"] = "Enables a column showing the number of set pieces the
 L["opt_forged_desc"] = "Enables a column showing how many Titan-/Warforged items the cancidate has equipped."
 L["opt_legendaries_desc"] = "Enables a column showing how many legendaries the candidate has equipped."
 L["opt_ilvlupgrades_desc"] = "Enables a column showing the total ilvls a candidate have optained through item upgrades. It's basicly the 'Upgrade' option put into actual ilvls."
+L["opt_bonusRoll_desc"] = "Enables a column showing a candidates' bonus roll, if any."
+L["opt_guildNotes_desc"] = "Enables a column showing a candidates' Guild and Officer notes, if any and you're allowed to see them."
 L["opt_normalcolumn_desc"] = "Enables the %s column from RCLootCouncil."
 L["opt_pawn_warning"] = "You cannot activate Pawn column with having installed Pawn."
 L["opt_ilvldecimals_desc"] = "Check to show a more accurate ilvl in the ilvl column."

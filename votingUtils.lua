@@ -44,8 +44,8 @@ function EU:OnInitialize()
             legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
             ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
-            bonus =           { enabled = false, pos = -8, width = 40, func = self.SetCellBonusRoll, name = "Bonus"},
-            guildNotes =      { enabled = false, pos = -1, width = 40, func = self.SetCellGuildNote, name = "GuildNote"},
+            bonus =           { enabled = false, pos = -8, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
+            guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class},
@@ -291,7 +291,7 @@ function EU:GetEquippedItemData()
             if (gemID1 > 0 or gemID2 > 0) and i ~= 16 then -- Avoid artifact as it has relics in its' gemIDs
                sockets = sockets + 1
             end
-            
+
             if numBonuses > 0 then
                for _, v in ipairs(bonusIDs) do
                   if forgedTable[v] then
@@ -458,7 +458,7 @@ function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, 
 	f:SetPoint("CENTER", frame, "CENTER")
    if guildInfo and guildInfo[name] then
       f:SetNormalTexture("Interface/BUTTONS/UI-GuildButton-PublicNote-Up.png")
-		f:SetScript("OnEnter", function() addon:CreateTooltip(L["Note"], guildInfo[name][1], " ", "Officer Note", guildInfo[name][2])	end)
+		f:SetScript("OnEnter", function() addon:CreateTooltip(L["Note"], guildInfo[name][1], " ", LE["Officer Note"], guildInfo[name][2])	end)
 		f:SetScript("OnLeave", function() addon:HideTooltip() end)
 		data[realrow].cols[column].value = 1 -- Set value for sorting compability
    else
