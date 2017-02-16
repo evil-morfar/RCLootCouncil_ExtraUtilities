@@ -4,17 +4,11 @@
 -- votingUtils.lua	Adds extra columns for the default voting frame
 
 --[[
-   NOTE: This is made for the Better-VotingFrame branch
-
-   Pawn integration
-   ----------------
-   Noteable functions:
-      PawnGetItemValue(Item, ItemLevel, SocketBonus, ScaleName, DebugMessages, NoNormalization)
-         -- PawnUICurrentScale (global) should be useable as a scale
-      PawnGetAllItemValues()
-
-      PawnGetSingleValueFromItem(Item, ScaleName) -- Returns the score from a selected scale
-      PawnRecalculateItemValuesIfNecessary(Item, NoNormalization) -- Returns scores from every enabled scale
+   TODO :
+      "send Pawn scores"
+         Options,
+         ST:SetCell
+       are implemented, but the actual calculation at candidates and sending is still missing.
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
@@ -55,6 +49,7 @@ function EU:OnInitialize()
             diff =   { enabled = true, name = L.Diff},
             roll =   { enabled = true, name = L.Roll},
          },
+         acceptPawn = true, -- Allow Pawn scores sent from candidates
          pawn = { -- Default Pawn scales
             WARRIOR = {
                [71] = '"MrRobot":WARRIOR1', -- Arms
@@ -315,28 +310,44 @@ function EU:UpdateGuildInfo()
    end
 end
 
+-- Returns a Pawn score calculated based on the select scale in the EU options
+-- mathcing the class and spec
+function EU:GetPawnScore(link, class, spec)
+   local item = PawnGetItemData(link)
+   if not (item and class and spec) then
+      return addon:Debug("Error in :GetPawnScore", link, class, spec)
+   end
+   -- Normalize
+   PawnCommon.Scales[self.db.pawn[class][spec]].NormalizationFactor = 1
+   local score = PawnGetSingleValueFromItem(item, self.db.pawn[class][spec])
+   return score
+end
 ---------------------------------------------
 -- Lib-st UI functions
 ---------------------------------------------
 function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
    -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
-   -- We'll calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
+   -- We can calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
    local score
-   if playerData[name] and playerData[name][session] and playerData[name][session].pawn then
+   -- If we've already calculated it, then just retrieve it from the votingFrame data:
+   if playerData[name] and playerData[name][session] and playerData[name][session].pawn and playerData[name][session].own then
       score = EU.votingFrame:GetCandidateData(session, name, "pawn")
 
+   -- But if we've enabled it, we might have received a Pawn score from the player, in which case we want to display that.
+   -- For this we rely on our own storage:
+   elseif playerData[name] and playerData[name][session] and playerData[name][session].pawn and self.db.acceptPawn then
+      score = playerData[name][session].pawn
+
+   -- Or just calculate it ourself
    elseif lootTable[session] and lootTable[session].link then
       local class = EU.votingFrame:GetCandidateData(session, name, "class")
       local specID = playerData[name] and playerData[name].specID
       if specID then -- SpecID might not be received yet, so don't bother checking further
-         local item = PawnGetItemData(lootTable[session].link)
-         if class and specID and item then
-            -- Try and force NormalizationFactor
-            PawnCommon.Scales[EU.db.pawn[class][specID]].NormalizationFactor = 1
-            score = PawnGetSingleValueFromItem(item, EU.db.pawn[class][specID])
+         score = EU:GetPawnScore(lootTable[session].link, class, specID)
+         if score then -- Did we actually get it?
             EU.votingFrame:SetCandidateData(session, name, "pawn", score)
-            playerData[name][session] = {pawn = score}
+            playerData[name][session] = {pawn = score, own = true}
          end
       end
    end

@@ -5,7 +5,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RCExtraUtilities", "enUS", true)
 if not L then return end
 
-
+L["Accept Pawn"] = true
 L["Artifact Traits"] = true
 L["Bonus"] = true
 L["Bonus Rolls"] = true
@@ -31,6 +31,8 @@ L["Traits"] = true
 L["Upgrades"] = true
 L["You can't change these settings while the voting frame is showing."] = true
 
+
+L["opt_acceptPawn_desc"] = "Enables candidates to calculate and send their own Pawn scores instead of relying on you to keep your own scales up to date."
 L["opt_pawn_desc"] = "Enables a Pawn column, showing upgrade statistics for the candidate."
 L["opt_traits_desc"] = "Enables a column showing the number of artifact traits a candidate has."
 L["opt_upgrades_desc"] = "Enables a column showing x of y valor upgrades a candidate has performed."

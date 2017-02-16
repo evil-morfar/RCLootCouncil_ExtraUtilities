@@ -182,6 +182,14 @@ function EU:OptionsTable()
             disabled = function() return not PawnVersion end,
             childGroups = "tab",
             args = {
+               acceptPawn = {
+                  order = 1,
+                  name = LE["Accept Pawn"],
+                  desc = LE["opt_acceptPawn_desc"],
+                  type = "toggle",
+                  set = function() self.db.acceptPawn = not self.db.acceptPawn end,
+                  get = function() return self.db.acceptPawn end,
+               },
                scalesGroup = {
                   order = 2,
                   type = "group",
