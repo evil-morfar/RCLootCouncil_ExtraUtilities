@@ -227,6 +227,7 @@ function EU:UpdateColumn(name, bool)
             col = v
             col.pos = k
             col.func = v.DoCellUpdate
+            col.width = self.db.normalColumns[name].width or v.width -- We might have overridden the orignial value
          end
       end
    end
@@ -248,6 +249,24 @@ function EU:UpdateColumn(name, bool)
    if self.votingFrame.frame then -- We might need to recreate it
       self.votingFrame.frame.UpdateSt()
    end
+end
+
+function EU:UpdateColumnWidth(name, width)
+   -- Find the column
+   local col = self.db.columns[name] or self.db.normalColumns[name]
+   if not col then return addon:Debug("Couldn't find col", name, width) end
+   -- Now change it's data
+   col.width = width
+   -- Our storage has now been updated, but we still need to edit it in the scrollCols table:
+   for _,col in ipairs(self.votingFrame.scrollCols) do
+      if col.colName == name then
+         -- Found it
+         col.width = width
+         break
+      end
+   end
+   -- Should update the width of the cols:
+   self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
 end
 
 function EU:BuildData()

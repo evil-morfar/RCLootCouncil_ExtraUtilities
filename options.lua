@@ -198,12 +198,38 @@ function EU:OptionsTable()
                },
             },
          },
+         widthOptions = {
+            order = 3,
+            type = "group",
+            name = "Widths",
+            args = {
+               columns = {
+                  order = 1,
+                  name = LE["Extra Utilities Columns"],
+                  type = "group",
+                  inline = true,
+                  args = {
+                     -- Made further down
+                  },
+               },
+               normalColumns = {
+                  order = 2,
+                  name = LE["RCLootCouncil Columns"],
+                  type = "group",
+                  inline = true,
+                  args = {
+                     -- Made further down
+                  },
+               },
+            },
+         },
       },
    }
    -- Create the normalColumns
    local i = 0
    for name, v in pairs(self.db.normalColumns) do
       i = i + 1
+      -- Enabledness
       options.args.general.args.normalColumns.args[name] = {
          order = i,
          name = v.name,
@@ -215,6 +241,43 @@ function EU:OptionsTable()
             self:UpdateColumn(name, self.db.normalColumns[name].enabled)
          end,
          get = function() return self.db.normalColumns[name].enabled end
+      }
+      -- Width
+      -- TODO We might need a label before the slider
+      options.args.widthOptions.args.normalColumns.args[name.."Width"] = {
+         order = i,
+         name = v.name,
+         desc = format(LE["column_width_desc"], v.name),
+         type = "range",
+         width = "full",
+         min = 10,
+         max = 300,
+         step = 1,
+         get = function() return v.width or self.originalCols[name].width end,
+         set = function(_, val)
+            self.db.normalColumns[name].width = val
+            self:UpdateColumnWidth(name, val)
+         end,
+      }
+   end
+   -- Create width slider for the EU cols
+   i = 0
+   for name, v in pairs(self.db.columns) do
+      i = i + 1
+      options.args.widthOptions.args.columns.args[name.."Width"] = {
+         order = i,
+         name = v.name,
+         desc = format(LE["column_width_desc"], v.name),
+         type = "range",
+         width = "full",
+         min = 10,
+         max = 300,
+         step = 1,
+         get = function() return v.width end,
+         set = function(_, val)
+            self.db.columns[name].width = val
+            self:UpdateColumnWidth(name, val)
+         end,
       }
    end
 

@@ -1,3 +1,8 @@
+* **Column Width**
+ * You're now able to change the width of the columns created with ExtraUtilities,
+ along with those from RCLootCouncil you can enable/disable.
+ * Located in a seperate options tab to keep it organized.
+
 ### v0.3.0
 ---
 * **Bonus Roll**

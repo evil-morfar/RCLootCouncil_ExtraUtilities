@@ -10,6 +10,7 @@ L["Artifact Traits"] = true
 L["Bonus"] = true
 L["Bonus Rolls"] = true
 L["Class"] = true
+L["column_width_desc"] = "Chose the width of the %s column."
 L["extra_util_desc"] = "RCLootCouncil - Extra Utilities |cFF87CEFAv %s |r.\nNote: these settings are not shared with the group, so each council member can have different settings."
 L["Extra Utilities Columns"] = true
 L["Forged"] = true
