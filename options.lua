@@ -266,7 +266,7 @@ function EU:OptionsTable()
       i = i + 1
       options.args.widthOptions.args.columns.args[name.."Width"] = {
          order = i,
-         name = v.name,
+         name = name == "spec" and "Spec" or v.name, -- Special case with spec
          desc = format(LE["column_width_desc"], v.name),
          type = "range",
          width = "full",

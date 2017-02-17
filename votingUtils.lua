@@ -48,12 +48,12 @@ function EU:OnInitialize()
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
          },
          normalColumns = {
-            class =  { enabled = true, name = LE.Class},
-            rank =   { enabled = true, name = L.Rank},
-            role =   { enabled = true, name = L.Role},
-            ilvl =   { enabled = true, name = L.ilvl},
-            diff =   { enabled = true, name = L.Diff},
-            roll =   { enabled = true, name = L.Roll},
+            class =  { enabled = true, name = LE.Class, width = 20},
+            rank =   { enabled = true, name = L.Rank, width = 95,},
+            role =   { enabled = true, name = L.Role, width = 55},
+            ilvl =   { enabled = true, name = L.ilvl, width = 45,},
+            diff =   { enabled = true, name = L.Diff, width = 40},
+            roll =   { enabled = true, name = L.Roll, width = 30},
          },
          pawn = { -- Default Pawn scales
             WARRIOR = {
@@ -122,7 +122,6 @@ function EU:OnInitialize()
 
    addon.db:RegisterNamespace("ExtraUtilities", self.defaults)
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
-   self:OptionsTable()
    self:Enable()
    addon:CustomChatCmd(self, "OpenOptions", "EU", "eu")
    self:RegisterEvent("BONUS_ROLL_RESULT")
@@ -142,6 +141,8 @@ function EU:OnEnable()
    for k,v in pairs(self.votingFrame.scrollCols) do
       self.originalCols[k] = v
    end
+   -- Setup options
+   self:OptionsTable()
 
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
@@ -252,11 +253,6 @@ function EU:UpdateColumn(name, bool)
 end
 
 function EU:UpdateColumnWidth(name, width)
-   -- Find the column
-   local col = self.db.columns[name] or self.db.normalColumns[name]
-   if not col then return addon:Debug("Couldn't find col", name, width) end
-   -- Now change it's data
-   col.width = width
    -- Our storage has now been updated, but we still need to edit it in the scrollCols table:
    for _,col in ipairs(self.votingFrame.scrollCols) do
       if col.colName == name then
@@ -265,8 +261,13 @@ function EU:UpdateColumnWidth(name, width)
          break
       end
    end
-   -- Should update the width of the cols:
-   self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
+   -- The frame might not yet be created, so check before altering anything
+   if self.votingFrame.frame then
+      -- Update the width of the cols
+      self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
+      -- Now update the frame width
+      self.votingFrame.frame:SetWidth(self.votingFrame.frame.st.frame:GetWidth() + 20)
+   end
 end
 
 function EU:BuildData()
