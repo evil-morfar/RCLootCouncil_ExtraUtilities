@@ -222,7 +222,7 @@ function EU:UpdateColumn(name, bool)
    local col = self.db.columns[name]
    if not col then -- It's one of the default RC columns
       -- find its' data
-      for k,v in pairs(self.originalCols) do
+      for k,v in ipairs(self.originalCols) do
          if v.colName == name then
             -- We got it!
             col = v
@@ -254,19 +254,39 @@ end
 
 function EU:UpdateColumnWidth(name, width)
    -- Our storage has now been updated, but we still need to edit it in the scrollCols table:
-   for _,col in ipairs(self.votingFrame.scrollCols) do
-      if col.colName == name then
-         -- Found it
-         col.width = width
-         break
-      end
-   end
+   local i = self:GetScrollColIndexFromName(name)
+   self.votingFrame.scrollCols[i].width = width
    -- The frame might not yet be created, so check before altering anything
    if self.votingFrame.frame then
       -- Update the width of the cols
       self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
       -- Now update the frame width
       self.votingFrame.frame:SetWidth(self.votingFrame.frame.st.frame:GetWidth() + 20)
+   end
+end
+
+function EU:UpdateColumnPosition(name, pos)
+   -- Find the index in scrollCols
+   local i = self:GetScrollColIndexFromName(name)
+   -- We might need to change pos abit
+   if pos < 0 then -- "from the back, i.e. add it"
+      pos = #self.votingFrame.scrollCols + pos
+   end
+   if pos > #self.votingFrame.scrollCols then
+      pos = #self.votingFrame.scrollCols
+   end
+   if pos == 0 then pos = 1 end
+   -- Move the column and update
+   tinsert(self.votingFrame.scrollCols, pos, tremove(self.votingFrame.scrollCols, i))
+   self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
+   self.votingFrame.frame.st:SortData()
+end
+
+function EU:GetScrollColIndexFromName(name)
+   for i,v in ipairs(self.votingFrame.scrollCols) do
+      if v.colName == name then
+         return i
+      end
    end
 end
 

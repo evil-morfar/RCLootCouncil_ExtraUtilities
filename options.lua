@@ -242,14 +242,26 @@ function EU:OptionsTable()
          end,
          get = function() return self.db.normalColumns[name].enabled end
       }
-      -- Width
-      -- TODO We might need a label before the slider
-      options.args.widthOptions.args.normalColumns.args[name.."Width"] = {
+      -- Position
+      options.args.widthOptions.args.normalColumns.args[name.."Pos"] = {
          order = i,
+         name = v.name,
+         desc = "coming soon",
+         type = "input",
+         pattern = "%d",
+         get = function() return tostring(self.db.normalColumns[name].pos or self:GetScrollColIndexFromName(name)) end,
+         set = function(info, txt)
+            self.db.normalColumns[name].pos = tonumber(txt)
+            self:UpdateColumnPosition(name, tonumber(txt))
+         end,
+      }
+      -- Width
+      options.args.widthOptions.args.normalColumns.args[name.."Width"] = {
+         order = i + 0.1,
          name = v.name,
          desc = format(LE["column_width_desc"], v.name),
          type = "range",
-         width = "full",
+         width = "double",
          min = 10,
          max = 300,
          step = 1,
@@ -263,13 +275,25 @@ function EU:OptionsTable()
    -- Create width slider for the EU cols
    i = 0
    for name, v in pairs(self.db.columns) do
-      i = i + 1
-      options.args.widthOptions.args.columns.args[name.."Width"] = {
+      i = i + 1 * 2
+      options.args.widthOptions.args.columns.args[name.."Pos"] = {
          order = i,
+         name = name == "spec" and "Spec" or v.name, -- Special case with spec
+         desc = "coming soon",
+         type = "input",
+         pattern = "%d",
+         get = function() return tostring(self.db.columns[name].pos) end,
+         set = function(info, txt)
+            self.db.columns[name].pos = tonumber(txt)
+            self:UpdateColumnPosition(name, tonumber(txt))
+         end,
+      }
+      options.args.widthOptions.args.columns.args[name.."Width"] = {
+         order = i + 1,
          name = name == "spec" and "Spec" or v.name, -- Special case with spec
          desc = format(LE["column_width_desc"], v.name),
          type = "range",
-         width = "full",
+         width = "double",
          min = 10,
          max = 300,
          step = 1,
