@@ -201,10 +201,22 @@ function EU:OptionsTable()
          widthOptions = {
             order = 3,
             type = "group",
-            name = "Widths",
+            name = "Advanced",
             args = {
-               columns = {
+               desc = {
+                  order = 0,
+                  name = "Here you can change the position and width of the columns.\nPositions accepts both positive (indicating which order a column should come in) and negative (how far from the end) numbers.\nClick the button to open the voting frame and see your changes right away. When things start to look funny, just do a /reload to refresh all the icons.",
+                  type = "description",
+                  width = "full",
+               },
+               open = {
                   order = 1,
+                  name = "Open Voting Frame",
+                  type = "execute",
+                  func = function() addon:Test(2) end,
+               },
+               columns = {
+                  order = 2,
                   name = LE["Extra Utilities Columns"],
                   type = "group",
                   inline = true,
@@ -213,7 +225,7 @@ function EU:OptionsTable()
                   },
                },
                normalColumns = {
-                  order = 2,
+                  order = 3,
                   name = LE["RCLootCouncil Columns"],
                   type = "group",
                   inline = true,
@@ -230,18 +242,20 @@ function EU:OptionsTable()
    for name, v in pairs(self.db.normalColumns) do
       i = i + 1
       -- Enabledness
-      options.args.general.args.normalColumns.args[name] = {
-         order = i,
-         name = v.name,
-         type = "toggle",
-         desc = format(LE["opt_normalcolumn_desc"], v.name),
-         set = function()
-            if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
-            self.db.normalColumns[name].enabled = not self.db.normalColumns[name].enabled
-            self:UpdateColumn(name, self.db.normalColumns[name].enabled)
-         end,
-         get = function() return self.db.normalColumns[name].enabled end
-      }
+      if type(v.enabled) == "boolean" then -- Don't allow certain things to be turned off
+         options.args.general.args.normalColumns.args[name] = {
+            order = i,
+            name = v.name,
+            type = "toggle",
+            desc = format(LE["opt_normalcolumn_desc"], v.name),
+            set = function()
+               if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+               self.db.normalColumns[name].enabled = not self.db.normalColumns[name].enabled
+               self:UpdateColumn(name, self.db.normalColumns[name].enabled)
+            end,
+            get = function() return self.db.normalColumns[name].enabled end
+         }
+      end
       -- Position
       options.args.widthOptions.args.normalColumns.args[name.."Pos"] = {
          order = i,
@@ -249,6 +263,7 @@ function EU:OptionsTable()
          desc = "coming soon",
          type = "input",
          pattern = "%d",
+         usage = "Accepts postive and negative numbers only.",
          get = function() return tostring(self.db.normalColumns[name].pos or self:GetScrollColIndexFromName(name)) end,
          set = function(info, txt)
             self.db.normalColumns[name].pos = tonumber(txt)
@@ -282,6 +297,7 @@ function EU:OptionsTable()
          desc = "coming soon",
          type = "input",
          pattern = "%d",
+         usage = "Accepts postive and negative numbers only.",
          get = function() return tostring(self.db.columns[name].pos) end,
          set = function(info, txt)
             self.db.columns[name].pos = tonumber(txt)

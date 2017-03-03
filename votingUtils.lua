@@ -54,6 +54,14 @@ function EU:OnInitialize()
             ilvl =   { enabled = true, name = L.ilvl, width = 45,},
             diff =   { enabled = true, name = L.Diff, width = 40},
             roll =   { enabled = true, name = L.Roll, width = 30},
+
+            name =   { enabled = "", name = L.Name, width = 120},
+            response={ enabled = "", name = L.Response, width = 240,},
+            gear1 =  { enabled = "", name = L.g1, width = 20},
+            gear2 =  { enabled = "", name = L.g2, width = 20},
+            votes =  { enabled = "", name = L.Votes, width = 40},
+            vote =   { enabled = "", name = L.Vote, width = 60},
+            note =   { enabled = "", name = L.Notes, width = 40},
          },
          pawn = { -- Default Pawn scales
             WARRIOR = {
@@ -151,8 +159,20 @@ function EU:OnEnable()
    for colName, v in pairs(self.db.columns) do
       if v.enabled then self:UpdateColumn(colName, true) end
    end
+   -- Potentially remove existing columns
    for colName, v in pairs(self.db.normalColumns) do
       if not v.enabled then self:UpdateColumn(colName, false) end
+   end
+   -- And possibly update their widths and positions acording to our settings
+   -- we assume the voting frame isn't created at this point
+   for i, v in ipairs(self.votingFrame.scrollCols) do
+      if self.db.normalColumns[v.colName] then -- Check if we handle it
+         -- and update width
+         self.votingFrame.scrollCols[i].width = self.db.normalColumns[v.colName].width
+         if self.db.normalColumns[v.colName].pos then
+            self:UpdateColumnPosition(v.colName, self.db.normalColumns[v.colName].pos)
+         end
+      end
    end
 end
 
@@ -217,8 +237,8 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
    ]]
 end
 
-function EU:UpdateColumn(name, bool)
-   addon:Debug("UpdateColumn", name, bool)
+function EU:UpdateColumn(name, add)
+   addon:Debug("UpdateColumn", name, add)
    local col = self.db.columns[name]
    if not col then -- It's one of the default RC columns
       -- find its' data
@@ -232,7 +252,7 @@ function EU:UpdateColumn(name, bool)
          end
       end
    end
-   if bool then
+   if add then
       local pos = 0
       if col.pos < 0 then
          pos = #self.votingFrame.scrollCols + col.pos -- col.pos is negative, so add it for the desired effect
@@ -278,8 +298,10 @@ function EU:UpdateColumnPosition(name, pos)
    if pos == 0 then pos = 1 end
    -- Move the column and update
    tinsert(self.votingFrame.scrollCols, pos, tremove(self.votingFrame.scrollCols, i))
-   self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
-   self.votingFrame.frame.st:SortData()
+   if self.votingFrame.frame then -- Frame might not be created
+      self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
+      self.votingFrame.frame.st:SortData()
+   end
 end
 
 function EU:GetScrollColIndexFromName(name)
