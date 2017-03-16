@@ -4,9 +4,16 @@
 -- votingUtils.lua	Adds extra columns for the default voting frame
 
 --[[
-   NOTE: This is made for the Better-VotingFrame branch
-
+   NOTE:
       Adding or removing columns affects the sortnext flags from votingFrame.
+
+      % Pawn upgrade. We should be able to choose between showing the item's score and its percentage upgrade.
+      When calculating other players' score:
+         For percentage we can use % = (newItemScore/currentItemScore - 1) * 100
+      When calculating our own:
+         Check out PawnIsItemAnUpgrade(), has some nice stuff, although it relies on the player's current scores,
+         not the ones we've set in our options. We should probably look into auto importing the current scales into our storage.
+
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
