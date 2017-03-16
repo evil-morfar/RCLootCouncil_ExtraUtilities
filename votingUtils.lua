@@ -6,15 +6,7 @@
 --[[
    NOTE: This is made for the Better-VotingFrame branch
 
-   Pawn integration
-   ----------------
-   Noteable functions:
-      PawnGetItemValue(Item, ItemLevel, SocketBonus, ScaleName, DebugMessages, NoNormalization)
-         -- PawnUICurrentScale (global) should be useable as a scale
-      PawnGetAllItemValues()
-
-      PawnGetSingleValueFromItem(Item, ScaleName) -- Returns the score from a selected scale
-      PawnRecalculateItemValuesIfNecessary(Item, NoNormalization) -- Returns scores from every enabled scale
+      Adding or removing columns affects the sortnext flags from votingFrame.
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
