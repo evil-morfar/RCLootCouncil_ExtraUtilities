@@ -127,6 +127,10 @@ function EU:OnInitialize()
          }
       }
    }
+   -- The order of which the new cols appear in the advanced options
+   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes"}
+   -- The order of which the normal cols appear ANYWHERE in the options
+   self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
    addon.db:RegisterNamespace("ExtraUtilities", self.defaults)
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
@@ -145,35 +149,35 @@ function EU:OnEnable()
    -- Get the voting frame
    self.votingFrame = addon:GetActiveModule("votingframe")
    -- Crap a copy of the cols
-   self.originalCols = {}
-   for k,v in pairs(self.votingFrame.scrollCols) do
-      self.originalCols[k] = v
-   end
+   self.originalCols = {unpack(self.votingFrame.scrollCols)}
+
    -- Setup options
    self:OptionsTable()
 
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
 
-   -- Setup our columns
-   for colName, v in pairs(self.db.columns) do
-      if v.enabled then self:UpdateColumn(colName, true) end
-   end
+
    -- Potentially remove existing columns
    for colName, v in pairs(self.db.normalColumns) do
       if not v.enabled then self:UpdateColumn(colName, false) end
    end
-   -- And possibly update their widths and positions acording to our settings
-   -- we assume the voting frame isn't created at this point
-   for i, v in ipairs(self.votingFrame.scrollCols) do
-      if self.db.normalColumns[v.colName] then -- Check if we handle it
-         -- and update width
-         self.votingFrame.scrollCols[i].width = self.db.normalColumns[v.colName].width
-         if self.db.normalColumns[v.colName].pos then
-            self:UpdateColumnPosition(v.colName, self.db.normalColumns[v.colName].pos)
-         end
-      end
-   end
+   -- Setup our columns
+   self:SetupColumns()
+   -- for colName, v in pairs(self.db.columns) do
+   --    if v.enabled then self:UpdateColumn(colName, true) end
+   -- end
+   -- -- And possibly update their widths and positions acording to our settings
+   -- -- we assume the voting frame isn't created at this point
+   -- for i, v in ipairs(self.votingFrame.scrollCols) do
+   --    if self.db.normalColumns[v.colName] then -- Check if we handle it
+   --       -- and update width
+   --       self.votingFrame.scrollCols[i].width = self.db.normalColumns[v.colName].width
+   --       if self.db.normalColumns[v.colName].pos then
+   --          self:UpdateColumnPosition(v.colName, self.db.normalColumns[v.colName].pos)
+   --       end
+   --    end
+   -- end
 end
 
 function EU:OnDisable()
@@ -270,6 +274,43 @@ function EU:UpdateColumn(name, add)
    if self.votingFrame.frame then -- We might need to recreate it
       self.votingFrame.frame.UpdateSt()
    end
+end
+
+function EU:SetupColumns()
+   -- First we need to know the order of the columns, so extract from both tables:
+   local cols = {} -- The cols we want to use
+   for name, v in pairs(self.db.columns) do -- EU cols First
+      if v.enabled then tinsert(cols, {name = name, pos = v.pos}) end
+   end
+   for name, v in pairs(self.db.normalColumns) do -- then the default
+      if v.enabled then tinsert(cols, {name = name, pos = v.pos and v.pos or self:GetScrollColIndexFromName(name)}) end
+   end
+   -- Now we know which columns to add, but we need to "translate" any negative or 0 positions
+   for _, v in ipairs(cols) do
+      if v.pos < 0 then v.pos = #cols + v.pos end
+      if v.pos == 0 then v.pos = 1 end
+   end
+   -- Now sort the table to get the actual order:
+   table.sort(cols, function(a,b) return a.pos < b.pos end)
+   printtable(cols)
+   -- Now inject
+   local temp
+   local newCols = {}
+   for pos,v in ipairs(cols) do
+      --wipe(temp)
+      if self.db.columns[v.name] then -- handle EU column
+         temp = self.db.columns[v.name]
+         tinsert(newCols, {name = temp.name, align = temp.align or "CENTER", width = temp.width, DoCellUpdate = temp.func, colName = v.name, sortNext = temp.sortNext})
+      else -- Handle defualt column
+         local i = self:GetScrollColIndexFromName(v.name)
+         temp = self.votingFrame.scrollCols[i]
+         temp.width = self.db.normalColumns[v.name].width
+         tinsert(newCols, temp)
+      end
+
+   end
+   self.votingFrame.scrollCols = {unpack(newCols)}
+
 end
 
 function EU:UpdateColumnWidth(name, width)

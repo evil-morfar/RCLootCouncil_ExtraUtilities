@@ -5,7 +5,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("RCExtraUtilities", "enUS", true)
 if not L then return end
 
-
+L["Advanced"] = true
 L["Artifact Traits"] = true
 L["Bonus"] = true
 L["Bonus Rolls"] = true
@@ -21,6 +21,7 @@ L["ilvl Upg."] = true
 L["ilvl Upgrades"] = true
 L["Legendaries"] = true
 L["Officer Note"] = true
+L["Open Voting Frame"] = true
 L["Other"] = true
 L["Pawn specific options"] = true
 L["RCLootCouncil Columns"] = true
@@ -46,4 +47,12 @@ L["opt_normalcolumn_desc"] = "Enables the %s column from RCLootCouncil."
 L["opt_pawn_warning"] = "You cannot activate Pawn column with having installed Pawn."
 L["opt_ilvldecimals_desc"] = "Check to show a more accurate ilvl in the ilvl column."
 L["opt_specIcon_desc"] = "Enables a column showing the candidates' specialization."
-L["opt_scalesGroup_desc"] = "Here you can change the Pawn scales RCLootCouncil uses. You can edit these scales through Pawn (/pawn). Note the scale weights are forced to be normalized. You should do a /reload if you recently created a new scale."
+L["opt_scalesGroup_desc"] = "Here you can change the Pawn scales RCLootCouncil uses. You can edit these scales through Pawn (/pawn). Note the scale weights are forced to be normalized. You should do a /reload if you recently created a new scale.\n"
+L["opt_advanced_desc"] = "Here you can change the position and width of the columns.\n"..
+                        "Positions accepts both positive (indicating which order a column should come in) and negative (how far from the end) numbers.\n"..
+                        "Click the button to open the voting frame and see your changes right away. When things start to look funny, just do a /reload to refresh all the icons.\n"..
+                        "Note: There's no quarantee of the order if several columns share the same index once calculated. "..
+                        "Just do a /reload to check the permanent changes.\n"
+L["opt_advReset_desc"] = "Resets all positions and widths to default."
+L["opt_position_desc"] = "Change the position of the %s column"
+L["opt_position_usage"] = "Accepts postive and negative numbers only."
