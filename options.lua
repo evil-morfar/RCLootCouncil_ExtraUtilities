@@ -190,8 +190,16 @@ function EU:OptionsTable()
                   set = function() self.db.acceptPawn = not self.db.acceptPawn end,
                   get = function() return self.db.acceptPawn end,
                },
-               scalesGroup = {
+               pawnNormalMode = {
                   order = 2,
+                  name = LE["Score Mode"],
+                  desc = LE["opt_pawnMode_desc"],
+                  type = "toggle",
+                  set = function() self.db.pawnNormalMode = not self.db.pawnNormalMode end,
+                  get = function() return self.db.pawnNormalMode end,
+               },
+               scalesGroup = {
+                  order = 3,
                   type = "group",
                   --inline = true,
                   name = LE["Scales"],
