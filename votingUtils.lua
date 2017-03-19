@@ -50,6 +50,7 @@ function EU:OnInitialize()
             roll =   { enabled = true, name = L.Roll},
          },
          acceptPawn = true, -- Allow Pawn scores sent from candidates
+         pawnNormalMode = false, -- Scoring mode, % or normal
          pawn = { -- Default Pawn scales
             WARRIOR = {
                [71] = '"MrRobot":WARRIOR1', -- Arms
@@ -247,6 +248,18 @@ end
 
 function EU:BuildData()
    local forged,_,sockets, upgrades, legend, ilvl = self:GetEquippedItemData()
+   local spec = (GetSpecializationInfo(GetSpecialization()))
+   local score = {}
+   -- Calculate pawn scores
+   for session, v in ipairs(lootTable) do
+      score[session] = {}
+      score[session].new = EU:GetPawnScore(v.link, addon.playerClass, spec)
+      local item1,item2 = addon:GetPlayersGear(v.link, v.equipLoc)
+      -- Find the lowest score and use that
+      local score1 =  EU:GetPawnScore(item1, addon.playerClass, spec)
+      local score2 =  EU:GetPawnScore(item2, addon.playerClass, spec)
+      score[session].equipped = score1 >= score2 and score1 or score2
+   end
    return {
       forged = forged,
       traits = select(6,C_ArtifactUI.GetEquippedArtifactInfo()),
@@ -255,7 +268,8 @@ function EU:BuildData()
       upgrades = upgrades,
       legend = legend,
       upgradeIlvl = ilvl,
-      specID = (GetSpecializationInfo(GetSpecialization())),
+      specID = spec,
+      pawn = {unpack(score)}
    }
 end
 
@@ -322,6 +336,35 @@ function EU:GetPawnScore(link, class, spec)
    local score = PawnGetSingleValueFromItem(item, self.db.pawn[class][spec])
    return score
 end
+
+-- Calculates a color for the score
+-- Accepts normal or percent mode. Percent mode simply returns red/green for <0 / >=0
+-- while normal is gradient based around the current session's max score
+function EU:GetPawnScoreColor(score, mode)
+   local r,g,b,a = 1,1,1,1
+   if mode == "%" then
+      if score >= 0 then -- Green
+         r,b = 0,0
+      else -- Red
+         g,b = 0,0
+      end
+   elseif mode == "normal" then -- Gradient the top 90 %
+      if lootTable[session] then
+         if not lootTable[session].pawnMax or lootTable[session].pawnMax < score then
+            lootTable[session].pawnMax = score
+         end
+         local val = score / lootTable[session].pawnMax
+         if val > 0.1 then
+            r,g,b = 1-val, val, 0
+         else -- Greyout the 10th percentile
+            r,g,b = 0.7, 0.7, 0.7
+         end
+      end
+   else -- Greyout
+      r,g,b = 0.7,0.7,0.7
+   end
+   return {r,g,b,a}
+end
 ---------------------------------------------
 -- Lib-st UI functions
 ---------------------------------------------
@@ -330,15 +373,20 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
    -- We can calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
    local score
-   -- If we've already calculated it, then just retrieve it from the votingFrame data:
-   if playerData[name] and playerData[name][session] and playerData[name][session].pawn and playerData[name][session].own then
-      score = EU.votingFrame:GetCandidateData(session, name, "pawn")
+   if playerData[name] and playerData[name].pawn and playerData[name].pawn[session] then
+      -- If we've already calculated it, then just retrieve it from the votingFrame data:
+      if playerData[name].pawn[session].own then
+         score = EU.votingFrame:GetCandidateData(session, name, "pawn")
 
-   -- But if we've enabled it, we might have received a Pawn score from the player, in which case we want to display that.
-   -- For this we rely on our own storage:
-   elseif playerData[name] and playerData[name][session] and playerData[name][session].pawn and self.db.acceptPawn then
-      score = playerData[name][session].pawn
-
+      -- But if we've enabled it, we might have received a Pawn score from the player, in which case we want to display that.
+      -- For this we rely on our own storage:
+      elseif self.db.acceptPawn then
+         if EU.db.pawnNormalMode then
+            score = playerData[name].pawn[session].new
+         else
+            -- TODO
+         end
+      end
    -- Or just calculate it ourself
    elseif lootTable[session] and lootTable[session].link then
       local class = EU.votingFrame:GetCandidateData(session, name, "class")
@@ -347,27 +395,20 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
          score = EU:GetPawnScore(lootTable[session].link, class, specID)
          if score then -- Did we actually get it?
             EU.votingFrame:SetCandidateData(session, name, "pawn", score)
-            playerData[name][session] = {pawn = score, own = true}
+            if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
+            playerData[name].pawn[session] = {new = score, own = true}
          end
       end
    end
    data[realrow].cols[column].value = score or 0
    frame.text:SetText(score and addon.round(score,1) or L["None"])
-   if lootTable[session] and score then
-      if not lootTable[session].pawnMax or lootTable[session].pawnMax < score then
-         lootTable[session].pawnMax = score
-      end
-      local val = score / lootTable[session].pawnMax
-      if val > 0.1 then
-         frame.text:SetTextColor(1-val,val,0,1)
-      else -- Greyout the 10th percentile
-         frame.text:SetTextColor(0.7, 0.7,0.7,1)
-      end
-   elseif score then
-      frame.text:SetTextColor(1,1,1,1)
+   local color
+   if EU.db.pawnNormalMode then
+      color = EU:GetPawnScoreColor(score, "normal")
    else
-      frame.text:SetTextColor(0.7, 0.7,0.7,1)
+      color = EU:GetPawnScoreColor(score, "%")
    end
+   frame.text:SetTextColor(unpack(color))
 end
 
 function EU.SetCellForged(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
