@@ -383,14 +383,16 @@ function EU:BuildData()
    local spec = (GetSpecializationInfo(GetSpecialization()))
    local score = {}
    -- Calculate pawn scores
-   for session, v in ipairs(lootTable) do
-      score[session] = {}
-      score[session].new = addon.round(EU:GetPawnScore(v.link, addon.playerClass, spec) or 0,3)
-      local item1,item2 = addon:GetPlayersGear(v.link, v.equipLoc)
-      -- Find the lowest score and use that
-      local score1 =  EU:GetPawnScore(item1, addon.playerClass, spec)
-      local score2 =  EU:GetPawnScore(item2, addon.playerClass, spec)
-      score[session].equipped = addon.round((score2 and score1 < score2) and score2 or score1 or 0, 3)
+   if PawnVersion then
+      for session, v in ipairs(lootTable) do
+         score[session] = {}
+         score[session].new = addon.round(EU:GetPawnScore(v.link, addon.playerClass, spec) or 0,3)
+         local item1,item2 = addon:GetPlayersGear(v.link, v.equipLoc)
+         -- Find the lowest score and use that
+         local score1 =  EU:GetPawnScore(item1, addon.playerClass, spec)
+         local score2 =  EU:GetPawnScore(item2, addon.playerClass, spec)
+         score[session].equipped = addon.round((score2 and score1 < score2) and score2 or score1 or 0, 3)
+      end
    end
    return {
       forged = forged,
