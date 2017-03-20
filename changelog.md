@@ -6,6 +6,13 @@
 * **Column Position**
  * You can now change the positions of all columns.
 
+* **Pawn**
+ * Candidates now, by default, send out their own Pawn scores so councilmen doesn't have to calculate them.
+ * Added percentage upgrade display, which is now used by default.
+ * Both of these additions are changeable in the options menu ("/rc eu").
+
+* **Other**
+ * Now updates the voting frame immediately when data is received.
 
 ### v0.3.0
 ---
