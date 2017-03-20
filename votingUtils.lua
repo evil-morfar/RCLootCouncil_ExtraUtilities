@@ -158,11 +158,19 @@ function EU:OnEnable()
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
 
-
-   -- Potentially remove existing columns
-   for colName, v in pairs(self.db.normalColumns) do
-      if not v.enabled then self:UpdateColumn(colName, false) end
+   -- Translate sortNext into colNames
+   self.sortNext = {}
+   for k,v in ipairs(self.votingFrame.scrollCols) do
+      if v.sortNext then
+         self.sortNext[v.colName] = self.votingFrame.scrollCols[v.sortNext].colName
+      end
    end
+
+   -- -- Potentially remove existing columns
+   -- for colName, v in pairs(self.db.normalColumns) do
+   --    if not v.enabled then self:UpdateColumn(colName, false) end
+   -- end
+
    -- Setup our columns
    self:SetupColumns()
    -- for colName, v in pairs(self.db.columns) do
@@ -277,6 +285,7 @@ function EU:UpdateColumn(name, add)
    if self.votingFrame.frame then -- We might need to recreate it
       self.votingFrame.frame.UpdateSt()
    end
+   self:UpdateSortNext()
 end
 
 --- Completely resets all columns
@@ -314,6 +323,18 @@ function EU:SetupColumns()
 
    end
    self.votingFrame.scrollCols = {unpack(newCols)}
+   self:UpdateSortNext()
+end
+
+--- Updates the sortNext index on scrollCols
+-- Shouldn't be called until all columns have been set up.
+function EU:UpdateSortNext()
+   for index in ipairs(self.votingFrame.scrollCols) do
+      if self.votingFrame.scrollCols[index].sortNext then
+         local exists = self:GetScrollColIndexFromName(self.sortNext[self.votingFrame.scrollCols[index].colName])
+         self.votingFrame.scrollCols[index].sortNext = exists
+      end
+   end
 end
 
 function EU:UpdateColumnWidth(name, width)
@@ -342,6 +363,7 @@ function EU:UpdateColumnPosition(name, pos)
    if pos == 0 then pos = 1 end
    -- Move the column and update
    tinsert(self.votingFrame.scrollCols, pos, tremove(self.votingFrame.scrollCols, i))
+   self:UpdateSortNext()
    if self.votingFrame.frame then -- Frame might not be created
       self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
       self.votingFrame.frame.st:SortData()
