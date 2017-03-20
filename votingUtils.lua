@@ -385,12 +385,12 @@ function EU:BuildData()
    -- Calculate pawn scores
    for session, v in ipairs(lootTable) do
       score[session] = {}
-      score[session].new = EU:GetPawnScore(v.link, addon.playerClass, spec)
+      score[session].new = addon.round(EU:GetPawnScore(v.link, addon.playerClass, spec) or 0,3)
       local item1,item2 = addon:GetPlayersGear(v.link, v.equipLoc)
       -- Find the lowest score and use that
       local score1 =  EU:GetPawnScore(item1, addon.playerClass, spec)
       local score2 =  EU:GetPawnScore(item2, addon.playerClass, spec)
-      score[session].equipped = score1 >= score2 and score1 or score2
+      score[session].equipped = addon.round((score2 and score1 < score2) and score2 or score1 or 0, 3)
    end
    return {
       forged = forged,
@@ -461,7 +461,7 @@ end
 function EU:GetPawnScore(link, class, spec)
    local item = PawnGetItemData(link)
    if not (item and class and spec) then
-      return addon:Debug("Error in :GetPawnScore", link, class, spec)
+      return --addon:Debug("Error in :GetPawnScore", link, item, class, spec)
    end
    -- Normalize
    PawnCommon.Scales[self.db.pawn[class][spec]].NormalizationFactor = 1
@@ -476,10 +476,12 @@ function EU:GetPawnScoreColor(score, mode)
    local r,g,b,a = 1,1,1,1
    if type(score) == "number" then
       if mode == "%" then
-         if score >= 0 then -- Green
+         if score > 0 then -- Green
             r,b = 0,0
-         else -- Red
+         elseif score < 0 then -- Red
             g,b = 0,0
+         else -- Greyout
+            r,g,b = 0.7,0.7,0.7
          end
       elseif mode == "normal" then -- Gradient the top 90 %
          if lootTable[session] then
@@ -509,20 +511,18 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
    -- We can calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
    local score
-   if playerData[name] and playerData[name].pawn and playerData[name].pawn[session] then
-      -- If we've enabled it, we might have received a Pawn score from the player, in which case we want to display that.
+   -- If we've enabled it, we might have received a Pawn score from the player, in which case we want to display that.
+   if EU.db.acceptPawn and playerData[name] and playerData[name].pawn and playerData[name].pawn[session] and playerData[name].pawn[session].new then
       -- For this we rely on our own storage:
-      if self.db.acceptPawn and playerData[name].pawn[session].new then
-         if EU.db.pawnNormalMode then
-            score = playerData[name].pawn[session].new
-         else
-            score = (playerData[name].pawn[session].new / playerData[name].pawn[session].equipped - 1) * 100
-         end
-
-      -- If we've already calculated it, then just retrieve it from the votingFrame data:
-      elseif playerData[name].pawn[session].own then
-         score = EU.votingFrame:GetCandidateData(session, name, "pawn")
+      if EU.db.pawnNormalMode then
+         score = playerData[name].pawn[session].new
+      elseif playerData[name].pawn[session].equipped > 0 and playerData[name].pawn[session].new > 0  then
+         score = (playerData[name].pawn[session].new / playerData[name].pawn[session].equipped - 1) * 100
       end
+
+   -- If we've already calculated it, then just retrieve it from the votingFrame data:
+   elseif playerData[name] and playerData[name].pawn and playerData[name].pawn[session] and playerData[name].pawn[session].own then
+      score = EU.votingFrame:GetCandidateData(session, name, "pawn")
 
    -- Or just calculate it ourself
    elseif lootTable[session] and lootTable[session].link then
