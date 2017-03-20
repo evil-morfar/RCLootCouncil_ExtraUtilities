@@ -243,6 +243,7 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
    ]]
 end
 
+--- Adds or removes a column based on its name in self.db.columns/normalColumns
 function EU:UpdateColumn(name, add)
    addon:Debug("UpdateColumn", name, add)
    local col = self.db.columns[name]
@@ -278,6 +279,7 @@ function EU:UpdateColumn(name, add)
    end
 end
 
+--- Completely resets all columns
 function EU:SetupColumns()
    -- First we need to know the order of the columns, so extract from both tables:
    local cols = {} -- The cols we want to use
@@ -303,7 +305,7 @@ function EU:SetupColumns()
       if self.db.columns[v.name] then -- handle EU column
          temp = self.db.columns[v.name]
          tinsert(newCols, {name = temp.name, align = temp.align or "CENTER", width = temp.width, DoCellUpdate = temp.func, colName = v.name, sortNext = temp.sortNext})
-      else -- Handle defualt column
+      else -- Handle default column
          local i = self:GetScrollColIndexFromName(v.name)
          temp = self.votingFrame.scrollCols[i]
          temp.width = self.db.normalColumns[v.name].width
@@ -312,7 +314,6 @@ function EU:SetupColumns()
 
    end
    self.votingFrame.scrollCols = {unpack(newCols)}
-
 end
 
 function EU:UpdateColumnWidth(name, width)
