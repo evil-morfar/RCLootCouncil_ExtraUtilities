@@ -198,23 +198,156 @@ function EU:OptionsTable()
                },
             },
          },
+         widthOptions = {
+            order = 3,
+            type = "group",
+            name = LE["Advanced"],
+            childGroups = "tab",
+            args = {
+               subGroup = {
+                  order = 1,
+                  type = "group",
+                  name = " ",
+                  inline = true,
+                  args = {
+                     open = {
+                        order = 1,
+                        name = LE["Open Voting Frame"],
+                        type = "execute",
+                        func = function() addon:Test(2) end,
+                     },
+                     reset = {
+                        order = 2,
+                        type = "execute",
+                        name = L["Reset to default"],
+                        desc = LE["opt_advReset_desc"],
+                        confirm = true,
+                        func = function()
+                           for name in pairs(self.db.columns) do
+                              self.db.columns[name].pos = self.defaults.profile.columns[name].pos
+                              self.db.columns[name].width = self.defaults.profile.columns[name].width
+                           end
+                           for name in pairs(self.db.normalColumns) do
+                              self.db.normalColumns[name].width = self.defaults.profile.normalColumns[name].width
+                              self.db.normalColumns[name].pos = nil
+                           end
+                           self:SetupColumns()
+                           if self.votingFrame.frame then
+                              self.votingFrame.frame.UpdateSt()
+                           end
+                        end,
+                     },
+                  },
+               },
+               columns = {
+                  order = -1,
+                  name = LE["Extra Utilities Columns"],
+                  type = "group",
+                  args = {
+                     -- Made further down
+                     desc = {
+                        order = 0,
+                        name = LE["opt_advanced_desc"],
+                        type = "description",
+                        width = "full",
+                     },
+                  },
+               },
+               normalColumns = {
+                  order = -1,
+                  name = LE["RCLootCouncil Columns"],
+                  type = "group",
+                  args = {
+                     -- Made further down
+                  },
+               },
+            },
+         },
       },
    }
    -- Create the normalColumns
    local i = 0
-   for name, v in pairs(self.db.normalColumns) do
+   for _, name in ipairs(self.optionsNormalColOrder) do
+      local entry = self.db.normalColumns[name]
       i = i + 1
-      options.args.general.args.normalColumns.args[name] = {
+      -- Enabledness
+      if type(entry.enabled) == "boolean" then -- Don't allow certain things to be turned off
+         options.args.general.args.normalColumns.args[name] = {
+            order = i,
+            name = entry.name,
+            type = "toggle",
+            desc = format(LE["opt_normalcolumn_desc"], entry.name),
+            set = function()
+               if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+               entry.enabled = not entry.enabled
+               self:UpdateColumn(name, entry.enabled)
+            end,
+            get = function() return entry.enabled end
+         }
+      end
+      -- Position
+      options.args.widthOptions.args.normalColumns.args[name.."Pos"] = {
          order = i,
-         name = v.name,
-         type = "toggle",
-         desc = format(LE["opt_normalcolumn_desc"], v.name),
-         set = function()
-            if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
-            self.db.normalColumns[name].enabled = not self.db.normalColumns[name].enabled
-            self:UpdateColumn(name, self.db.normalColumns[name].enabled)
+         name = entry.name,
+         desc = format(LE["opt_position_desc"], entry.name),
+         type = "input",
+         pattern = "%d",
+         usage = LE["opt_position_usage"],
+         get = function() return tostring(entry.pos or self:GetScrollColIndexFromName(name)) end,
+         set = function(info, txt)
+            entry.pos = tonumber(txt)
+            self:UpdateColumnPosition(name, tonumber(txt))
          end,
-         get = function() return self.db.normalColumns[name].enabled end
+      }
+      -- Width
+      options.args.widthOptions.args.normalColumns.args[name.."Width"] = {
+         order = i + 0.1,
+         name = entry.name,
+         desc = format(LE["column_width_desc"], entry.name),
+         type = "range",
+         width = "double",
+         min = 10,
+         max = 300,
+         step = 1,
+         get = function() return entry.width or self.originalCols[name].width end,
+         set = function(_, val)
+            entry.width = val
+            self:UpdateColumnWidth(name, val)
+         end,
+      }
+   end
+   -- Create width slider for the EU cols
+   i = 0
+   for _, name in ipairs(self.optionsColOrder) do
+      local entry = self.db.columns[name]
+      i = i + 1 * 2
+      options.args.widthOptions.args.columns.args[name.."Pos"] = {
+         order = i,
+         name = name == "spec" and "Spec" or entry.name, -- Special case with spec
+         desc = format(LE["opt_position_desc"], entry.name),
+         type = "input",
+         pattern = "%d",
+         usage = LE["opt_position_usage"],
+         get = function() return tostring(entry.pos) end,
+         set = function(info, txt)
+            entry.pos = tonumber(txt)
+            self:UpdateColumnPosition(name, tonumber(txt))
+         end,
+      }
+      options.args.widthOptions.args.columns.args[name.."Width"] = {
+         order = i + 1,
+         name = name == "spec" and "Spec" or entry.name, -- Special case with spec
+         desc = format(LE["column_width_desc"], entry.name),
+         type = "range",
+         width = "double",
+         min = 10,
+         max = 300,
+         step = 1,
+         get = function() return entry.width end,
+         set = function(_, val)
+            entry.width = val
+            self:UpdateColumnWidth(name, val)
+         end,
       }
    end
 

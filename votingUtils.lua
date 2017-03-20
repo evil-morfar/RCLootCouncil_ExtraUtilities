@@ -47,12 +47,20 @@ function EU:OnInitialize()
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
          },
          normalColumns = {
-            class =  { enabled = true, name = LE.Class},
-            rank =   { enabled = true, name = L.Rank},
-            role =   { enabled = true, name = L.Role},
-            ilvl =   { enabled = true, name = L.ilvl},
-            diff =   { enabled = true, name = L.Diff},
-            roll =   { enabled = true, name = L.Roll},
+            class =  { enabled = true, name = LE.Class, width = 20},
+            rank =   { enabled = true, name = L.Rank, width = 95,},
+            role =   { enabled = true, name = L.Role, width = 55},
+            ilvl =   { enabled = true, name = L.ilvl, width = 45,},
+            diff =   { enabled = true, name = L.Diff, width = 40},
+            roll =   { enabled = true, name = L.Roll, width = 30},
+
+            name =   { enabled = "", name = L.Name, width = 120},
+            response={ enabled = "", name = L.Response, width = 240,},
+            gear1 =  { enabled = "", name = L.g1, width = 20},
+            gear2 =  { enabled = "", name = L.g2, width = 20},
+            votes =  { enabled = "", name = L.Votes, width = 40},
+            vote =   { enabled = "", name = L.Vote, width = 60},
+            note =   { enabled = "", name = L.Notes, width = 40},
          },
          pawn = { -- Default Pawn scales
             WARRIOR = {
@@ -118,10 +126,13 @@ function EU:OnInitialize()
          }
       }
    }
+   -- The order of which the new cols appear in the advanced options
+   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes"}
+   -- The order of which the normal cols appear ANYWHERE in the options
+   self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
    addon.db:RegisterNamespace("ExtraUtilities", self.defaults)
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
-   self:OptionsTable()
    self:Enable()
    addon:CustomChatCmd(self, "OpenOptions", "EU", "eu")
    self:RegisterEvent("BONUS_ROLL_RESULT")
@@ -137,21 +148,35 @@ function EU:OnEnable()
    -- Get the voting frame
    self.votingFrame = addon:GetActiveModule("votingframe")
    -- Crap a copy of the cols
-   self.originalCols = {}
-   for k,v in pairs(self.votingFrame.scrollCols) do
-      self.originalCols[k] = v
-   end
+   self.originalCols = {unpack(self.votingFrame.scrollCols)}
+
+   -- Setup options
+   self:OptionsTable()
 
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
 
-   -- Setup our columns
-   for colName, v in pairs(self.db.columns) do
-      if v.enabled then self:UpdateColumn(colName, true) end
-   end
+
+   -- Potentially remove existing columns
    for colName, v in pairs(self.db.normalColumns) do
       if not v.enabled then self:UpdateColumn(colName, false) end
    end
+   -- Setup our columns
+   self:SetupColumns()
+   -- for colName, v in pairs(self.db.columns) do
+   --    if v.enabled then self:UpdateColumn(colName, true) end
+   -- end
+   -- -- And possibly update their widths and positions acording to our settings
+   -- -- we assume the voting frame isn't created at this point
+   -- for i, v in ipairs(self.votingFrame.scrollCols) do
+   --    if self.db.normalColumns[v.colName] then -- Check if we handle it
+   --       -- and update width
+   --       self.votingFrame.scrollCols[i].width = self.db.normalColumns[v.colName].width
+   --       if self.db.normalColumns[v.colName].pos then
+   --          self:UpdateColumnPosition(v.colName, self.db.normalColumns[v.colName].pos)
+   --       end
+   --    end
+   -- end
 end
 
 function EU:OnDisable()
@@ -215,21 +240,22 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
    ]]
 end
 
-function EU:UpdateColumn(name, bool)
-   addon:Debug("UpdateColumn", name, bool)
+function EU:UpdateColumn(name, add)
+   addon:Debug("UpdateColumn", name, add)
    local col = self.db.columns[name]
    if not col then -- It's one of the default RC columns
       -- find its' data
-      for k,v in pairs(self.originalCols) do
+      for k,v in ipairs(self.originalCols) do
          if v.colName == name then
             -- We got it!
             col = v
             col.pos = k
             col.func = v.DoCellUpdate
+            col.width = self.db.normalColumns[name].width or v.width -- We might have overridden the orignial value
          end
       end
    end
-   if bool then
+   if add then
       local pos = 0
       if col.pos < 0 then
          pos = #self.votingFrame.scrollCols + col.pos -- col.pos is negative, so add it for the desired effect
@@ -246,6 +272,83 @@ function EU:UpdateColumn(name, bool)
    end
    if self.votingFrame.frame then -- We might need to recreate it
       self.votingFrame.frame.UpdateSt()
+   end
+end
+
+function EU:SetupColumns()
+   -- First we need to know the order of the columns, so extract from both tables:
+   local cols = {} -- The cols we want to use
+   for name, v in pairs(self.db.columns) do -- EU cols First
+      if v.enabled then tinsert(cols, {name = name, pos = v.pos}) end
+   end
+   for name, v in pairs(self.db.normalColumns) do -- then the default
+      if v.enabled then tinsert(cols, {name = name, pos = v.pos and v.pos or self:GetScrollColIndexFromName(name)}) end
+   end
+   -- Now we know which columns to add, but we need to "translate" any negative or 0 positions
+   for _, v in ipairs(cols) do
+      if v.pos < 0 then v.pos = #cols + v.pos end
+      if v.pos == 0 then v.pos = 1 end
+   end
+   -- Now sort the table to get the actual order:
+   table.sort(cols, function(a,b) return a.pos < b.pos end)
+   printtable(cols)
+   -- Now inject
+   local temp
+   local newCols = {}
+   for pos,v in ipairs(cols) do
+      --wipe(temp)
+      if self.db.columns[v.name] then -- handle EU column
+         temp = self.db.columns[v.name]
+         tinsert(newCols, {name = temp.name, align = temp.align or "CENTER", width = temp.width, DoCellUpdate = temp.func, colName = v.name, sortNext = temp.sortNext})
+      else -- Handle defualt column
+         local i = self:GetScrollColIndexFromName(v.name)
+         temp = self.votingFrame.scrollCols[i]
+         temp.width = self.db.normalColumns[v.name].width
+         tinsert(newCols, temp)
+      end
+
+   end
+   self.votingFrame.scrollCols = {unpack(newCols)}
+
+end
+
+function EU:UpdateColumnWidth(name, width)
+   -- Our storage has now been updated, but we still need to edit it in the scrollCols table:
+   local i = self:GetScrollColIndexFromName(name)
+   self.votingFrame.scrollCols[i].width = width
+   -- The frame might not yet be created, so check before altering anything
+   if self.votingFrame.frame then
+      -- Update the width of the cols
+      self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
+      -- Now update the frame width
+      self.votingFrame.frame:SetWidth(self.votingFrame.frame.st.frame:GetWidth() + 20)
+   end
+end
+
+function EU:UpdateColumnPosition(name, pos)
+   -- Find the index in scrollCols
+   local i = self:GetScrollColIndexFromName(name)
+   -- We might need to change pos abit
+   if pos < 0 then -- "from the back, i.e. add it"
+      pos = #self.votingFrame.scrollCols + pos
+   end
+   if pos > #self.votingFrame.scrollCols then
+      pos = #self.votingFrame.scrollCols
+   end
+   if pos == 0 then pos = 1 end
+   -- Move the column and update
+   tinsert(self.votingFrame.scrollCols, pos, tremove(self.votingFrame.scrollCols, i))
+   if self.votingFrame.frame then -- Frame might not be created
+      self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
+      self.votingFrame.frame.st:SortData()
+   end
+end
+
+function EU:GetScrollColIndexFromName(name)
+   for i,v in ipairs(self.votingFrame.scrollCols) do
+      if v.colName == name then
+         return i
+      end
    end
 end
 

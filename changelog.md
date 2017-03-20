@@ -1,3 +1,12 @@
+* **Column Width**
+ * You're now able to change the width of all columns.
+ * Located in a separate options tab to keep it organized.
+
+
+* **Column Position**
+ * You can now change the positions of all columns.
+
+
 ### v0.3.0
 ---
 * **Bonus Roll**
