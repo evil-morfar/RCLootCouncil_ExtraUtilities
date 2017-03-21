@@ -145,6 +145,10 @@ function EU:OpenOptions()
    InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
 end
 
+function EU:GetPlayerData()
+   return playerData
+end
+
 function EU:OnEnable()
    addon:DebugLog("Using ExtraUtilities", self.version)
    -- Get the voting frame
@@ -187,6 +191,7 @@ function EU:OnEnable()
    --       end
    --    end
    -- end
+   self:UpdateGuildInfo()
 end
 
 function EU:OnDisable()
@@ -205,10 +210,6 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          if command == "lootTable" then
             -- And grap a copy
             lootTable = unpack(data)
-            --(Re)calculate guild info if we need it
-            if self.db.columns.guildNotes.enabled then
-               self:UpdateGuildInfo()
-            end
             -- Send out our data
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
 
@@ -243,6 +244,8 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
       BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
+      BONUS_ROLL_RESULT (item) (|cffa335ee|Hitem:140804::::::::110:256::5:3:3516:1492:3336:::|h[Star Gate]|h|r) (1) (256) (3) (false)
+      BONUS_ROLL_RESULT (item) (||cffa335ee||Hitem:140851::::::::110:256::3:3:3443:1467:1813:::||h[Nighthold Custodian's Hood]||h||r)
 
       Tests:
       /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "artifact_power", "|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r")
@@ -305,7 +308,6 @@ function EU:SetupColumns()
    end
    -- Now sort the table to get the actual order:
    table.sort(cols, function(a,b) return a.pos < b.pos end)
-   printtable(cols)
    -- Now inject
    local temp
    local newCols = {}
@@ -391,7 +393,7 @@ function EU:BuildData()
          -- Find the lowest score and use that
          local score1 =  EU:GetPawnScore(item1, addon.playerClass, spec)
          local score2 =  EU:GetPawnScore(item2, addon.playerClass, spec)
-         score[session].equipped = addon.round((score2 and score1 < score2) and score2 or score1 or 0, 3)
+         score[session].equipped = addon.round((score2 and score1 > score2) and score2 or score1 or 0, 3)
       end
    end
    return {
@@ -520,6 +522,8 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
          score = playerData[name].pawn[session].new
       elseif playerData[name].pawn[session].equipped > 0 and playerData[name].pawn[session].new > 0  then
          score = (playerData[name].pawn[session].new / playerData[name].pawn[session].equipped - 1) * 100
+      elseif playerData[name].pawn[session].equipped == 0 and playerData[name].pawn[session].new > 0 then -- Major, not realistic, upgrade
+         score = 100
       end
 
    -- If we've already calculated it, then just retrieve it from the votingFrame data:
@@ -536,12 +540,14 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
             if score then
                local item1 = EU.votingFrame:GetCandidateData(session, name, "gear1")
                local item2 = EU.votingFrame:GetCandidateData(session, name, "gear2")
-               local score1 = EU:GetPawnScore(item1, name, specID)
-               local score2 = EU:GetPawnScore(item2, name, specID)
-               if not score2 or score1 >= score2 then
-                  score = (score / score1 - 1) * 100
-               else
-                  score = (score / score2 - 1) * 100
+               local score1 = EU:GetPawnScore(item1, class, specID)
+               local score2 = EU:GetPawnScore(item2, class, specID)
+               if score1 then
+                  if not score2 or score1 < score2 then
+                     score = (score / score1 - 1) * 100
+                  else
+                     score = (score / score2 - 1) * 100
+                  end
                end
             else
                score = nil -- Nullify it
@@ -550,7 +556,7 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
          if score then -- Did we actually get it?
             EU.votingFrame:SetCandidateData(session, name, "pawn", score)
             if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
-            playerData[name].pawn[session] = {new = score, own = true}
+            playerData[name].pawn[session] = {own = true}
          end
       end
    end
@@ -558,7 +564,7 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    if EU.db.pawnNormalMode then
       frame.text:SetText(score and addon.round(score,1) or L["None"])
    else
-      frame.text:SetText(score and addon.round(score,1).."%" or L["None"])
+      frame.text:SetText(score and (addon.round(score,1).."%") or L["None"])
    end
    local color
    if EU.db.pawnNormalMode then
