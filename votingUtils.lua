@@ -463,6 +463,7 @@ end
 -- Returns a Pawn score calculated based on the select scale in the EU options
 -- mathcing the class and spec
 function EU:GetPawnScore(link, class, spec)
+   addon:Debug("GetPawnScore", link, class, spec)
    local item = PawnGetItemData(link)
    if not (item and class and spec) then
       return --addon:Debug("Error in :GetPawnScore", link, item, class, spec)
@@ -548,9 +549,9 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
                   else
                      score = (score / score2 - 1) * 100
                   end
+               else -- We haven't received the candidate's gear yet
+                  score = nil -- Nullify it
                end
-            else
-               score = nil -- Nullify it
             end
          end
          if score then -- Did we actually get it?
