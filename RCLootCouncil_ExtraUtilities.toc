@@ -1,5 +1,5 @@
 ## Author: Potdisc
-## Interface: 70100
+## Interface: 70200
 ## Notes: An RCLootCouncil module for more advanced utilities.
 ## Title: RCLootCouncil - Extra Utilities
 ## Version: 0.4.0
