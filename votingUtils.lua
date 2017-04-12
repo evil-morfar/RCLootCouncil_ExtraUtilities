@@ -159,6 +159,9 @@ function EU:OnEnable()
    -- Setup options
    self:OptionsTable()
 
+   -- Setup InspectHandler
+   self.InspectHandler:SetCallback("InspectReady")
+
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
 
@@ -228,6 +231,9 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
             self.votingFrame:Update()
+
+         elseif command == "candidates" then
+            self:QueueInspects(unpack(data))
          end
       end
    end
@@ -253,6 +259,35 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
       /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "item", "|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r")
 
    ]]
+end
+
+function EU:InspectReady(unit, type, data)
+   if type == "spec" then
+      if data then
+         addon:Debug("Successfully received specID for ", unit, data)
+         if not playerData[unit] then playerData[unit] = {} end
+         playerData[unit].specID = data
+      else
+         -- REVIEW Queue again?
+         addon:Debug("Didn't receive specID for ", unit, "requeuing")
+         self.InspectHandler:InspectUnit(unit, type)
+      end
+   else
+      addon:Debug("EU:InspectReady() - unknown type", type)
+   end
+end
+
+function EU:QueueInspects(candidates)
+   for name in pairs(candidates) do
+      if not (playerData[name] and playerData[name].specID) then
+         -- We're missing at least the specID, so lets try to inspect the candidate
+         if self.InspectHandler:InspectUnit(name, "spec") then
+            addon:Debug("Inspect queued on: ", name)
+         else
+            addon:Debug("Inspect failed on: ", name)
+         end
+      end
+   end
 end
 
 --- Adds or removes a column based on its name in self.db.columns/normalColumns
