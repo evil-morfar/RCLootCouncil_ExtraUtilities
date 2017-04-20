@@ -264,6 +264,11 @@ end
 function EU:InspectReady(unit, type, data)
    if type == "spec" then
       if data then
+         if data == 0 then -- We don't want this
+            addon:Debug("Got spec = 0 for ", unit)
+            --self.InspectHandler:InspectUnit(unit, type)
+            return
+         end
          addon:Debug("Successfully received specID for ", unit, data)
          if not playerData[unit] then playerData[unit] = {} end
          playerData[unit].specID = data
@@ -577,8 +582,8 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
             if score then
                local item1 = EU.votingFrame:GetCandidateData(session, name, "gear1")
                local item2 = EU.votingFrame:GetCandidateData(session, name, "gear2")
-               local score1 = EU:GetPawnScore(item1, class, specID)
-               local score2 = EU:GetPawnScore(item2, class, specID)
+               local score1 = item1 and EU:GetPawnScore(item1, class, specID)
+               local score2 = item2 and EU:GetPawnScore(item2, class, specID)
                if score1 then
                   if not score2 or score1 < score2 then
                      score = (score / score1 - 1) * 100
