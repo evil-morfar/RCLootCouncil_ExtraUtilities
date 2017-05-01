@@ -47,11 +47,17 @@ end
 local function AddToCache(unit, type, data)
    if not cache[unit] then cache[unit] = {} end
    cache[unit][type] = data
+   cache[unit][type].time = time()
 end
 
 local function CheckCache(unit, type)
-   if cache[unit] then
-      return cache[unit][type]
+   if cache[unit] and cache[unit][type] then
+      if time() - cache[unit][type].time > 600 then -- Data outdates after 10 mins
+         cache[unit][type] = nil
+         return nil
+      else
+         return cache[unit][type]
+      end
    end
 end
 
