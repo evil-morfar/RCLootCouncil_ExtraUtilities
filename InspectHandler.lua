@@ -93,8 +93,9 @@ end
 -- The provided callback function (@see InspectHandler:SetCallback()) is called once the data is available
 -- @param unit The unitid to inspect. Function will just return false if invalid
 -- @param inspectType The type of the requested inspect. See top of file for supported types
+-- @param forceUpdate boolean, true to ignore cached data.
 -- @return True if the inspect was pooled i.e. it's currently possible, otherwise false.
-function module.InspectHandler:InspectUnit(unit, inspectType)
+function module.InspectHandler:InspectUnit(unit, inspectType, forceUpdate)
    if not callback then error("InspectHandler:InspectUnit(unit,inspectType): Callback not set.") end
    if not unit or type(unit) ~= "string" then error("InspectHandler:InspectUnit(unit,inspectType): unit is invalid.") end
    inspectType = inspectType and inspectType or "spec" -- default to spec
@@ -105,7 +106,7 @@ function module.InspectHandler:InspectUnit(unit, inspectType)
    if CanInspect(name) and CheckInteractDistance(name, 1) then
       if inspectType == "gear" then
          -- REVIEW: Should we verify the gear is actually here?
-         local check = CheckCache(unit, "gear")
+         local check = not forceUpdate and CheckCache(unit, "gear")
          if check then return FireCallback(check, guid, unit, "gear") end
          addToPool(guid, unit, name, inspectType)
          -- Should be able to pull it immediately
@@ -128,7 +129,7 @@ function module.InspectHandler:InspectUnit(unit, inspectType)
             return true
          end]]
          --tinsert(pool, {unit = unit, type = inspectType})
-         local check = CheckCache(unit, "spec")
+         local check = not forceUpdate and CheckCache(unit, "spec")
          if check then return FireCallback(check, guid, unit, "spec") end
          -- Should be available after "INSPECT_READY" event
          addToPool(guid, unit, name, inspectType)
