@@ -595,11 +595,9 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
                end
             end
          end
-         if score then -- Did we actually get it?
-            EU.votingFrame:SetCandidateData(session, name, "pawn", score)
-            if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
-            playerData[name].pawn[session] = {own = true}
-         end
+         EU.votingFrame:SetCandidateData(session, name, "pawn", score)
+         if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
+         playerData[name].pawn[session] = {own = true}
       end
    end
    data[realrow].cols[column].value = score or 0

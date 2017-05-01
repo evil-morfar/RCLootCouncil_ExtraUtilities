@@ -1,4 +1,4 @@
---[[ InspectHandler.lua by Potdisc
+--[[--- InspectHandler.lua by Potdisc
    Handles inspects based on unitIDs and provides callback when data is available.
 
    Supported inspects:
