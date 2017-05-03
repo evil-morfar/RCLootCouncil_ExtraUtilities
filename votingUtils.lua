@@ -219,7 +219,17 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          elseif command == "extraUtilData" then
             -- We received our EU data
             local name, data = unpack(data)
-            playerData[name] = data
+            for _, v in pairs(data) do
+               playerData[name] = v
+            end
+            if lootTable and playerData[name].bonusReference then
+               if playerData[name].bonusReference ~= lootTable[1].link then
+                  -- The bonus data belongs to an earlier session
+                  playerData[name].bonusType = nil
+                  playerData[name].bonusLink = nil
+                  playerData[name].bonusReference = nil
+               end
+            end
             self.votingFrame:Update()
 
          elseif command == "extraUtilDataRequest" then
@@ -230,6 +240,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             if not playerData[name] then playerData[name] = {} end
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
+            playerData[name].bonusReference = lootTable and lootTable[1].link
             self.votingFrame:Update()
 
          elseif command == "candidates" then
