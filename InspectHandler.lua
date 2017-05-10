@@ -46,17 +46,20 @@ end
 
 local function AddToCache(unit, type, data)
    if not cache[unit] then cache[unit] = {} end
-   cache[unit][type] = data
-   cache[unit][type].time = time()
+   cache[unit][type] = {
+      data = data,
+      time = time()
+   }
 end
 
 local function CheckCache(unit, type)
    if cache[unit] and cache[unit][type] then
       if time() - cache[unit][type].time > 600 then -- Data outdates after 10 mins
+         addon:DebugLog("InspectHandler()", "Outdated:", unit, type) -- TODO Not really needed
          cache[unit][type] = nil
          return nil
       else
-         return cache[unit][type]
+         return cache[unit][type].data
       end
    end
 end
@@ -159,9 +162,13 @@ function module.InspectHandler.INSPECT_READY(event, guid, ...)
          PoolNextInspect(guid)
 
       else
-         -- We're trying to inspect something we're not handling
+         -- We're trying to inspect something we're not handling/prepared for
          isInspecting = false
-         error("InspectHandler: Trying to handle non handled event for type: "..pool[guid].type..", for guid: "..guid)
+         if not pool[guid] then -- Silently log this
+            addon:Debug("InspectHandler() tried to inspect a non pooled guid:", guid)
+         else
+            error("InspectHandler: Trying to handle non handled event for type: "..pool[guid].type..", for guid: "..guid)
+         end
       end
    end
 end
