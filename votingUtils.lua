@@ -219,8 +219,8 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          elseif command == "extraUtilData" then
             -- We received our EU data
             local name, data = unpack(data)
-            for _, v in pairs(data) do
-               playerData[name] = v
+            for k, v in pairs(data) do
+               playerData[name][k] = v
             end
             if lootTable and playerData[name].bonusReference then
                if playerData[name].bonusReference ~= lootTable[1].link then
