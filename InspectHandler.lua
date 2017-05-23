@@ -75,7 +75,9 @@ local function PoolNextInspect(guid)
    removeFromPool(guid)
    if pool.size > 0 then -- We have more
       for k in pairs(pool) do
-         return NotifyInspect(pool[k].name)
+         if k ~= "size" then
+            return NotifyInspect(pool[k].name)
+         end
       end
    else
       isInspecting = false

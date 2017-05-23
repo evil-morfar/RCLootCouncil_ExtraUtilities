@@ -219,6 +219,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          elseif command == "extraUtilData" then
             -- We received our EU data
             local name, data = unpack(data)
+            playerData[name] = playerData[name] or {}
             for k, v in pairs(data) do
                playerData[name][k] = v
             end
