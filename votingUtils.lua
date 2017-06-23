@@ -4,16 +4,7 @@
 -- votingUtils.lua	Adds extra columns for the default voting frame
 
 --[[ TODO:
-            Review these:
-      Adding or removing columns affects the sortnext flags from votingFrame.
-
-      % Pawn upgrade. We should be able to choose between showing the item's score and its percentage upgrade.
-      When calculating other players' score:
-         For percentage we can use % = (newItemScore/currentItemScore - 1) * 100
-      When calculating our own:
-         Check out PawnIsItemAnUpgrade(), has some nice stuff, although it relies on the player's current scores,
-         not the ones we've set in our options. We should probably look into auto importing the current scales into our storage.
-
+            
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
@@ -132,7 +123,7 @@ function EU:OnInitialize()
       }
    }
    -- The order of which the new cols appear in the advanced options
-   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes"}
+   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes","ep","gp","pr"}
    -- The order of which the normal cols appear ANYWHERE in the options
    self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
@@ -754,4 +745,29 @@ function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, 
 		data[realrow].cols[column].value = 0
    end
    frame.noteBtn = f
+end
+
+function EU.SetCellEP(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+    local name = data[realrow].name
+    local ep = EPGP:GetEPGP(name)
+    frame.text:SetText(ep or 0)
+    data[realrow].cols[column].value = ep or 0
+end
+
+function EU.SetCellGP(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+    local name = data[realrow].name
+    local _, gp = EPGP:GetEPGP(name)
+    frame.text:SetText(gp or 0)
+    data[realrow].cols[column].value = gp or 0
+end
+
+function EU.SetCellPR(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+    local name = data[realrow].name
+    local ep, gp = EPGP:GetEPGP(name)
+    local pr = 0
+    if ep and gp then
+        pr = ep / gp
+    end
+    frame.text:SetText(string.format("%.4f", pr))
+    data[realrow].cols[column].value = pr or 0
 end

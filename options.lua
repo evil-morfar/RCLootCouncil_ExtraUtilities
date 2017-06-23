@@ -36,13 +36,7 @@ function EU:OptionsTable()
                         order = 1,
                         type = "toggle",
                         desc = LE["opt_pawn_desc"],
-                        set = function(info, val)
-                           if PawnVersion then
-                              self:ColSet(info,val)
-                           else
-                              addon:Print(LE["opt_pawn_warning"])
-                           end
-                        end,
+                        tristate = true,
                      },
                      traits = {
                         name = LE["Artifact Traits"],
@@ -103,6 +97,27 @@ function EU:OptionsTable()
                         order = 11,
                         type = "toggle",
                         desc = LE["opt_guildNotes_desc"],
+                     },
+                     ep = {
+                        name = "EP",
+                        order = 12,
+                        type = "toggle",
+                        desc = LE["opt_ep_desc"],
+                        tristate = true,
+                     },
+                     gp = {
+                        name = "GP",
+                        order = 13,
+                        type = "toggle",
+                        desc = LE["opt_gp_desc"],
+                        tristate = true,
+                     },
+                     pr = {
+                        name = "PR",
+                        order = 14,
+                        type = "toggle",
+                        desc = LE["opt_pr_desc"],
+                        tristate = true,
                      },
                      header = {
                         order = -1,
@@ -375,10 +390,25 @@ end
 
 function EU:ColSet(info, val)
    if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+   if info.option.tristate then
+      if info[#info] == "pawn" then
+         if not PawnVersion then return addon:Print(info.option.name, LE["opt_addon_requirement"]) end
+      else
+         if not EPGP then return addon:Print("EPGP", LE["opt_addon_requirement"]) end
+      end
+   end
    self.db.columns[info[#info]].enabled = val
    self:UpdateColumn(info[#info], val)
 end
+
 function EU:ColGet(info)
+   if info.option.tristate then
+      if info[#info] == "pawn" then
+         if not PawnVersion then return nil end
+      else
+         if not EPGP then return nil end
+      end
+   end
    return self.db.columns[info[#info]].enabled
 end
 

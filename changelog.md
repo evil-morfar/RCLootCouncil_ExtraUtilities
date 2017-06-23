@@ -4,6 +4,10 @@
   * Specs can now be gathered from inspects, meaning all spec related stuff doesn't require other people to have ExtraUtilities installed.
   * This affects the spec icon and Pawn calculations.
 
+* **EPGP**
+  * Added new columns for EP, GP and PR. Courtesy of safetee.
+  * Note: these columns will only display data as it's stored from EPGP.
+
 * All ExtraUtilities columns now have "response" as their secondary sort.
 
 ##### Bugfixes
