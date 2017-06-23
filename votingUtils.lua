@@ -178,6 +178,9 @@ function EU:OnEnable()
    --    if not v.enabled then self:UpdateColumn(colName, false) end
    -- end
 
+   -- Make sure we handle external requirements
+   self:HandleExternalRequirements()
+
    -- Setup our columns
    self:SetupColumns()
    -- for colName, v in pairs(self.db.columns) do
@@ -304,6 +307,13 @@ function EU:QueueInspects(candidates)
             addon:Debug("Inspect failed on: ", name)
          end
       end
+   end
+end
+
+function EU:HandleExternalRequirements()
+   -- Pawn
+   if self.db.columns.pawn.enabled and not PawnVersion then
+      self.db.columns.pawn.enabled = false
    end
 end
 

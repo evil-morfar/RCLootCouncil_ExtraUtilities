@@ -6,6 +6,7 @@
 
 ##### Bugfixes
 + *Bonusrolls before a session was started would not get displayed.*
++ *Added check for external requirements.*
 
 ### v0.4.1
 ---
