@@ -45,6 +45,9 @@ function EU:OnInitialize()
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
             bonus =           { enabled = false, pos = 100, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
+            ep =              { enabled = false, pos = 13, width = 40, func = self.SetCellEP, name = "EP"},
+            gp =              { enabled = false, pos = 14, width = 40, func = self.SetCellGP, name = "GP"},
+            pr =              { enabled = false, pos = 15, width = 40, func = self.SetCellPR, name = "PR"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class, width = 20},
@@ -315,6 +318,12 @@ function EU:HandleExternalRequirements()
    if self.db.columns.pawn.enabled and not PawnVersion then
       self.db.columns.pawn.enabled = false
    end
+   -- EPGP
+   if not EPGP and (self.db.columns.ep.enabled or self.db.columns.gp.enabled or self.db.columns.pr.enabled) then
+      self.db.columns.ep.enabled = false
+      self.db.columns.gp.enabled = false
+      self.db.columns.pr.enabled = false
+   end
 end
 
 --- Adds or removes a column based on its name in self.db.columns/normalColumns
@@ -378,7 +387,7 @@ function EU:SetupColumns()
       --wipe(temp)
       if self.db.columns[v.name] then -- handle EU column
          temp = self.db.columns[v.name]
-         tinsert(newCols, {name = temp.name, align = temp.align or "CENTER", width = temp.width, DoCellUpdate = temp.func, colName = v.name, sortNext = temp.sortNext})
+         tinsert(newCols, {name = temp.name, align = temp.align or "CENTER", width = temp.width, DoCellUpdate = temp.func, colName = v.name, sortNext = temp.sortNext or self:GetScrollColIndexFromName("reponse")})
       else -- Handle default column
          local i = self:GetScrollColIndexFromName(v.name)
          temp = self.votingFrame.scrollCols[i]

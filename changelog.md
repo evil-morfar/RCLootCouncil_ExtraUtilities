@@ -4,6 +4,8 @@
   * Specs can now be gathered from inspects, meaning all spec related stuff doesn't require other people to have ExtraUtilities installed.
   * This affects the spec icon and Pawn calculations.
 
+* All ExtraUtilities columns now have "response" as their secondary sort.
+
 ##### Bugfixes
 + *Bonusrolls before a session was started would not get displayed.*
 + *Added check for external requirements.*
