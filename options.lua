@@ -92,32 +92,32 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_bonusRoll_desc"],
                      },
-                     guildNotes = {
-                        name = LE["Guild Notes"],
-                        order = 11,
-                        type = "toggle",
-                        desc = LE["opt_guildNotes_desc"],
-                     },
                      ep = {
                         name = "EP",
-                        order = 12,
+                        order = 11,
                         type = "toggle",
                         desc = LE["opt_ep_desc"],
                         tristate = true,
                      },
                      gp = {
                         name = "GP",
-                        order = 13,
+                        order = 12,
                         type = "toggle",
                         desc = LE["opt_gp_desc"],
                         tristate = true,
                      },
                      pr = {
                         name = "PR",
-                        order = 14,
+                        order = 13,
                         type = "toggle",
                         desc = LE["opt_pr_desc"],
                         tristate = true,
+                     },
+                     guildNotes = {
+                        name = LE["Guild Notes"],
+                        order = 14,
+                        type = "toggle",
+                        desc = LE["opt_guildNotes_desc"],
                      },
                      header = {
                         order = -1,
@@ -397,7 +397,8 @@ function EU:ColSet(info, val)
          if not EPGP then return addon:Print("EPGP", LE["opt_addon_requirement"]) end
       end
    end
-   self.db.columns[info[#info]].enabled = val
+   -- v0.5.0: we can't use val anymore as we have tristates, so just invert stuff
+   self.db.columns[info[#info]].enabled = not self.db.columns[info[#info]].enabled
    self:UpdateColumn(info[#info], val)
 end
 
