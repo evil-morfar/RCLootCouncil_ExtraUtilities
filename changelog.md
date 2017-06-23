@@ -1,3 +1,13 @@
+### v0.5.0
+---
+* **Spec**
+  * Specs can now be gathered from inspects, meaning all spec related stuff doesn't require other people to have ExtraUtilities installed.
+  * This affects the spec icon and Pawn calculations.
+
+##### Bugfixes
++ *Bonusrolls before a session was started would not get displayed.*
++ *Added check for external requirements.*
+
 ### v0.4.1
 ---
 ##### Bugfixes

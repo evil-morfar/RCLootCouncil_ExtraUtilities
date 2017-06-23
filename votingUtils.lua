@@ -159,6 +159,9 @@ function EU:OnEnable()
    -- Setup options
    self:OptionsTable()
 
+   -- Setup InspectHandler
+   self.InspectHandler:SetCallback("InspectReady")
+
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
 
@@ -174,6 +177,9 @@ function EU:OnEnable()
    -- for colName, v in pairs(self.db.normalColumns) do
    --    if not v.enabled then self:UpdateColumn(colName, false) end
    -- end
+
+   -- Make sure we handle external requirements
+   self:HandleExternalRequirements()
 
    -- Setup our columns
    self:SetupColumns()
@@ -216,7 +222,18 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          elseif command == "extraUtilData" then
             -- We received our EU data
             local name, data = unpack(data)
-            playerData[name] = data
+            playerData[name] = playerData[name] or {}
+            for k, v in pairs(data) do
+               playerData[name][k] = v
+            end
+            if lootTable and playerData[name].bonusReference then
+               if playerData[name].bonusReference ~= lootTable[1].link then
+                  -- The bonus data belongs to an earlier session
+                  playerData[name].bonusType = nil
+                  playerData[name].bonusLink = nil
+                  playerData[name].bonusReference = nil
+               end
+            end
             self.votingFrame:Update()
 
          elseif command == "extraUtilDataRequest" then
@@ -227,7 +244,11 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             if not playerData[name] then playerData[name] = {} end
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
+            playerData[name].bonusReference = lootTable and lootTable[1].link
             self.votingFrame:Update()
+
+         elseif command == "candidates" then
+            self:QueueInspects(unpack(data))
          end
       end
    end
@@ -253,6 +274,47 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
       /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "item", "|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r")
 
    ]]
+end
+
+function EU:InspectReady(unit, type, data)
+   if type == "spec" then
+      if data then
+         if data == 0 then -- We don't want this
+            addon:Debug("Got spec = 0 for ", unit)
+            --self.InspectHandler:InspectUnit(unit, type)
+            return
+         end
+         addon:Debug("Successfully received specID for ", unit, data)
+         if not playerData[unit] then playerData[unit] = {} end
+         playerData[unit].specID = data
+      else
+         -- REVIEW Queue again?
+         addon:Debug("Didn't receive specID for ", unit, "requeuing")
+         self.InspectHandler:InspectUnit(unit, type)
+      end
+   else
+      addon:Debug("EU:InspectReady() - unknown type", type)
+   end
+end
+
+function EU:QueueInspects(candidates)
+   for name in pairs(candidates) do
+      if not (playerData[name] and playerData[name].specID) then
+         -- We're missing at least the specID, so lets try to inspect the candidate
+         if self.InspectHandler:InspectUnit(name, "spec") then
+            addon:Debug("Inspect queued on: ", name)
+         else
+            addon:Debug("Inspect failed on: ", name)
+         end
+      end
+   end
+end
+
+function EU:HandleExternalRequirements()
+   -- Pawn
+   if self.db.columns.pawn.enabled and not PawnVersion then
+      self.db.columns.pawn.enabled = false
+   end
 end
 
 --- Adds or removes a column based on its name in self.db.columns/normalColumns
@@ -542,8 +604,8 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
             if score then
                local item1 = EU.votingFrame:GetCandidateData(session, name, "gear1")
                local item2 = EU.votingFrame:GetCandidateData(session, name, "gear2")
-               local score1 = EU:GetPawnScore(item1, class, specID)
-               local score2 = EU:GetPawnScore(item2, class, specID)
+               local score1 = item1 and EU:GetPawnScore(item1, class, specID)
+               local score2 = item2 and EU:GetPawnScore(item2, class, specID)
                if score1 then
                   if not score2 or score1 < score2 then
                      score = (score / score1 - 1) * 100
@@ -555,11 +617,9 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
                end
             end
          end
-         if score then -- Did we actually get it?
-            EU.votingFrame:SetCandidateData(session, name, "pawn", score)
-            if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
-            playerData[name].pawn[session] = {own = true}
-         end
+         EU.votingFrame:SetCandidateData(session, name, "pawn", score)
+         if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
+         playerData[name].pawn[session] = {own = true}
       end
    end
    data[realrow].cols[column].value = score or 0
