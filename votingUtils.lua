@@ -130,7 +130,7 @@ function EU:OnInitialize()
    addon.db:RegisterNamespace("ExtraUtilities", self.defaults)
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
    self:Enable()
-   addon:CustomChatCmd(self, "OpenOptions", "EU", "eu")
+   addon:CustomChatCmd(self, "OpenOptions","- eu - Opens the ExtraUtilities options window", "EU", "eu")
    self:RegisterEvent("BONUS_ROLL_RESULT")
 end
 
@@ -198,6 +198,7 @@ function EU:OnDisable()
    -- Reset cols
    self.votingFrame.scrollCols = self.originalCols
    self:UnregisterAllComm()
+   self:UnregisterAllEvents()
 end
 
 function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
