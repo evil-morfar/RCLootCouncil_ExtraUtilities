@@ -1,3 +1,9 @@
+### v0.6.0
+---
+* **RC Score**
+ * A performance score!.
+
+ 
 ### v0.5.0
 ---
 * **Spec**
