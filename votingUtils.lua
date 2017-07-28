@@ -240,7 +240,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             if not playerData[name] then playerData[name] = {} end
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
-            playerData[name].bonusReference = lootTable and lootTable[1].link
+            playerData[name].bonusReference = lootTable and lootTable[1] and lootTable[1].link
             self.votingFrame:Update()
 
          elseif command == "candidates" then
