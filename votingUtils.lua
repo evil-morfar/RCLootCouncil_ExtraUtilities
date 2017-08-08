@@ -4,6 +4,7 @@
 -- votingUtils.lua	Adds extra columns for the default voting frame
 
 --[[ TODO:
+   - Bonus rolls should be saved in loot history
 
 ]]
 
@@ -222,13 +223,11 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             for k, v in pairs(data) do
                playerData[name][k] = v
             end
-            if lootTable and playerData[name].bonusReference then
-               if playerData[name].bonusReference ~= lootTable[1].link then
-                  -- The bonus data belongs to an earlier session
-                  playerData[name].bonusType = nil
-                  playerData[name].bonusLink = nil
-                  playerData[name].bonusReference = nil
-               end
+            if playerData[name].bonusReference and playerData[name].bonusReference ~= addon.bossName then
+               -- The bonus data belongs to an earlier session
+               playerData[name].bonusType = nil
+               playerData[name].bonusLink = nil
+               playerData[name].bonusReference = nil
             end
             self.votingFrame:Update()
 
@@ -240,7 +239,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             if not playerData[name] then playerData[name] = {} end
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
-            playerData[name].bonusReference = lootTable and lootTable[1] and lootTable[1].link
+            playerData[name].bonusReference = addon.bossName
             self.votingFrame:Update()
 
          elseif command == "candidates" then

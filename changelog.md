@@ -3,7 +3,9 @@
 * **RC Score**
  * A performance score!.
 
- 
+##### Bugfixes
++ *Fixed error related to bonus rolls (#3).*
+
 ### v0.5.0
 ---
 * **Spec**
