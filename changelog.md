@@ -1,7 +1,6 @@
-### v0.6.0
+### v0.5.1
 ---
-* **RC Score**
- * A performance score!.
+* Updated for future RCLootCouncil changes.
 
 ##### Bugfixes
 + *Fixed error related to bonus rolls (#3).*
