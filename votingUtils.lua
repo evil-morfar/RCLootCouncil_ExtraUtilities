@@ -323,9 +323,9 @@ function EU:HandleExternalRequirements()
       self.db.columns.pr.enabled = false
    end
    -- RCScore
-   if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
-      self.db.columns.rcscore.enabled = false
-   end
+   -- if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
+   --    self.db.columns.rcscore.enabled = false
+   -- end
 end
 
 --- Adds or removes a column based on its name in self.db.columns/normalColumns
