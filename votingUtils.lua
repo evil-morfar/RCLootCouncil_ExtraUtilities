@@ -40,7 +40,7 @@ function EU:OnInitialize()
             ep =              { enabled = false, pos = 13, width = 40, func = self.SetCellEP, name = "EP"},
             gp =              { enabled = false, pos = 14, width = 40, func = self.SetCellGP, name = "GP"},
             pr =              { enabled = false, pos = 15, width = 40, func = self.SetCellPR, name = "PR"},
-         --   rcscore =         { enabked = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
+            rcscore =         { enabked = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class, width = 20},
@@ -125,7 +125,7 @@ function EU:OnInitialize()
       }
    }
    -- The order of which the new cols appear in the advanced options
-   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","ep","gp","pr","guildNotes",}-- "rcscore"}
+   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","ep","gp","pr","guildNotes","rcscore"}
    -- The order of which the normal cols appear ANYWHERE in the options
    self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
@@ -323,9 +323,9 @@ function EU:HandleExternalRequirements()
       self.db.columns.pr.enabled = false
    end
    -- RCScore
-   -- if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
-   --    self.db.columns.rcscore.enabled = false
-   -- end
+   if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
+      self.db.columns.rcscore.enabled = false
+   end
 end
 
 --- Adds or removes a column based on its name in self.db.columns/normalColumns
