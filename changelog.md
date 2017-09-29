@@ -1,3 +1,8 @@
+### v0.6.0
+---
+* **EPGP**
+* EPGP support has been removed. Use [RCLootCouncil - EPGP](https://mods.curse.com/addons/wow/269161-rclootcouncil-epgp) for that.
+
 ### v0.5.2
 ---
 * Updated .toc for 7.3.

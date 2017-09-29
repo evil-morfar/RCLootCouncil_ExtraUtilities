@@ -56,9 +56,6 @@ L["opt_scalesGroup_desc"] = "Here you can change the Pawn scales RCLootCouncil u
 L["opt_advanced_desc"] = "Here you can change the position and width of the columns.\nPositions accepts both positive (indicating which order a column should come in) and negative (how far from the end) numbers.\nClick the button to open the voting frame and see your changes right away. When things start to look funny, just do a /reload to refresh all the icons.\nNote: There's no quarantee of the order if several columns share the same index once calculated. Just do a /reload to check the permanent changes.\n"
 L["opt_advReset_desc"] = "Resets all positions and widths to default."
 L["opt_position_desc"] = "Change the position of the %s column"
-L["opt_ep_desc"] = "Enables a column showing the candidates EP values as gathered from EPGP."
-L["opt_gp_desc"] = "Enables a column showing the candidate's GP values as gathered from EPGP."
-L["opt_pr_desc"] = "Enables a column showing PR values, calculated as EP / GP."
 
 L["opt_position_usage"] = "Accepts postive and negative numbers only."
 L["opt_addon_requirement"] = "needs to be installed and enabled to use this option."

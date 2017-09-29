@@ -39,9 +39,6 @@ function EU:OnInitialize()
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
             bonus =           { enabled = false, pos = 100, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
-            ep =              { enabled = false, pos = 13, width = 40, func = self.SetCellEP, name = "EP"},
-            gp =              { enabled = false, pos = 14, width = 40, func = self.SetCellGP, name = "GP"},
-            pr =              { enabled = false, pos = 15, width = 40, func = self.SetCellPR, name = "PR"},
             rcscore =         { enabked = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
          },
          normalColumns = {
@@ -127,7 +124,7 @@ function EU:OnInitialize()
       }
    }
    -- The order of which the new cols appear in the advanced options
-   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","ep","gp","pr","guildNotes","rcscore"}
+   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes","rcscore"}
    -- The order of which the normal cols appear ANYWHERE in the options
    self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
@@ -317,12 +314,6 @@ function EU:HandleExternalRequirements()
    -- Pawn
    if self.db.columns.pawn.enabled and not PawnVersion then
       self.db.columns.pawn.enabled = false
-   end
-   -- EPGP
-   if not EPGP and (self.db.columns.ep.enabled or self.db.columns.gp.enabled or self.db.columns.pr.enabled) then
-      self.db.columns.ep.enabled = false
-      self.db.columns.gp.enabled = false
-      self.db.columns.pr.enabled = false
    end
    -- RCScore
    if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
@@ -773,31 +764,6 @@ function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, 
 		data[realrow].cols[column].value = 0
    end
    frame.noteBtn = f
-end
-
-function EU.SetCellEP(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
-    local name = data[realrow].name
-    local ep = EPGP:GetEPGP(name)
-    frame.text:SetText(ep or 0)
-    data[realrow].cols[column].value = ep or 0
-end
-
-function EU.SetCellGP(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
-    local name = data[realrow].name
-    local _, gp = EPGP:GetEPGP(name)
-    frame.text:SetText(gp or 0)
-    data[realrow].cols[column].value = gp or 0
-end
-
-function EU.SetCellPR(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
-    local name = data[realrow].name
-    local ep, gp = EPGP:GetEPGP(name)
-    local pr = 0
-    if ep and gp then
-        pr = ep / gp
-    end
-    frame.text:SetText(string.format("%.4f", pr))
-    data[realrow].cols[column].value = pr or 0
 end
 
 -- Max percentile: (MOD(ilvl,893)/3+1)*101068+614274
