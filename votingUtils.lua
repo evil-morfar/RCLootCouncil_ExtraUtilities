@@ -18,6 +18,8 @@ local playerData = {} -- Table containing all EU data received, format playerDat
 local lootTable = {}
 local session = 0
 local guildInfo = {}
+local debugPawn = false
+local debugRCScore = false
 
 function EU:OnInitialize()
    self:RegisterComm("RCLootCouncil")
@@ -552,7 +554,7 @@ local colorGradient = {
 -- Returns a Pawn score calculated based on the select scale in the EU options
 -- mathcing the class and spec
 function EU:GetPawnScore(link, class, spec)
-   addon:Debug("GetPawnScore", link, class, spec)
+   if debugPawn then addon:Debug("GetPawnScore", link, class, spec) end
    local item = PawnGetItemData(link)
    if not (item and class and spec) then
       return --addon:Debug("Error in :GetPawnScore", link, item, class, spec)
@@ -866,7 +868,7 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
       if not score then -- Calculate it
          local role = EU.votingFrame:GetCandidateData(session, name, "role")
          local dps = getDPSFromLastFight(role, name)
-         addon:Debug("Role, dps:", role, dps)
+         if debugRCScore then addon:Debug("Role, dps:", role, dps) end
          if role == "DAMAGER" or role == "NONE" then
             score = getDPSRCScore2(dps, ilvl)
          elseif role == "TANK" then
@@ -876,7 +878,7 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
          else
             return addon:DebugLog("No valid role in SetCellRCScore", name, role)
          end
-         addon:Debug("RCScore:", name, score)
+         if debugRCScore then addon:Debug("RCScore:", name, score) end
          -- Store the score
          EU.votingFrame:SetCandidateData(session, name, "RCScore", score)
       end
