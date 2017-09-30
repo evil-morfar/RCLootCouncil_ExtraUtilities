@@ -171,6 +171,14 @@ function EU:OptionsTable()
                         get = function() return addon_db.iLvlDecimal end,
                         set = function(_, val) addon_db.iLvlDecimal = val end,
                      },
+                     bonusRollsHistory = {
+                        name = "Bonus Rolls to History",
+                        order = 2,
+                        type = "toggle",
+                        desc = "Check to save all bonus rolls to the Loot History. Only works if you're the Master Looter",
+                        get = function() return self.db.bonusRollsHistory end,
+                        set = function() self.db.bonusRollsHistory = not self.db.bonusRollsHistory end,
+                     },
                   },
                }
             },
@@ -314,6 +322,7 @@ function EU:OptionsTable()
          set = function(info, txt)
             entry.pos = tonumber(txt)
             self:UpdateColumnPosition(name, tonumber(txt))
+            self:StripTextures()
          end,
       }
       -- Width
@@ -330,6 +339,7 @@ function EU:OptionsTable()
          set = function(_, val)
             entry.width = val
             self:UpdateColumnWidth(name, val)
+            self:StripTextures()
          end,
       }
    end
@@ -349,6 +359,7 @@ function EU:OptionsTable()
          set = function(info, txt)
             entry.pos = tonumber(txt)
             self:UpdateColumnPosition(name, tonumber(txt))
+            self:StripTextures()
          end,
       }
       options.args.widthOptions.args.columns.args[name.."Width"] = {
@@ -364,6 +375,7 @@ function EU:OptionsTable()
          set = function(_, val)
             entry.width = val
             self:UpdateColumnWidth(name, val)
+            self:StripTextures()
          end,
       }
    end

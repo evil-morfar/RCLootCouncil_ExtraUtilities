@@ -53,7 +53,7 @@ L["opt_pawn_warning"] = "You cannot activate Pawn column with having installed P
 L["opt_ilvldecimals_desc"] = "Check to show a more accurate ilvl in the ilvl column."
 L["opt_specIcon_desc"] = "Enables a column showing a candidate's specialization."
 L["opt_scalesGroup_desc"] = "Here you can change the Pawn scales RCLootCouncil uses. You can edit these scales through Pawn (/pawn). Note the scale weights are forced to be normalized. You should do a /reload if you recently created a new scale.\n"
-L["opt_advanced_desc"] = "Here you can change the position and width of the columns.\nPositions accepts both positive (indicating which order a column should come in) and negative (how far from the end) numbers.\nClick the button to open the voting frame and see your changes right away. When things start to look funny, just do a /reload to refresh all the icons.\nNote: There's no quarantee of the order if several columns share the same index once calculated. Just do a /reload to check the permanent changes.\n"
+L["opt_advanced_desc"] = "Here you can change the position and width of the columns.\nPositions accepts both positive (indicating which order a column should come in) and negative (how far from the end) numbers.\nClick the button to open the voting frame and see your changes right away.\nNote: There's no guarantee of the order if several columns share the same index once calculated. Do a /reload to check the permanent changes, or enter exact values to be certain.\n"
 L["opt_advReset_desc"] = "Resets all positions and widths to default."
 L["opt_position_desc"] = "Change the position of the %s column"
 

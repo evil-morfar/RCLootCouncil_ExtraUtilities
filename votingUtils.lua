@@ -4,8 +4,6 @@
 -- votingUtils.lua	Adds extra columns for the default voting frame
 
 --[[ TODO:
-   - Bonus rolls should be saved in loot history
-
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
@@ -24,7 +22,6 @@ local debugRCScore = false
 function EU:OnInitialize()
    self:RegisterComm("RCLootCouncil")
    self.version = GetAddOnMetadata("RCLootCouncil_ExtraUtilities", "Version")
-
    self.defaults = {
       profile = {
          columns = {
@@ -57,6 +54,7 @@ function EU:OnInitialize()
             vote =   { enabled = "", name = L.Vote, width = 60},
             note =   { enabled = "", name = L.Notes, width = 40},
          },
+         bonusRollsHistory = false,
          acceptPawn = true, -- Allow Pawn scores sent from candidates
          pawnNormalMode = false, -- Scoring mode, % or normal
          pawn = { -- Default Pawn scales
@@ -152,6 +150,7 @@ end
 
 function EU:OnEnable()
    addon:DebugLog("Using ExtraUtilities", self.version)
+   addon.db.profile.responses["BONUSROLL"] = { color = {1,0.8,0,1},	sort = 510,		text = LE["Bonus Rolls"],}
    -- Get the voting frame
    self.votingFrame = addon:GetActiveModule("votingframe")
    -- Crap a copy of the cols
@@ -246,6 +245,9 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             playerData[name].bonusLink = link
             playerData[name].bonusReference = addon.bossName
             self.votingFrame:Update()
+            if self.db.bonusRollsHistory and addon.isMasterLooter and type == "item" then
+               addon:GetActiveModule("masterlooter"):TrackAndLogLoot(name,link,"BONUSROLL", addon.bossName,0)
+            end
 
          elseif command == "candidates" then
             self:QueueInspects(unpack(data))
@@ -254,7 +256,6 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
    end
 end
 
--- TODO
 function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantity, rewardSpecID)
    addon:SendCommand("group", "EUBonusRoll", addon.playerName, rewardType, rewardLink)
    --addon:Debug("BONUS_ROLL_RESULT", rewardType, rewardLink, rewardQuantity, rewardSpecID)
@@ -316,9 +317,9 @@ function EU:HandleExternalRequirements()
       self.db.columns.pawn.enabled = false
    end
    -- RCScore
-   if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
-      self.db.columns.rcscore.enabled = false
-   end
+   -- if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
+   --    self.db.columns.rcscore.enabled = false
+   -- end
 end
 
 --- Adds or removes a column based on its name in self.db.columns/normalColumns
@@ -525,6 +526,21 @@ function EU:UpdateGuildInfo()
       local name, _, _, _, _, _, note, officernote = GetGuildRosterInfo(i)
       guildInfo[name] = {note, officernote}
    end
+end
+
+function EU:StripTextures()
+   if not self.votingFrame.frame:IsVisible() then return end
+   for k,v in ipairs(self.votingFrame.scrollCols) do
+      for row = 1, self.votingFrame.frame.st.displayRows do
+         local frame = self.votingFrame.frame.st.rows[row].cols[k]
+         frame:SetNormalTexture("")
+         frame.text:SetTextColor(1,1,1,1)
+         if frame.voteBtn then frame.voteBtn:Hide(); frame.voteBtn = nil end
+         if frame.noteBtn then frame.noteBtn:Hide(); frame.noteBtn = nil end
+         if frame.bonusBtn then frame.bonusBtn:Hide(); frame.bonusBtn = nil end
+      end
+   end
+   self.votingFrame.frame.st:Refresh()
 end
 
 -- A 10 value gradient going from 1-3: red ->4-7: yellow -> 8-10: green
