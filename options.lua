@@ -172,10 +172,10 @@ function EU:OptionsTable()
                         set = function(_, val) addon_db.iLvlDecimal = val end,
                      },
                      bonusRollsHistory = {
-                        name = "Bonus Rolls to History",
+                        name = LE["Bonus Rolls to History"],
                         order = 2,
                         type = "toggle",
-                        desc = "Check to save all bonus rolls to the Loot History. Only works if you're the Master Looter",
+                        desc = LE["opt_bonusRollHistory_desc"],
                         get = function() return self.db.bonusRollsHistory end,
                         set = function() self.db.bonusRollsHistory = not self.db.bonusRollsHistory end,
                      },

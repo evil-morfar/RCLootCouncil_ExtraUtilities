@@ -10,6 +10,7 @@ L["Accept Pawn"] = true
 L["Artifact Traits"] = true
 L["Bonus"] = true
 L["Bonus Rolls"] = true
+L["Bonus Rolls to History"] = true
 L["Class"] = true
 L["column_width_desc"] = "Chose the width of the %s column."
 L["extra_util_desc"] = "RCLootCouncil - Extra Utilities |cFF87CEFAv %s |r.\nNote: these settings are not shared with the group, so each council member can have different settings."
@@ -56,6 +57,6 @@ L["opt_scalesGroup_desc"] = "Here you can change the Pawn scales RCLootCouncil u
 L["opt_advanced_desc"] = "Here you can change the position and width of the columns.\nPositions accepts both positive (indicating which order a column should come in) and negative (how far from the end) numbers.\nClick the button to open the voting frame and see your changes right away.\nNote: There's no guarantee of the order if several columns share the same index once calculated. Do a /reload to check the permanent changes, or enter exact values to be certain.\n"
 L["opt_advReset_desc"] = "Resets all positions and widths to default."
 L["opt_position_desc"] = "Change the position of the %s column"
-
 L["opt_position_usage"] = "Accepts postive and negative numbers only."
 L["opt_addon_requirement"] = "needs to be installed and enabled to use this option."
+L["opt_bonusRollHistory_desc"] = "Check to save all item bonus rolls to the Loot History. Only works if you're the Master Looter"
