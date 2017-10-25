@@ -42,13 +42,13 @@ function EU:OnInitialize()
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class, width = 20},
-            rank =   { enabled = true, name = L.Rank, width = 95,},
-            role =   { enabled = true, name = L.Role, width = 55},
-            ilvl =   { enabled = true, name = L.ilvl, width = 45,},
+            rank =   { enabled = true, name = _G.RANK, width = 95,},
+            role =   { enabled = true, name = _G.ROLE, width = 55},
+            ilvl =   { enabled = true, name = _G.ITEM_LEVEL_ABBR, width = 45,},
             diff =   { enabled = true, name = L.Diff, width = 40},
-            roll =   { enabled = true, name = L.Roll, width = 30},
+            roll =   { enabled = true, name = _G.ROLL, width = 30},
 
-            name =   { enabled = "", name = L.Name, width = 120},
+            name =   { enabled = "", name = _G.NAME, width = 120},
             response={ enabled = "", name = L.Response, width = 240,},
             gear1 =  { enabled = "", name = L.g1, width = 20},
             gear2 =  { enabled = "", name = L.g2, width = 20},
