@@ -867,8 +867,6 @@ function EU.getDPSFromLastFight(role, name)
          addon:Debug("No last fight for Skada for ",name)
       end
       if debugRCScore then addon:Debug("Skada:",dps) end
-   else
-      addon:Debug("No Damage meter installed?!")
    end
    return dps
 end
