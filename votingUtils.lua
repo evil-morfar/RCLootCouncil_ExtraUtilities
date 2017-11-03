@@ -661,9 +661,9 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    end
    data[realrow].cols[column].value = score or 0
    if EU.db.pawnNormalMode then
-      frame.text:SetText(score and addon.round(score,1) or L["None"])
+      frame.text:SetText(score and addon.round(score,1) or _G.NONE)
    else
-      frame.text:SetText(score and (addon.round(score,1).."%") or L["None"])
+      frame.text:SetText(score and (addon.round(score,1).."%") or _G.NONE)
    end
    local color
    if EU.db.pawnNormalMode then
@@ -773,7 +773,7 @@ function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, 
 	f:SetPoint("CENTER", frame, "CENTER")
    if guildInfo and guildInfo[name] then
       f:SetNormalTexture("Interface/BUTTONS/UI-GuildButton-PublicNote-Up.png")
-		f:SetScript("OnEnter", function() addon:CreateTooltip(L["Note"], guildInfo[name][1], " ", LE["Officer Note"], guildInfo[name][2])	end)
+		f:SetScript("OnEnter", function() addon:CreateTooltip(_G.LABEL_NOTE, guildInfo[name][1], " ", LE["Officer Note"], guildInfo[name][2])	end)
 		f:SetScript("OnLeave", function() addon:HideTooltip() end)
 		data[realrow].cols[column].value = 1 -- Set value for sorting compability
    else
