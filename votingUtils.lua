@@ -132,12 +132,9 @@ function EU:OnInitialize()
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
    self:Enable()
 
-   -- This changes in rclc v2.5
-   if addon:VersionCompare(addon.version, "2.5.0") then
-      addon:CustomChatCmd(self, "OpenOptions", "EU", "eu")
-   else
-      addon:CustomChatCmd(self, "OpenOptions","- eu - Opens the ExtraUtilities options window", "EU", "eu")
-   end
+   -- Setup chat command for options
+   addon:CustomChatCmd(self, "OpenOptions","- eu - Opens the ExtraUtilities options window", "EU", "eu")
+
    self:RegisterEvent("BONUS_ROLL_RESULT")
 end
 
