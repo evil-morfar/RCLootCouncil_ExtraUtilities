@@ -168,31 +168,11 @@ function EU:OnEnable()
          self.sortNext[v.colName] = self.votingFrame.scrollCols[v.sortNext].colName
       end
    end
-
-   -- -- Potentially remove existing columns
-   -- for colName, v in pairs(self.db.normalColumns) do
-   --    if not v.enabled then self:UpdateColumn(colName, false) end
-   -- end
-
    -- Make sure we handle external requirements
    self:HandleExternalRequirements()
-
    -- Setup our columns
    self:SetupColumns()
-   -- for colName, v in pairs(self.db.columns) do
-   --    if v.enabled then self:UpdateColumn(colName, true) end
-   -- end
-   -- -- And possibly update their widths and positions acording to our settings
-   -- -- we assume the voting frame isn't created at this point
-   -- for i, v in ipairs(self.votingFrame.scrollCols) do
-   --    if self.db.normalColumns[v.colName] then -- Check if we handle it
-   --       -- and update width
-   --       self.votingFrame.scrollCols[i].width = self.db.normalColumns[v.colName].width
-   --       if self.db.normalColumns[v.colName].pos then
-   --          self:UpdateColumnPosition(v.colName, self.db.normalColumns[v.colName].pos)
-   --       end
-   --    end
-   -- end
+
    self:UpdateGuildInfo()
 end
 
@@ -274,12 +254,12 @@ function EU:HandleExternalRequirements()
    -- Pawn
    if self.db.columns.pawn.enabled and not PawnVersion then
       self.db.columns.pawn.enabled = false
-      addon:Print(L["Pawn column was disabled as Pawn isn't installed."])
+      addon:Print(LE["Pawn column was disabled as Pawn isn't installed."])
    end
    -- RCScore
    if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
       self.db.columns.rcscore.enabled = false
-      addon:Print(L["RCScore column was disabled as no damage meter is installed."])
+      addon:Print(LE["RCScore column was disabled as no damage meter is installed."])
    end
 end
 
