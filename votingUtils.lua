@@ -38,7 +38,7 @@ function EU:OnInitialize()
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
             bonus =           { enabled = false, pos = 100, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
-            rcscore =         { enabked = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
+            rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class, width = 20},
@@ -161,9 +161,6 @@ function EU:OnEnable()
    -- Setup options
    self:OptionsTable()
 
-   -- Setup InspectHandler
-   self.InspectHandler:SetCallback("InspectReady")
-
    -- Hook SwitchSession() so we know which session we're on
    self:Hook(self.votingFrame, "SwitchSession", function(_, s) session = s end)
 
@@ -250,9 +247,6 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             if self.db.bonusRollsHistory and addon.isMasterLooter and type == "item" then
                addon:GetActiveModule("masterlooter"):TrackAndLogLoot(name,link,"BONUSROLL", addon.bossName,0)
             end
-
-         elseif command == "candidates" then
-            self:QueueInspects(unpack(data))
          end
       end
    end
@@ -277,40 +271,6 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
       /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "item", "|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r")
 
    ]]
-end
-
-function EU:InspectReady(unit, type, data)
-   if type == "spec" then
-      if data then
-         if data == 0 then -- We don't want this
-            addon:Debug("Got spec = 0 for ", unit)
-            --self.InspectHandler:InspectUnit(unit, type)
-            return
-         end
-         addon:Debug("Successfully received specID for ", unit, data)
-         if not playerData[unit] then playerData[unit] = {} end
-         playerData[unit].specID = data
-      else
-         -- REVIEW Queue again?
-         addon:Debug("Didn't receive specID for ", unit, "requeuing")
-         self.InspectHandler:InspectUnit(unit, type)
-      end
-   else
-      addon:Debug("EU:InspectReady() - unknown type", type)
-   end
-end
-
-function EU:QueueInspects(candidates)
-   for name in pairs(candidates) do
-      if not (playerData[name] and playerData[name].specID) then
-         -- We're missing at least the specID, so lets try to inspect the candidate
-         if self.InspectHandler:InspectUnit(name, "spec") then
-            addon:Debug("Inspect queued on: ", name)
-         else
-            addon:Debug("Inspect failed on: ", name)
-         end
-      end
-   end
 end
 
 function EU:HandleExternalRequirements()
@@ -725,7 +685,7 @@ end
 
 function EU.SetCellSpecIcon(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-	local specID = playerData[name] and playerData[name].specID
+	local specID = EU.votingFrame:GetCandidateData(session, name, "specID")
    local icon
    if specID then
       icon = select(4,GetSpecializationInfoByID(specID))
