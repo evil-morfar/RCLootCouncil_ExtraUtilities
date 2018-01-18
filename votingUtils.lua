@@ -274,10 +274,12 @@ function EU:HandleExternalRequirements()
    -- Pawn
    if self.db.columns.pawn.enabled and not PawnVersion then
       self.db.columns.pawn.enabled = false
+      addon:Print(L["Pawn column was disabled as Pawn isn't installed."])
    end
    -- RCScore
    if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
       self.db.columns.rcscore.enabled = false
+      addon:Print(L["RCScore column was disabled as no damage meter is installed."])
    end
 end
 
