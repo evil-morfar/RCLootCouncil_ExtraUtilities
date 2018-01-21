@@ -816,7 +816,7 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
    -- check if ilvl is availble
    if ilvl and ilvl ~= "" then
       -- Now check if we've already stored the score
-      local score = EU.votingFrame:GetCandidateData(session, name, "RCScore")
+      local score = EU.votingFrame:GetCandidateData(1, name, "RCScore")
       if not score then -- Calculate it
          local role = EU.votingFrame:GetCandidateData(session, name, "role")
          local dps = EU.getDPSFromLastFight(role, name)
@@ -832,7 +832,7 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
          end
          if debugRCScore then addon:Debug("RCScore:", name, score) end
          -- Store the score
-         EU.votingFrame:SetCandidateData(session, name, "RCScore", score)
+         EU.votingFrame:SetCandidateData(1, name, "RCScore", score)
       end
       data[realrow].cols[column].value = score or 0
       frame.text:SetText(addon.round(score,0) .. "%")
