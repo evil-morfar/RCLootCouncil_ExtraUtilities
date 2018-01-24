@@ -133,7 +133,11 @@ function EU:OnInitialize()
    self:Enable()
 
    -- Setup chat command for options
-   addon:CustomChatCmd(self, "OpenOptions","- eu - Opens the ExtraUtilities options window", "EU", "eu")
+   if addon:VersionCompare(addon.version, "2.7.6") then
+      addon:CustomChatCmd(self, "OpenOptions","- eu - Opens the ExtraUtilities options window", "EU", "eu")
+   else
+      addon:ModuleChatCmd(self, "OpenOptions", nil, LE["chat_cmd_desc"], "eu", "extrautilities")
+   end
 
    self:RegisterEvent("BONUS_ROLL_RESULT")
 end

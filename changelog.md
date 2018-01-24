@@ -1,6 +1,8 @@
 ### vxxxx
 ---
-* Utilizes specID's sent from RCLootCouncil to more consistently show spec icons. 
+* Utilizes specID's sent from RCLootCouncil to more consistently show spec icons.
+* Updated to use new chat command format in RCLootCouncil v2.7.6.
+
 
 ### v0.6.1
 ---
