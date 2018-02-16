@@ -840,7 +840,7 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
       end
       data[realrow].cols[column].value = score or 0
       frame.text:SetText(addon.round(score,0) .. "%")
-      frame.text:SetTextColor(unpack(colorGradient[math.ceil(score / 10)]))
+      frame.text:SetTextColor(unpack(colorGradient[math.ceil(score / 10)] or {0,1,0})) -- >100% is not included in the table, just make it green
    else -- Clear it
       frame.text:SetText("")
       data[realrow].cols[column].value = 0
