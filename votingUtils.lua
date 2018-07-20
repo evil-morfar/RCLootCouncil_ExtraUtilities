@@ -18,6 +18,7 @@ local session = 0
 local guildInfo = {}
 local debugPawn = false
 local debugRCScore = true
+local rcscore_funcs
 
 local unpack, pairs, ipairs, UnitGUID = unpack, pairs, ipairs, UnitGUID
 
@@ -38,7 +39,7 @@ function EU:OnInitialize()
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
             bonus =           { enabled = false, pos = 100, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
-            rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
+            rcscore =         { enabled = true, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
          },
          normalColumns = {
             class =  { enabled = true, name = LE.Class, width = 20},
@@ -124,7 +125,7 @@ function EU:OnInitialize()
       }
    }
    -- The order of which the new cols appear in the advanced options
-   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes",--[["rcscore"]]}
+   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes","rcscore"}
    -- The order of which the normal cols appear ANYWHERE in the options
    self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
@@ -140,6 +141,8 @@ function EU:OnInitialize()
    end
 
    self:RegisterEvent("BONUS_ROLL_RESULT")
+   self:RegisterEvent("ENCOUNTER_END")
+   rcscore_funcs = ExtraUtilities_RCScore_Functions
 end
 
 function EU:OpenOptions()
@@ -200,6 +203,14 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             -- Send out our data
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
 
+         elseif command == "lt_add" then
+            local l = unpack(data)
+            addon:Debug(l)
+            -- for i = #lootTable, #l do
+            --    lootTable[i] = l[i]
+            -- end
+            addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
+
          elseif command == "extraUtilData" then
             -- We received our EU data
             local name, data = unpack(data)
@@ -252,6 +263,10 @@ function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantit
       /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "item", "|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r")
 
    ]]
+end
+
+function EU:ENCOUNTER_END(event, id)
+   self.latestBossID = id
 end
 
 function EU:HandleExternalRequirements()
@@ -754,10 +769,10 @@ function EU.getDPSFromLastFight(role, name)
       if combat then
          if role == "HEALER" then -- look for hps
             local healingActor = combat:GetActor (DETAILS_ATTRIBUTE_HEAL, Ambiguate(name, "none"))
-            dps = healingActor and (healingActor.total / healingActor:Tempo()) or 0
+            dps = healingActor and (healingActor.total / combat:GetCombatTime()) or 0
          else -- Look for dps
             local damageActor = combat:GetActor (DETAILS_ATTRIBUTE_DAMAGE, Ambiguate(name, "none"))
-            dps = damageActor and (damageActor.total / damageActor:Tempo()) or 0
+            dps = damageActor and (damageActor.total / combat:GetCombatTime()) or 0
          end
       end
       if debugRCScore then addon:Debug("Details:", dps) end
@@ -822,24 +837,23 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
       -- Now check if we've already stored the score
       local score = EU.votingFrame:GetCandidateData(1, name, "RCScore")
       if not score then -- Calculate it
+         local specID = EU.votingFrame:GetCandidateData(session, name, "specID")
+         local class = EU.votingFrame:GetCandidateData(session, name, "class")
          local role = EU.votingFrame:GetCandidateData(session, name, "role")
          local dps = EU.getDPSFromLastFight(role, name)
          if debugRCScore then addon:Debug("Role, dps:", role, dps) end
-         if role == "DAMAGER" or role == "NONE" then
-            score = getDPSRCScore2(dps, ilvl)
-         elseif role == "TANK" then
-            score = getTankRCScore(dps, ilvl)
-         elseif role == "HEALER" then
-            score = getHealerRCScore(dps, ilvl)
+         if class and specID and dps and ilvl then
+            score = rcscore_funcs[EU.latestBossID or 2076][class][specID](dps, ilvl) -- Default to Garothi Worldbreaker if we for some reason haven't got it
+            if debugRCScore then addon:Debug("RCScore:", name, score) end
+            -- Store the score
+            EU.votingFrame:SetCandidateData(1, name, "RCScore", score)
          else
-            return addon:DebugLog("No valid role in SetCellRCScore", name, role)
+            addon:Debug("ERROR missing data for rcscore", class, specID, dps, ilvl)
          end
-         if debugRCScore then addon:Debug("RCScore:", name, score) end
-         -- Store the score
-         EU.votingFrame:SetCandidateData(1, name, "RCScore", score)
       end
-      data[realrow].cols[column].value = score or 0
-      frame.text:SetText(addon.round(score,0) .. "%")
+      score = score or 0
+      data[realrow].cols[column].value = score
+      frame.text:SetText((score and score > 0 and (addon.round(score,0) .. "%")) or "NaN")
       frame.text:SetTextColor(unpack(colorGradient[math.ceil(score / 10)] or {0,1,0})) -- >100% is not included in the table, just make it green
    else -- Clear it
       frame.text:SetText("")

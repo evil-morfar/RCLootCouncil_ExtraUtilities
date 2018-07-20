@@ -98,13 +98,13 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_guildNotes_desc"],
                      },
-                     -- rcscore = {
-                     --    name = "RC Score",
-                     --    order = 12,
-                     --    type = "toggle",
-                     --    desc = "A performance metric based on hps/dps and item levels.",
-                     --    tristate = true,
-                     -- },
+                     rcscore = {
+                        name = "RC Score",
+                        order = 12,
+                        type = "toggle",
+                        desc = "A performance metric based on hps/dps and item levels.",
+                        tristate = true,
+                     },
                      header = {
                         order = -1,
                         name = "",

@@ -2,7 +2,7 @@
 ## Interface: 70300
 ## Notes: An RCLootCouncil module for more advanced utilities.
 ## Title: RCLootCouncil - Extra Utilities
-## Version: 0.6.2
+## Version: 0.6.3
 ## Dependencies: RCLootCouncil
 
 Locale\Locales.xml
@@ -10,4 +10,4 @@ Libs\LibItemUpgradeInfo-1.0\Core.lua
 
 votingUtils.lua
 options.lua
-InspectHandler.lua
+RCScore_Functions.lua
