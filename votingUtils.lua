@@ -700,7 +700,7 @@ function EU.SetCellBonusRoll(rowFrame, frame, data, cols, row, realrow, column, 
    		f:Show()
       else
          f:SetScript("OnEnter", function() addon:CreateTooltip("Gold", type, link) end)
-         addon:Debug("BonusRoll was gold", type, link)
+         --addon:Debug("BonusRoll was gold", type, link)
       end
    else
       f:Hide()
