@@ -848,7 +848,7 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
          local dps = EU.getDPSFromLastFight(role, name)
          if debugRCScore then addon:Debug("Role, dps:", role, dps) end
          if class and specID and dps and ilvl then
-            score = rcscore_funcs[EU.latestBossID or 2076][class][specID](dps, ilvl) -- Default to Garothi Worldbreaker if we for some reason haven't got it
+            score = rcscore_funcs[EU.latestBossID or 2144][class][specID](dps, ilvl) -- Default to Taloc if we for some reason haven't got it
             if debugRCScore then addon:Debug("RCScore:", name, score) end
             -- Store the score
             EU.votingFrame:SetCandidateData(1, name, "RCScore", score)

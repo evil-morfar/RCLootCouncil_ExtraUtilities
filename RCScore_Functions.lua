@@ -1,1479 +1,1077 @@
 -- Contains the functions used to calculate RCScore
 -- Auto generated with data from WarcraftLogs.com
--- Updated on 05/25/18 00:07:21 by Potdisc
+-- Updated on 09/26/18 09:20:47 by Potdisc
 
 _G.ExtraUtilities_RCScore_Functions = {
-	[2064] = {
+	[2122] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (0 * ilvl + 0)
+				return 100 * dps / (162.00820512821 * ilvl + -44213.353846154)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (36873.142857131 * ilvl + -33299220.42856)
+				return 100 * dps / (166.85384615385 * ilvl + -46713.153846154)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (24947.776595745 * ilvl + -21987827.797872)
+				return 100 * dps / (138.05087853323 * ilvl + -35949.991138273)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (21757.158802554 * ilvl + -19802188.970205)
+				return 100 * dps / (99.561538461538 * ilvl + -27190.266153846)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (34201.159973739 * ilvl + -30977768.808513)
+				return 100 * dps / (175.10461229947 * ilvl + -49102.090463458)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (44250.653643725 * ilvl + -40247014.268016)
+				return 100 * dps / (166.55517241379 * ilvl + -46950.048275862)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (34605.80908284 * ilvl + -31215126.612542)
+				return 100 * dps / (159.22085385878 * ilvl + -43902.678981938)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (25237.791463415 * ilvl + -22745263.159756)
+				return 100 * dps / (178.38909899889 * ilvl + -43894.902261772)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (37357.923867596 * ilvl + -33606200.52561)
+				return 100 * dps / (132.97684729064 * ilvl + -34980.803940887)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (39185.401220268 * ilvl + -35456238.686205)
+				return 100 * dps / (180.17570664629 * ilvl + -51533.580595875)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (35597.825865003 * ilvl + -32175228.131756)
+				return 100 * dps / (177.0841025641 * ilvl + -50916.576410256)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (39749.942720667 * ilvl + -36050563.707997)
+				return 100 * dps / (216.54380498534 * ilvl + -64491.603922287)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (22093.230141951 * ilvl + -19613580.243431)
+				return 100 * dps / (189.26693548387 * ilvl + -43478.987903226)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (34476.931742676 * ilvl + -31053790.981577)
+				return 100 * dps / (203.88476084538 * ilvl + -58526.614386355)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (31573.318181818 * ilvl + -28712746.606061)
+				return 100 * dps / (255.74435483871 * ilvl + -69359.181451613)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (37695.520896789 * ilvl + -34220856.86906)
+				return 100 * dps / (181.73081201335 * ilvl + -51596.239525399)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (31089.445661953 * ilvl + -27857989.46773)
+				return 100 * dps / (198.04802052786 * ilvl + -56231.321297654)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (16861.96323449 * ilvl + -15250935.160411)
+				return 100 * dps / (113.17780748663 * ilvl + -32094.693404635)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (38782.990033076 * ilvl + -35231480.165972)
+				return 100 * dps / (132.8189379936 * ilvl + -35009.866997137)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (34672.923897582 * ilvl + -31350149.909673)
+				return 100 * dps / (240.36307692308 * ilvl + -72164.369230769)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (37040.626903802 * ilvl + -33303511.028968)
+				return 100 * dps / (200.49532085561 * ilvl + -57076.303921569)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (32034.077853922 * ilvl + -28757926.016213)
+				return 100 * dps / (171.54344919786 * ilvl + -47180.498217469)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (24976.066666667 * ilvl + -22804320.638095)
+				return 100 * dps / (142.1078817734 * ilvl + -42298.543842365)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (33811.733959102 * ilvl + -30454110.824135)
+				return 100 * dps / (169.7506684492 * ilvl + -47192.268270945)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (23101.174617579 * ilvl + -20655238.601454)
+				return 100 * dps / (203.08024193548 * ilvl + -52814.9375)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (18595.062834225 * ilvl + -16799031.656417)
+				return 100 * dps / (168.960591133 * ilvl + -52065.285714286)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (37179.826567458 * ilvl + -33521819.986213)
+				return 100 * dps / (182.10393162393 * ilvl + -51793.712820513)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (21744.542038796 * ilvl + -19904209.961105)
+				return 100 * dps / (125.44975369458 * ilvl + -36974.833497537)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (36155.671523753 * ilvl + -32666034.532812)
+				return 100 * dps / (187.37536656891 * ilvl + -52684.380315249)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (27282.475687104 * ilvl + -24679652.581395)
+				return 100 * dps / (242.58522727273 * ilvl + -65223.517045455)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (37574.024587425 * ilvl + -33915120.717821)
+				return 100 * dps / (150.66330645161 * ilvl + -41009.054435484)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (29273.681365576 * ilvl + -26516979.009957)
+				return 100 * dps / (246.88427419355 * ilvl + -66800.304435484)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (24343.35862069 * ilvl + -22359317.641379)
+				return 100 * dps / (113.15469208211 * ilvl + -32476.555535191)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (41739.633743764 * ilvl + -38193331.182148)
+				return 100 * dps / (133.03812316716 * ilvl + -33348.802785924)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (39883.706074122 * ilvl + -36297962.085474)
+				return 100 * dps / (186.89032258065 * ilvl + -52932.886021505)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (32082.151827012 * ilvl + -28798011.29556)
+				return 100 * dps / (168.56103372434 * ilvl + -45866.041239003)
 			end,
 		},
 	},
-	[2073] = {
+	[2141] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (0 * ilvl + 0)
+				return 100 * dps / (389.27932998173 * ilvl + -121393.68790318)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (50600.708377826 * ilvl + -46497851.663014)
+				return 100 * dps / (394.36 * ilvl + -124845.28)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (27857.832591093 * ilvl + -24958877.415655)
+				return 100 * dps / (414.37249809015 * ilvl + -131065.85439267)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (21816.363418803 * ilvl + -19930217.478974)
+				return 100 * dps / (264.11275314724 * ilvl + -84149.072523262)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (37734.936134454 * ilvl + -34400007.539496)
+				return 100 * dps / (357.19151069519 * ilvl + -112234.23841355)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (43016.493969608 * ilvl + -39365293.317594)
+				return 100 * dps / (421.27339901478 * ilvl + -134706.71428571)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (39514.613636364 * ilvl + -36051035.833333)
+				return 100 * dps / (367.78133552271 * ilvl + -115422.38067871)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (25358.463289369 * ilvl + -23175001.121434)
+				return 100 * dps / (352.56195773081 * ilvl + -105515.28068224)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (39123.79116599 * ilvl + -35660621.970759)
+				return 100 * dps / (305.97192118227 * ilvl + -94735.956650246)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (43571.477942053 * ilvl + -39792853.489618)
+				return 100 * dps / (325.03269671505 * ilvl + -101765.24461421)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (35853.993351792 * ilvl + -32640210.232854)
+				return 100 * dps / (276.56654456654 * ilvl + -85411.730972731)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (42081.950875212 * ilvl + -38800149.070017)
+				return 100 * dps / (403.37667112299 * ilvl + -128302.03431373)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (20651.29374111 * ilvl + -18617504.231152)
+				return 100 * dps / (386.19274193548 * ilvl + -114382.22983871)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (58922.502559065 * ilvl + -53896389.533494)
+				return 100 * dps / (304.87897664071 * ilvl + -94849.230552466)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (27847.419530723 * ilvl + -25565952.269596)
+				return 100 * dps / (391.51319648094 * ilvl + -119876.12884897)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (41721.807803542 * ilvl + -38178008.729733)
+				return 100 * dps / (323.67389162562 * ilvl + -100544.93694581)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (31074.527753018 * ilvl + -27975493.974259)
+				return 100 * dps / (567.482771261 * ilvl + -184999.25018328)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (18526.429946524 * ilvl + -16871412.352941)
+				return 100 * dps / (242.30715240642 * ilvl + -76532.528074866)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (-47430 * ilvl + 47746486.666667)
+				return 100 * dps / (394.16347826087 * ilvl + -126460.37927536)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (56464.947177419 * ilvl + -51994197.970565)
+				return 100 * dps / (347.84619594964 * ilvl + -109015.77312534)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (54047.51129841 * ilvl + -49200432.822371)
+				return 100 * dps / (397.26938502674 * ilvl + -124978.32531194)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (37980.75551193 * ilvl + -34555527.710661)
+				return 100 * dps / (449 * ilvl + -143212)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (23997.627131133 * ilvl + -21985706.291407)
+				return 100 * dps / (296.60133481646 * ilvl + -95481.006525769)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (29939.067185651 * ilvl + -27001431.705965)
+				return 100 * dps / (393.02573529412 * ilvl + -124127.76782531)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (20739.80183228 * ilvl + -18713240.915919)
+				return 100 * dps / (315.19072580645 * ilvl + -94061.997983871)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (22191.270769231 * ilvl + -20353023.849231)
+				return 100 * dps / (261.16462736374 * ilvl + -83621.960400445)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (44977.090240642 * ilvl + -41237273.781194)
+				return 100 * dps / (382.23452991453 * ilvl + -119428.59487179)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (32982.35958486 * ilvl + -30707693.692308)
+				return 100 * dps / (178.05665024631 * ilvl + -55277.812807882)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (61675.816413228 * ilvl + -56745666.36682)
+				return 100 * dps / (325.54453812317 * ilvl + -101701.98955279)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (22407.045864467 * ilvl + -20381941.218213)
+				return 100 * dps / (432.57903225806 * ilvl + -132712.36290323)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (35574.12177739 * ilvl + -32188057.168821)
+				return 100 * dps / (407.33592880979 * ilvl + -127980.08676307)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (22025.398472116 * ilvl + -19941558.085409)
+				return 100 * dps / (366.07177419355 * ilvl + -109238.86693548)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (26941.416996047 * ilvl + -24936497.992095)
+				return 100 * dps / (221.80021994135 * ilvl + -69262.22818915)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (43620.306968178 * ilvl + -40100577.699103)
+				return 100 * dps / (346.00846774194 * ilvl + -107192.42540323)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (37368.197242914 * ilvl + -34159751.93008)
+				return 100 * dps / (408.82298387097 * ilvl + -128025.09475806)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (39071.422737217 * ilvl + -35483862.598385)
+				return 100 * dps / (406.44849706745 * ilvl + -127880.09695748)
 			end,
 		},
 	},
-	[2074] = {
+	[2135] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (46376.666666667 * ilvl + -42705243.333333)
+				return 100 * dps / (175.38222222222 * ilvl + -50324.733333333)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (53936.929788601 * ilvl + -49255247.57732)
+				return 100 * dps / (188.20717948718 * ilvl + -55615.646153846)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (29108.396530612 * ilvl + -25867884.205714)
+				return 100 * dps / (163.78792971734 * ilvl + -46607.102826585)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (32781.921099468 * ilvl + -30120526.100713)
+				return 100 * dps / (118.25911330049 * ilvl + -35486.243349754)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (53147.440392644 * ilvl + -48623568.720907)
+				return 100 * dps / (198.25868983957 * ilvl + -58730.457219251)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (41084.337630662 * ilvl + -37175110.583624)
+				return 100 * dps / (168.47487684729 * ilvl + -48683.278817734)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (44630.068795073 * ilvl + -40482865.99033)
+				return 100 * dps / (165.16064310834 * ilvl + -47715.631820461)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (33977.83801526 * ilvl + -31110848.804248)
+				return 100 * dps / (295.35846774194 * ilvl + -86229.901209677)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (35655.600413845 * ilvl + -32084893.8379)
+				return 100 * dps / (174.51280788177 * ilvl + -50861.189162562)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (52244.992599445 * ilvl + -47588993.327475)
+				return 100 * dps / (174.70466004584 * ilvl + -51152.27012987)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (56080.093564464 * ilvl + -51461388.724867)
+				return 100 * dps / (186.50976800977 * ilvl + -55772.503663004)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (44559.474439249 * ilvl + -40779301.772133)
+				return 100 * dps / (218.94813049853 * ilvl + -66438.404142229)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (24544.941238472 * ilvl + -22108577.231884)
+				return 100 * dps / (340.88790322581 * ilvl + -97085.495967742)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (58840.609795631 * ilvl + -53679761.76568)
+				return 100 * dps / (229.38669354839 * ilvl + -69217.856854839)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (38939.69859944 * ilvl + -35840028.214006)
+				return 100 * dps / (342.42822580645 * ilvl + -99534.568548387)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (45348.772465774 * ilvl + -41204301.499895)
+				return 100 * dps / (172.13681868743 * ilvl + -50464.668891361)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (44244.113061224 * ilvl + -40171479.943673)
+				return 100 * dps / (218.77291055718 * ilvl + -65999.550953079)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (22574.446515679 * ilvl + -20581262.086585)
+				return 100 * dps / (104.81483957219 * ilvl + -30286.507130125)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (54112.763345466 * ilvl + -49806633.033412)
+				return 100 * dps / (164.98538461538 * ilvl + -47856.295384615)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (55235.260168792 * ilvl + -50384897.265283)
+				return 100 * dps / (234.61233211233 * ilvl + -71616.486568987)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (42132.224883518 * ilvl + -37899383.396993)
+				return 100 * dps / (239.5320855615 * ilvl + -71779.392156863)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (38901.149586671 * ilvl + -35045315.75382)
+				return 100 * dps / (193.52740641711 * ilvl + -56629.453654189)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (34187.868382931 * ilvl + -31408297.678198)
+				return 100 * dps / (157.00725806452 * ilvl + -48811.157258065)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (42533.16244898 * ilvl + -38559438.24)
+				return 100 * dps / (178.51804812834 * ilvl + -52036.152406417)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (32950.838339921 * ilvl + -29955882.386298)
+				return 100 * dps / (261.76924486804 * ilvl + -74611.747800586)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (25620.186248013 * ilvl + -23503204.562209)
+				return 100 * dps / (145.30611790879 * ilvl + -44805.118798665)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (40415.719876063 * ilvl + -36606203.36225)
+				return 100 * dps / (187.94735042735 * ilvl + -55471.287179487)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (29223.727530364 * ilvl + -27004985.018893)
+				return 100 * dps / (137.90295566502 * ilvl + -42747.266995074)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (63879.639603335 * ilvl + -58665494.792021)
+				return 100 * dps / (216.7008797654 * ilvl + -64631.850256598)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (28504.11076164 * ilvl + -25955484.726118)
+				return 100 * dps / (285.19959677419 * ilvl + -80687.175403226)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (46236.690516206 * ilvl + -41870780.337719)
+				return 100 * dps / (196.25205784205 * ilvl + -57996.387838339)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (26318.710344267 * ilvl + -23813814.277008)
+				return 100 * dps / (240.32298387097 * ilvl + -64638.885080645)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (33120.413300493 * ilvl + -30686937.008374)
+				return 100 * dps / (114.89919354839 * ilvl + -34002.163306452)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (45774.21036234 * ilvl + -41811285.826085)
+				return 100 * dps / (172.78467741935 * ilvl + -49257.302419355)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (36080.727391776 * ilvl + -32620957.244101)
+				return 100 * dps / (166.19758064516 * ilvl + -46958.883064516)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (42670.123939651 * ilvl + -38606907.312424)
+				return 100 * dps / (196.06524926686 * ilvl + -57282.258614369)
 			end,
 		},
 	},
-	[2082] = {
+	[2136] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (43875.769230947 * ilvl + -40668613.46171)
+				return 100 * dps / (238.27194465452 * ilvl + -69451.784312848)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (31572.845257779 * ilvl + -28489649.631187)
+				return 100 * dps / (281.16025839794 * ilvl + -85522.035710597)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (24296.189639223 * ilvl + -21630036.020352)
+				return 100 * dps / (225.21176470588 * ilvl + -65390.376470588)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (22016.062337058 * ilvl + -20161283.888356)
+				return 100 * dps / (200.95840175151 * ilvl + -61856.795019157)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (31526.266477003 * ilvl + -28546870.686581)
+				return 100 * dps / (298.50679908327 * ilvl + -89405.938579068)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (30251.754878049 * ilvl + -27224797.415854)
+				return 100 * dps / (256.4362625139 * ilvl + -75995.088394512)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (30131.191300271 * ilvl + -27169202.293303)
+				return 100 * dps / (265.31034482759 * ilvl + -79432.706896552)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (24926.321626215 * ilvl + -22450360.675831)
+				return 100 * dps / (340.83426028921 * ilvl + -100095.27860586)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (31342.312902644 * ilvl + -28347677.998284)
+				return 100 * dps / (236.29014778325 * ilvl + -69402.298522167)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (29206.983170488 * ilvl + -26242806.74937)
+				return 100 * dps / (251.41400560224 * ilvl + -74484)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (28454.766102889 * ilvl + -25705974.59845)
+				return 100 * dps / (248.47252747253 * ilvl + -74603.098494098)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (41899.170046565 * ilvl + -38505255.000225)
+				return 100 * dps / (306.7353372434 * ilvl + -94384.224890029)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (20366.432460903 * ilvl + -18119214.537585)
+				return 100 * dps / (401.80161290323 * ilvl + -117235.95967742)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (26005.060216916 * ilvl + -23379515.665994)
+				return 100 * dps / (214.87634892089 * ilvl + -62149.616007205)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (23652.391377005 * ilvl + -21440036.146168)
+				return 100 * dps / (370.1578822224 * ilvl + -108139.88206388)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (31673.582276547 * ilvl + -28657442.188388)
+				return 100 * dps / (216.2275862069 * ilvl + -62439.875862069)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (26266.316201047 * ilvl + -23531779.850576)
+				return 100 * dps / (299.66184017595 * ilvl + -90638.127932551)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (13946.671736514 * ilvl + -12594934.860816)
+				return 100 * dps / (156.33389037433 * ilvl + -46729.834670232)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (32563.51253118 * ilvl + -29613145.064542)
+				return 100 * dps / (252.24547008547 * ilvl + -74790.143589744)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (32088.267188241 * ilvl + -29087023.87909)
+				return 100 * dps / (301.49397920088 * ilvl + -92432.800218938)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (27717.511781195 * ilvl + -24915623.424718)
+				return 100 * dps / (300.53353705118 * ilvl + -91134.9118411)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (27340.183891403 * ilvl + -24479170.459427)
+				return 100 * dps / (241.98362299465 * ilvl + -69663.684937611)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (18085.017366947 * ilvl + -16410154.17535)
+				return 100 * dps / (219.88467741935 * ilvl + -68695.060483871)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (26297.84071594 * ilvl + -23583749.057968)
+				return 100 * dps / (229.32252673797 * ilvl + -67265.486185383)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (25807.843244688 * ilvl + -23283186.800278)
+				return 100 * dps / (313.98185483871 * ilvl + -92200.945564516)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (14974.827540107 * ilvl + -13522451.508467)
+				return 100 * dps / (192.44649610679 * ilvl + -59774.116203189)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (31025.373481781 * ilvl + -28073068.886977)
+				return 100 * dps / (279.37435897436 * ilvl + -84554)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (16980.084026813 * ilvl + -15587857.917107)
+				return 100 * dps / (181.14630541872 * ilvl + -56250.412807882)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (27600.904151563 * ilvl + -24822379.371322)
+				return 100 * dps / (245.32166422287 * ilvl + -72788.820381232)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (24403.187405618 * ilvl + -21974180.999698)
+				return 100 * dps / (349.74211876833 * ilvl + -101885.54197214)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (29315.77471477 * ilvl + -26293691.405982)
+				return 100 * dps / (250.4255839822 * ilvl + -73624.369521691)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (23517.793194004 * ilvl + -21086188.565926)
+				return 100 * dps / (362.69596774194 * ilvl + -106202.06854839)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (19045.255665025 * ilvl + -17435381.564532)
+				return 100 * dps / (146.05681818182 * ilvl + -43363.011363636)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (30576.91406071 * ilvl + -27758353.096877)
+				return 100 * dps / (233.32496334311 * ilvl + -66606.430718475)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (31937.495413485 * ilvl + -28994531.075774)
+				return 100 * dps / (229.56209677419 * ilvl + -66026.092741935)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (27657.962430215 * ilvl + -24767788.890995)
+				return 100 * dps / (243.85410557185 * ilvl + -71377.322030792)
 			end,
 		},
 	},
-	[2075] = {
+	[2144] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (38448.139534467 * ilvl + -35495580.464715)
+				return 100 * dps / (143.57094017094 * ilvl + -39057.641025641)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (44665.957474196 * ilvl + -40589063.015557)
+				return 100 * dps / (176.75692307692 * ilvl + -50899.556923077)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (21727.706488264 * ilvl + -19357542.071347)
+				return 100 * dps / (139.59993315508 * ilvl + -37979.364081996)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (18069.875366569 * ilvl + -16475625.164956)
+				return 100 * dps / (123.30979748221 * ilvl + -37211.156267105)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (37274.842579422 * ilvl + -33870103.137032)
+				return 100 * dps / (146.31851604278 * ilvl + -40692.209893048)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (32415.138866397 * ilvl + -29145810.140891)
+				return 100 * dps / (152.36040044494 * ilvl + -43362.361957731)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (23090.189517618 * ilvl + -20743964.55819)
+				return 100 * dps / (156.00930487137 * ilvl + -44638.646414888)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (19610.78677141 * ilvl + -17743762.716646)
+				return 100 * dps / (334.43804226919 * ilvl + -103249.11931776)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (45515.069545145 * ilvl + -41515393.609747)
+				return 100 * dps / (157.35812807882 * ilvl + -44725.984236453)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (31789.143287167 * ilvl + -28906586.015294)
+				return 100 * dps / (148.0925802139 * ilvl + -41754.776737968)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (39091.816210518 * ilvl + -35561772.564212)
+				return 100 * dps / (150.58495726496 * ilvl + -42750.851282051)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (40607.048697325 * ilvl + -36849546.253891)
+				return 100 * dps / (198.42914438503 * ilvl + -58723.957219251)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (18862.414376321 * ilvl + -17017261.739958)
+				return 100 * dps / (367.25524193548 * ilvl + -113262.35282258)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (34620.037148898 * ilvl + -31430094.528239)
+				return 100 * dps / (142.88275862069 * ilvl + -39613.071264368)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (17666.860703812 * ilvl + -16103944.047104)
+				return 100 * dps / (311.94519794721 * ilvl + -94804.674120235)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (26315.824197861 * ilvl + -23703583.805704)
+				return 100 * dps / (133.08275862069 * ilvl + -36952.848275862)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (38664.776974842 * ilvl + -35145295.174905)
+				return 100 * dps / (183.7598973607 * ilvl + -53879.26851173)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (12985.21097561 * ilvl + -11607282.806098)
+				return 100 * dps / (107.55548128342 * ilvl + -31733.93315508)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (21463.024833447 * ilvl + -19424316.064821)
+				return 100 * dps / (132.19739130435 * ilvl + -36545.216376812)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (24705.843308896 * ilvl + -22285825.074735)
+				return 100 * dps / (183.10239355785 * ilvl + -53582.630199755)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (46791.044177671 * ilvl + -42625709.651765)
+				return 100 * dps / (161.30614973262 * ilvl + -45295.625668449)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (27492.373733107 * ilvl + -24630100.730134)
+				return 100 * dps / (147.85728609626 * ilvl + -41053.921122995)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (16877.344817927 * ilvl + -15246648.855742)
+				return 100 * dps / (138.27630700779 * ilvl + -42561.15083426)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (30133.630022654 * ilvl + -27165213.611251)
+				return 100 * dps / (163.80314171123 * ilvl + -46759.706327986)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (16285.149022019 * ilvl + -14692916.51856)
+				return 100 * dps / (289.39758064516 * ilvl + -86740.592741935)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (21281.424140565 * ilvl + -19438679.151719)
+				return 100 * dps / (153.7276974416 * ilvl + -47832.602076381)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (34220.299933076 * ilvl + -31094776.048646)
+				return 100 * dps / (174.91418803419 * ilvl + -50861.78974359)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (17398.714671815 * ilvl + -15826228.295839)
+				return 100 * dps / (114.85418719212 * ilvl + -34924.002955665)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (43794.905159588 * ilvl + -40028015.223403)
+				return 100 * dps / (146.85025659824 * ilvl + -40879.609970674)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (18853.68964233 * ilvl + -17035329.786306)
+				return 100 * dps / (275.12738269795 * ilvl + -82672.12829912)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (33968.586327634 * ilvl + -30562385.41036)
+				return 100 * dps / (160.4213570634 * ilvl + -45368.971078977)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (21238.374492732 * ilvl + -19216559.164692)
+				return 100 * dps / (312.37258064516 * ilvl + -93252.814516129)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (22074.629173508 * ilvl + -20214256.24439)
+				return 100 * dps / (102.20674486804 * ilvl + -30013.185300587)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (30168.408123345 * ilvl + -27511619.115065)
+				return 100 * dps / (138.46290322581 * ilvl + -37921.10483871)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (41418.207991242 * ilvl + -37993083.20416)
+				return 100 * dps / (150.42943548387 * ilvl + -41683.578629032)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (23673.537526981 * ilvl + -21217287.144558)
+				return 100 * dps / (159.86198680352 * ilvl + -45091.780058651)
 			end,
 		},
 	},
-	[2076] = {
+	[2145] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (42685 * ilvl + -39153060)
+				return 100 * dps / (211.83645504291 * ilvl + -59666.96627663)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (33588.955752756 * ilvl + -30182919.651888)
+				return 100 * dps / (205.28384615385 * ilvl + -58957.433846154)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (26654.35577431 * ilvl + -23607297.402353)
+				return 100 * dps / (246.29045072574 * ilvl + -72088.81038961)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (25486.893631041 * ilvl + -23377308.041626)
+				return 100 * dps / (203.78352490421 * ilvl + -61417.368910783)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (31810.328947368 * ilvl + -28507255.003374)
+				return 100 * dps / (321.05648395722 * ilvl + -95699.411319073)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (32937.095137421 * ilvl + -29515431.80444)
+				return 100 * dps / (259.48325123153 * ilvl + -76417.450246305)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (34563.640709829 * ilvl + -30952122.312995)
+				return 100 * dps / (279.32213570634 * ilvl + -83792.997107898)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (21800.999936338 * ilvl + -19517933.19998)
+				return 100 * dps / (215.96529477197 * ilvl + -59236.830329996)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (29391.609332528 * ilvl + -26244195.363787)
+				return 100 * dps / (264.07586206897 * ilvl + -77898.579310345)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (33978.695590503 * ilvl + -30570679.962874)
+				return 100 * dps / (251.69159663866 * ilvl + -73478.814285714)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (32741.460800185 * ilvl + -29571144.914662)
+				return 100 * dps / (261.52564102564 * ilvl + -78830.773504274)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (39410.50659824 * ilvl + -35934014.40011)
+				return 100 * dps / (282.91612903226 * ilvl + -85031.193548387)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (20763.356653491 * ilvl + -18503099.60628)
+				return 100 * dps / (246.29879032258 * ilvl + -67855.038306452)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (30346.660248043 * ilvl + -27196949.085503)
+				return 100 * dps / (230.32223792398 * ilvl + -67166.533890042)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (25145.58627451 * ilvl + -22826526.722969)
+				return 100 * dps / (235.35286857868 * ilvl + -66020.862056862)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (36309.440419329 * ilvl + -32716929.238672)
+				return 100 * dps / (222.94282536151 * ilvl + -63789.831590656)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (29921.995510204 * ilvl + -26680880.136327)
+				return 100 * dps / (311.392228739 * ilvl + -94002.187316716)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (16219.982693441 * ilvl + -14669051.469519)
+				return 100 * dps / (155.47159090909 * ilvl + -46246.795454545)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (36819.078378413 * ilvl + -33375340.681115)
+				return 100 * dps / (235.41 * ilvl + -68355.28)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (31542.624912892 * ilvl + -28336910.373868)
+				return 100 * dps / (296.39408866995 * ilvl + -89297.162561576)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (31108.663147983 * ilvl + -27871056.03892)
+				return 100 * dps / (276.41772345302 * ilvl + -82116.447822765)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (31947.252066344 * ilvl + -28499882.363625)
+				return 100 * dps / (293.25534759358 * ilvl + -86783.631016043)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (21676.548582996 * ilvl + -19775620.50135)
+				return 100 * dps / (197.42983870968 * ilvl + -59876.012096774)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (29385.328868778 * ilvl + -26256389.775566)
+				return 100 * dps / (252.77172459893 * ilvl + -74663.461229947)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (23251.631884058 * ilvl + -20933891.281159)
+				return 100 * dps / (254.92217741935 * ilvl + -72528.889112903)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (20138.381727014 * ilvl + -18407736.271789)
+				return 100 * dps / (224.71879866518 * ilvl + -70526.380793474)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (31085.051354312 * ilvl + -27835756.318129)
+				return 100 * dps / (232.19008547009 * ilvl + -68370.774358974)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (20875.943319838 * ilvl + -19178778.40081)
+				return 100 * dps / (146.47142857143 * ilvl + -43482.713300493)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (29319.628748925 * ilvl + -26277935.367943)
+				return 100 * dps / (209.37701612903 * ilvl + -59707.810483871)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (22680.512488437 * ilvl + -20424626.543016)
+				return 100 * dps / (213.97140762463 * ilvl + -58021.835410557)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (32310.98812693 * ilvl + -28791132.889243)
+				return 100 * dps / (263.73225806452 * ilvl + -78471.048387097)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (22694.764628776 * ilvl + -20357330.611123)
+				return 100 * dps / (217.95806451613 * ilvl + -58190.338709677)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (20655.824776082 * ilvl + -18864157.419486)
+				return 100 * dps / (133.97030791789 * ilvl + -39040.131964809)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (38029.512635322 * ilvl + -34426998.789161)
+				return 100 * dps / (243.94519794721 * ilvl + -69554.986620235)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (31557.121245829 * ilvl + -28360077.835373)
+				return 100 * dps / (240.4935483871 * ilvl + -69536.048387097)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (31753.208423795 * ilvl + -28276821.10727)
+				return 100 * dps / (263.24230205279 * ilvl + -77540.638379765)
 			end,
 		},
 	},
-	[2069] = {
+	[2134] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (42294.520547675 * ilvl + -38774204.657274)
+				return 100 * dps / (190.69293924466 * ilvl + -54976.096880131)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (34494.671862348 * ilvl + -30886605.305601)
+				return 100 * dps / (206.33461538462 * ilvl + -61989.864615385)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (28097.069511487 * ilvl + -24939397.919534)
+				return 100 * dps / (187.93873185638 * ilvl + -54774.363789152)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (22765.981074481 * ilvl + -20674314.607652)
+				return 100 * dps / (167.79666119321 * ilvl + -51766.941160372)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (35064.394420414 * ilvl + -31558677.480031)
+				return 100 * dps / (235.92498090145 * ilvl + -70339.990985485)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (35062.522262054 * ilvl + -31499666.459482)
+				return 100 * dps / (209.58709677419 * ilvl + -62636.959139785)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (35176.703687493 * ilvl + -31593639.424992)
+				return 100 * dps / (217.66119321292 * ilvl + -64684.231800766)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (34626.555465587 * ilvl + -31400499.580297)
+				return 100 * dps / (377.80889877642 * ilvl + -112082.55461624)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (34737.441186125 * ilvl + -31280978.475982)
+				return 100 * dps / (195.85714285714 * ilvl + -57683.669950739)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (36716.322813409 * ilvl + -33074683.585769)
+				return 100 * dps / (207.13417366947 * ilvl + -61287.557142857)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (33903.178571429 * ilvl + -30618084.143728)
+				return 100 * dps / (195.61294261294 * ilvl + -57962.442816443)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (42205.381538462 * ilvl + -38589917.843077)
+				return 100 * dps / (250.98258797654 * ilvl + -76631.21627566)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (32792.371384402 * ilvl + -29680970.509049)
+				return 100 * dps / (459.06169354839 * ilvl + -137889.6108871)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (34867.78441903 * ilvl + -31459388.531401)
+				return 100 * dps / (184.79754624875 * ilvl + -53948.767548829)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (39808.005013369 * ilvl + -36389705.146168)
+				return 100 * dps / (354.49413489736 * ilvl + -103814.53995601)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (33568.296364326 * ilvl + -30126086.976968)
+				return 100 * dps / (200.55350389321 * ilvl + -59488.217130145)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (28509.258065432 * ilvl + -25344661.478748)
+				return 100 * dps / (261.40395894428 * ilvl + -78998.419904692)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (15788.797375047 * ilvl + -14209106.537727)
+				return 100 * dps / (135.4361631016 * ilvl + -40766.213458111)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (45692.239422085 * ilvl + -41827472.700378)
+				return 100 * dps / (214.26230769231 * ilvl + -64018.652307692)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (34565.888006112 * ilvl + -31133977.523759)
+				return 100 * dps / (266.19852216749 * ilvl + -81293.759605911)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (31154.789431082 * ilvl + -27961055.400439)
+				return 100 * dps / (240.82219251337 * ilvl + -72445.609625668)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (33159.027271009 * ilvl + -29691795.606673)
+				return 100 * dps / (196.82553475936 * ilvl + -56838.557040998)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (23153.606617647 * ilvl + -21091771.687389)
+				return 100 * dps / (161.66290322581 * ilvl + -49525.10483871)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (30930.020351526 * ilvl + -27729953.560592)
+				return 100 * dps / (197.60795454545 * ilvl + -58374.28030303)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (28502.244191073 * ilvl + -25671531.751039)
+				return 100 * dps / (352.07298387097 * ilvl + -103086.3608871)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (19628.9243604 * ilvl + -17851314.130219)
+				return 100 * dps / (196.98576195773 * ilvl + -61922.819280682)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (30883.377007633 * ilvl + -27591833.676271)
+				return 100 * dps / (226.29230769231 * ilvl + -68681.923076923)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (19092.237903226 * ilvl + -17497751.469758)
+				return 100 * dps / (138.77980295567 * ilvl + -42854.084729064)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (32310.382591093 * ilvl + -29012815.849528)
+				return 100 * dps / (196.16880498534 * ilvl + -57557.103922287)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (38494.104315197 * ilvl + -35095468.790432)
+				return 100 * dps / (353.39754398827 * ilvl + -103004.98313783)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (32680.108560885 * ilvl + -29171684.192113)
+				return 100 * dps / (223.69855394883 * ilvl + -66564.037374861)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (36320.51969112 * ilvl + -33083190.476963)
+				return 100 * dps / (376.34959677419 * ilvl + -110114.42943548)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (25471.755213675 * ilvl + -23464155.288205)
+				return 100 * dps / (122.54618768328 * ilvl + -36370.044721408)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (32238.531282051 * ilvl + -28988857.044103)
+				return 100 * dps / (192.61143695015 * ilvl + -55830.365835777)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (35947.381852552 * ilvl + -32551012.21172)
+				return 100 * dps / (195.17620967742 * ilvl + -57076.360887097)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (31011.452082838 * ilvl + -27643667.449952)
+				return 100 * dps / (236.0758797654 * ilvl + -70770.662756598)
 			end,
 		},
 	},
-	[2092] = {
+	[2128] = {
 		["HUNTER"] = {
 			[255] = function(dps, ilvl)
-				return 100 * dps / (24825.909091059 * ilvl + -22185079.091054)
+				return 100 * dps / (279.51043288693 * ilvl + -80954.05356586)
 			end,
 			[254] = function(dps, ilvl)
-				return 100 * dps / (36814.046558704 * ilvl + -33370050.864372)
+				return 100 * dps / (336.21692307692 * ilvl + -101985.39692308)
 			end,
 			[253] = function(dps, ilvl)
-				return 100 * dps / (28540.515909885 * ilvl + -25592350.160238)
+				return 100 * dps / (294.9486631016 * ilvl + -87662.051336898)
 			end,
 		},
 		["WARRIOR"] = {
 			[73] = function(dps, ilvl)
-				return 100 * dps / (22352.090434783 * ilvl + -20475316.398116)
+				return 100 * dps / (217.06157635468 * ilvl + -66953.445812808)
 			end,
 			[71] = function(dps, ilvl)
-				return 100 * dps / (34251.848032243 * ilvl + -31005447.678521)
+				return 100 * dps / (318.36317799847 * ilvl + -95508.325897632)
 			end,
 			[72] = function(dps, ilvl)
-				return 100 * dps / (37356.66518219 * ilvl + -33908368.637174)
+				return 100 * dps / (266.30344827586 * ilvl + -77949.572413793)
 			end,
 		},
 		["SHAMAN"] = {
 			[263] = function(dps, ilvl)
-				return 100 * dps / (39536.747237116 * ilvl + -36031641.010723)
+				return 100 * dps / (314.69731800766 * ilvl + -94330.216201423)
 			end,
 			[264] = function(dps, ilvl)
-				return 100 * dps / (23226.312707444 * ilvl + -21109922.554291)
+				return 100 * dps / (298.32747497219 * ilvl + -88634.756544309)
 			end,
 			[262] = function(dps, ilvl)
-				return 100 * dps / (35097.539213486 * ilvl + -31893136.992851)
+				return 100 * dps / (353.86354679803 * ilvl + -108285.66108374)
 			end,
 		},
 		["MAGE"] = {
 			[64] = function(dps, ilvl)
-				return 100 * dps / (39745.252834008 * ilvl + -36168041.47139)
+				return 100 * dps / (298.33659281895 * ilvl + -89308.965928189)
 			end,
 			[63] = function(dps, ilvl)
-				return 100 * dps / (37438.95174216 * ilvl + -34124979.672997)
+				return 100 * dps / (286.05494505495 * ilvl + -85330.321530322)
 			end,
 			[62] = function(dps, ilvl)
-				return 100 * dps / (41591.768461538 * ilvl + -38209025.125385)
+				return 100 * dps / (427.09959893048 * ilvl + -132416.39661319)
 			end,
 		},
 		["PRIEST"] = {
 			[257] = function(dps, ilvl)
-				return 100 * dps / (19375.008403361 * ilvl + -17423029.455462)
+				return 100 * dps / (370.81935483871 * ilvl + -111350.58064516)
 			end,
 			[258] = function(dps, ilvl)
-				return 100 * dps / (42644.921775899 * ilvl + -38758038.600423)
+				return 100 * dps / (278.9560483871 * ilvl + -82519.558467742)
 			end,
 			[256] = function(dps, ilvl)
-				return 100 * dps / (25305.305418719 * ilvl + -23197216.807882)
+				return 100 * dps / (293.91239002933 * ilvl + -84788.292155425)
 			end,
 		},
 		["DEATHKNIGHT"] = {
 			[252] = function(dps, ilvl)
-				return 100 * dps / (31743.358700382 * ilvl + -28623853.864375)
+				return 100 * dps / (284.0318131257 * ilvl + -83807.044419726)
 			end,
 			[251] = function(dps, ilvl)
-				return 100 * dps / (31449.944946908 * ilvl + -28304214.934726)
+				return 100 * dps / (440.50623167155 * ilvl + -138070.52785924)
 			end,
 			[250] = function(dps, ilvl)
-				return 100 * dps / (14750.002382698 * ilvl + -13344733.014479)
+				return 100 * dps / (214.85060160428 * ilvl + -66366.783868093)
 			end,
 		},
 		["WARLOCK"] = {
 			[266] = function(dps, ilvl)
-				return 100 * dps / (49751.630546956 * ilvl + -46008240.440316)
+				return 100 * dps / (281.40538461538 * ilvl + -83566.495384615)
 			end,
 			[267] = function(dps, ilvl)
-				return 100 * dps / (42661.535014006 * ilvl + -38939829.932773)
+				return 100 * dps / (431.75697865353 * ilvl + -134965.59195402)
 			end,
 			[265] = function(dps, ilvl)
-				return 100 * dps / (37420.058222121 * ilvl + -33905567.230588)
+				return 100 * dps / (405.375 * ilvl + -124335.92424242)
 			end,
 		},
 		["DEMONHUNTER"] = {
 			[577] = function(dps, ilvl)
-				return 100 * dps / (37863.707330317 * ilvl + -34205001.402413)
+				return 100 * dps / (360.21423796791 * ilvl + -109245.9959893)
 			end,
 			[581] = function(dps, ilvl)
-				return 100 * dps / (24767.116747613 * ilvl + -22786155.27811)
+				return 100 * dps / (229.71572580645 * ilvl + -71438.405241935)
 			end,
 		},
 		["PALADIN"] = {
 			[70] = function(dps, ilvl)
-				return 100 * dps / (33294.736275933 * ilvl + -30068015.896269)
+				return 100 * dps / (334.51437165775 * ilvl + -101109.3587344)
 			end,
 			[65] = function(dps, ilvl)
-				return 100 * dps / (24604.100144189 * ilvl + -22407734.520469)
+				return 100 * dps / (357.06491935484 * ilvl + -107096.69153226)
 			end,
 			[66] = function(dps, ilvl)
-				return 100 * dps / (14926.529230769 * ilvl + -13420967.156923)
+				return 100 * dps / (269.00289210234 * ilvl + -84878.391916945)
 			end,
 		},
 		["DRUID"] = {
 			[103] = function(dps, ilvl)
-				return 100 * dps / (34891.893385523 * ilvl + -31711110.772875)
+				return 100 * dps / (395.91282051282 * ilvl + -122269.84615385)
 			end,
 			[104] = function(dps, ilvl)
-				return 100 * dps / (22561.704086416 * ilvl + -20882731.433543)
+				return 100 * dps / (198.99261083744 * ilvl + -61845.280788177)
 			end,
 			[102] = function(dps, ilvl)
-				return 100 * dps / (45434.956938412 * ilvl + -41673863.757904)
+				return 100 * dps / (432.27291055718 * ilvl + -135427.55095308)
 			end,
 			[105] = function(dps, ilvl)
-				return 100 * dps / (23640.512955466 * ilvl + -21554435.539811)
+				return 100 * dps / (366.25846774194 * ilvl + -111051.49798387)
 			end,
 		},
 		["MONK"] = {
 			[269] = function(dps, ilvl)
-				return 100 * dps / (37105.113507394 * ilvl + -33577981.48521)
+				return 100 * dps / (350.49454949944 * ilvl + -106096.81779755)
 			end,
 			[270] = function(dps, ilvl)
-				return 100 * dps / (23670.418123742 * ilvl + -21511452.236677)
+				return 100 * dps / (293.79233870968 * ilvl + -84022.66733871)
 			end,
 			[268] = function(dps, ilvl)
-				return 100 * dps / (22801.576955088 * ilvl + -20977547.127057)
+				return 100 * dps / (167.25018328446 * ilvl + -49584.158907625)
 			end,
 		},
 		["ROGUE"] = {
 			[260] = function(dps, ilvl)
-				return 100 * dps / (37651.065141267 * ilvl + -34407720.39097)
+				return 100 * dps / (257.96290322581 * ilvl + -74456.024193548)
 			end,
 			[261] = function(dps, ilvl)
-				return 100 * dps / (30324.910810837 * ilvl + -27382039.081107)
+				return 100 * dps / (333.43225806452 * ilvl + -98927.709677419)
 			end,
 			[259] = function(dps, ilvl)
-				return 100 * dps / (34797.693926194 * ilvl + -31416971.960836)
-			end,
-		},
-	},
-	[2070] = {
-		["HUNTER"] = {
-			[255] = function(dps, ilvl)
-				return 100 * dps / (0 * ilvl + 0)
-			end,
-			[254] = function(dps, ilvl)
-				return 100 * dps / (52194.824093912 * ilvl + -47041023.660999)
-			end,
-			[253] = function(dps, ilvl)
-				return 100 * dps / (31527.891396855 * ilvl + -27890004.968918)
-			end,
-		},
-		["WARRIOR"] = {
-			[73] = function(dps, ilvl)
-				return 100 * dps / (30855.613836109 * ilvl + -28178450.438476)
-			end,
-			[71] = function(dps, ilvl)
-				return 100 * dps / (50848.621679894 * ilvl + -45802423.152842)
-			end,
-			[72] = function(dps, ilvl)
-				return 100 * dps / (54460.677098109 * ilvl + -49138434.950316)
-			end,
-		},
-		["SHAMAN"] = {
-			[263] = function(dps, ilvl)
-				return 100 * dps / (43826.000851948 * ilvl + -39379818.741571)
-			end,
-			[264] = function(dps, ilvl)
-				return 100 * dps / (29653.372163495 * ilvl + -26946657.551092)
-			end,
-			[262] = function(dps, ilvl)
-				return 100 * dps / (49096.775687104 * ilvl + -44117835.246089)
-			end,
-		},
-		["MAGE"] = {
-			[64] = function(dps, ilvl)
-				return 100 * dps / (44730.778654261 * ilvl + -40198889.229765)
-			end,
-			[63] = function(dps, ilvl)
-				return 100 * dps / (45427.677809566 * ilvl + -40909074.89966)
-			end,
-			[62] = function(dps, ilvl)
-				return 100 * dps / (57971.23220391 * ilvl + -52690466.028903)
-			end,
-		},
-		["PRIEST"] = {
-			[257] = function(dps, ilvl)
-				return 100 * dps / (20441.176230746 * ilvl + -18207494.96859)
-			end,
-			[258] = function(dps, ilvl)
-				return 100 * dps / (52069.453334644 * ilvl + -46919302.63118)
-			end,
-			[256] = function(dps, ilvl)
-				return 100 * dps / (28041.175095493 * ilvl + -25617016.357066)
-			end,
-		},
-		["DEATHKNIGHT"] = {
-			[252] = function(dps, ilvl)
-				return 100 * dps / (37072.426290091 * ilvl + -33010668.644643)
-			end,
-			[251] = function(dps, ilvl)
-				return 100 * dps / (43674.188652482 * ilvl + -39147967.613013)
-			end,
-			[250] = function(dps, ilvl)
-				return 100 * dps / (19561.085553471 * ilvl + -17506854.438555)
-			end,
-		},
-		["WARLOCK"] = {
-			[266] = function(dps, ilvl)
-				return 100 * dps / (48602.224163741 * ilvl + -44198400.346966)
-			end,
-			[267] = function(dps, ilvl)
-				return 100 * dps / (46649.98774483 * ilvl + -42263327.674472)
-			end,
-			[265] = function(dps, ilvl)
-				return 100 * dps / (45142.184457156 * ilvl + -40533366.426193)
-			end,
-		},
-		["DEMONHUNTER"] = {
-			[577] = function(dps, ilvl)
-				return 100 * dps / (42615.566635362 * ilvl + -38212174.056049)
-			end,
-			[581] = function(dps, ilvl)
-				return 100 * dps / (28560.68767507 * ilvl + -25858156.570028)
-			end,
-		},
-		["PALADIN"] = {
-			[70] = function(dps, ilvl)
-				return 100 * dps / (39031.565124761 * ilvl + -34758048.52192)
-			end,
-			[65] = function(dps, ilvl)
-				return 100 * dps / (27102.919219934 * ilvl + -24574507.808179)
-			end,
-			[66] = function(dps, ilvl)
-				return 100 * dps / (26917.678099999 * ilvl + -24298546.677457)
-			end,
-		},
-		["DRUID"] = {
-			[103] = function(dps, ilvl)
-				return 100 * dps / (42682.152345216 * ilvl + -38307864.222889)
-			end,
-			[104] = function(dps, ilvl)
-				return 100 * dps / (25748.606692407 * ilvl + -23398792.612527)
-			end,
-			[102] = function(dps, ilvl)
-				return 100 * dps / (61202.807234882 * ilvl + -55466125.993397)
-			end,
-			[105] = function(dps, ilvl)
-				return 100 * dps / (26141.707641634 * ilvl + -23745840.213043)
-			end,
-		},
-		["MONK"] = {
-			[269] = function(dps, ilvl)
-				return 100 * dps / (46330.862346939 * ilvl + -41540075.194388)
-			end,
-			[270] = function(dps, ilvl)
-				return 100 * dps / (23512.281454778 * ilvl + -21159047.539804)
-			end,
-			[268] = function(dps, ilvl)
-				return 100 * dps / (29612.910837438 * ilvl + -26902214.239901)
-			end,
-		},
-		["ROGUE"] = {
-			[260] = function(dps, ilvl)
-				return 100 * dps / (45557.246043608 * ilvl + -41201902.76288)
-			end,
-			[261] = function(dps, ilvl)
-				return 100 * dps / (45712.264957265 * ilvl + -41274328.803419)
-			end,
-			[259] = function(dps, ilvl)
-				return 100 * dps / (42332.698576239 * ilvl + -37958016.3469)
-			end,
-		},
-	},
-	[2063] = {
-		["HUNTER"] = {
-			[255] = function(dps, ilvl)
-				return 100 * dps / (50688.333333333 * ilvl + -47211655)
-			end,
-			[254] = function(dps, ilvl)
-				return 100 * dps / (35054.774400187 * ilvl + -31822042.886224)
-			end,
-			[253] = function(dps, ilvl)
-				return 100 * dps / (28619.076454034 * ilvl + -25704914.959099)
-			end,
-		},
-		["WARRIOR"] = {
-			[73] = function(dps, ilvl)
-				return 100 * dps / (22555.491538462 * ilvl + -20683495.894615)
-			end,
-			[71] = function(dps, ilvl)
-				return 100 * dps / (33323.666921314 * ilvl + -30207830.077922)
-			end,
-			[72] = function(dps, ilvl)
-				return 100 * dps / (33044.311759128 * ilvl + -29858779.232812)
-			end,
-		},
-		["SHAMAN"] = {
-			[263] = function(dps, ilvl)
-				return 100 * dps / (31741.97189992 * ilvl + -28629603.810261)
-			end,
-			[264] = function(dps, ilvl)
-				return 100 * dps / (35402.919839878 * ilvl + -32333737.733825)
-			end,
-			[262] = function(dps, ilvl)
-				return 100 * dps / (31855.858365164 * ilvl + -28845516.494576)
-			end,
-		},
-		["MAGE"] = {
-			[64] = function(dps, ilvl)
-				return 100 * dps / (33997.578628368 * ilvl + -30801228.089544)
-			end,
-			[63] = function(dps, ilvl)
-				return 100 * dps / (31885.046737032 * ilvl + -28944208.520712)
-			end,
-			[62] = function(dps, ilvl)
-				return 100 * dps / (36539.909090909 * ilvl + -33571145.796537)
-			end,
-		},
-		["PRIEST"] = {
-			[257] = function(dps, ilvl)
-				return 100 * dps / (29819.601680672 * ilvl + -26926934.816807)
-			end,
-			[258] = function(dps, ilvl)
-				return 100 * dps / (34736.948790896 * ilvl + -31468063.328592)
-			end,
-			[256] = function(dps, ilvl)
-				return 100 * dps / (36890.944396272 * ilvl + -33739065.681858)
-			end,
-		},
-		["DEATHKNIGHT"] = {
-			[252] = function(dps, ilvl)
-				return 100 * dps / (25957.948823207 * ilvl + -23231417.512589)
-			end,
-			[251] = function(dps, ilvl)
-				return 100 * dps / (25099.485566784 * ilvl + -22385381.144817)
-			end,
-			[250] = function(dps, ilvl)
-				return 100 * dps / (15128.71297654 * ilvl + -13703212.140396)
-			end,
-		},
-		["WARLOCK"] = {
-			[266] = function(dps, ilvl)
-				return 100 * dps / (57656.133056083 * ilvl + -53723146.923029)
-			end,
-			[267] = function(dps, ilvl)
-				return 100 * dps / (33865.894077581 * ilvl + -30811113.073792)
-			end,
-			[265] = function(dps, ilvl)
-				return 100 * dps / (34162.451375827 * ilvl + -31060886.163567)
-			end,
-		},
-		["DEMONHUNTER"] = {
-			[577] = function(dps, ilvl)
-				return 100 * dps / (29255.463090511 * ilvl + -26285327.229398)
-			end,
-			[581] = function(dps, ilvl)
-				return 100 * dps / (20400.462407143 * ilvl + -18635084.172946)
-			end,
-		},
-		["PALADIN"] = {
-			[70] = function(dps, ilvl)
-				return 100 * dps / (27987.992389006 * ilvl + -25152790.697252)
-			end,
-			[65] = function(dps, ilvl)
-				return 100 * dps / (30944.585264093 * ilvl + -28006279.400344)
-			end,
-			[66] = function(dps, ilvl)
-				return 100 * dps / (15072.423589744 * ilvl + -13582471.975385)
-			end,
-		},
-		["DRUID"] = {
-			[103] = function(dps, ilvl)
-				return 100 * dps / (30823.721407625 * ilvl + -27872544.542339)
-			end,
-			[104] = function(dps, ilvl)
-				return 100 * dps / (18007.050116462 * ilvl + -16566268.921369)
-			end,
-			[102] = function(dps, ilvl)
-				return 100 * dps / (36121.668479734 * ilvl + -33034736.161593)
-			end,
-			[105] = function(dps, ilvl)
-				return 100 * dps / (30396.515410147 * ilvl + -27581614.469417)
-			end,
-		},
-		["MONK"] = {
-			[269] = function(dps, ilvl)
-				return 100 * dps / (30566.596341463 * ilvl + -27472107.068293)
-			end,
-			[270] = function(dps, ilvl)
-				return 100 * dps / (28473.968534629 * ilvl + -25673633.94455)
-			end,
-			[268] = function(dps, ilvl)
-				return 100 * dps / (25872.35037594 * ilvl + -23990433.338346)
-			end,
-		},
-		["ROGUE"] = {
-			[260] = function(dps, ilvl)
-				return 100 * dps / (34174.313715409 * ilvl + -31118435.686356)
-			end,
-			[261] = function(dps, ilvl)
-				return 100 * dps / (37420.118603293 * ilvl + -34247930.637007)
-			end,
-			[259] = function(dps, ilvl)
-				return 100 * dps / (27510.441651032 * ilvl + -24572119.764165)
-			end,
-		},
-	},
-	[2088] = {
-		["HUNTER"] = {
-			[255] = function(dps, ilvl)
-				return 100 * dps / (137990 * ilvl + -131402550)
-			end,
-			[254] = function(dps, ilvl)
-				return 100 * dps / (32975.604333078 * ilvl + -29575355.569975)
-			end,
-			[253] = function(dps, ilvl)
-				return 100 * dps / (29357.540944327 * ilvl + -26185708.408739)
-			end,
-		},
-		["WARRIOR"] = {
-			[73] = function(dps, ilvl)
-				return 100 * dps / (24142.199014778 * ilvl + -22092754.789163)
-			end,
-			[71] = function(dps, ilvl)
-				return 100 * dps / (35734.945945946 * ilvl + -32273043.72973)
-			end,
-			[72] = function(dps, ilvl)
-				return 100 * dps / (33917.89727955 * ilvl + -30409495.122889)
-			end,
-		},
-		["SHAMAN"] = {
-			[263] = function(dps, ilvl)
-				return 100 * dps / (33955.729948572 * ilvl + -30518909.306708)
-			end,
-			[264] = function(dps, ilvl)
-				return 100 * dps / (19421.889343055 * ilvl + -17492899.552427)
-			end,
-			[262] = function(dps, ilvl)
-				return 100 * dps / (36328.859156443 * ilvl + -32908835.19105)
-			end,
-		},
-		["MAGE"] = {
-			[64] = function(dps, ilvl)
-				return 100 * dps / (36168.598030019 * ilvl + -32643244.238743)
-			end,
-			[63] = function(dps, ilvl)
-				return 100 * dps / (30962.270804635 * ilvl + -27897151.67928)
-			end,
-			[62] = function(dps, ilvl)
-				return 100 * dps / (41891.99998349 * ilvl + -38352780.501343)
-			end,
-		},
-		["PRIEST"] = {
-			[257] = function(dps, ilvl)
-				return 100 * dps / (20742.607491289 * ilvl + -18637690.754878)
-			end,
-			[258] = function(dps, ilvl)
-				return 100 * dps / (32383.737541131 * ilvl + -29093434.576639)
-			end,
-			[256] = function(dps, ilvl)
-				return 100 * dps / (26141.507514663 * ilvl + -23883401.874084)
-			end,
-		},
-		["DEATHKNIGHT"] = {
-			[252] = function(dps, ilvl)
-				return 100 * dps / (29951.523200843 * ilvl + -26850847.955331)
-			end,
-			[251] = function(dps, ilvl)
-				return 100 * dps / (30005.757839262 * ilvl + -26831615.610013)
-			end,
-			[250] = function(dps, ilvl)
-				return 100 * dps / (16316.790896159 * ilvl + -14735427.13229)
-			end,
-		},
-		["WARLOCK"] = {
-			[266] = function(dps, ilvl)
-				return 100 * dps / (41920.170688141 * ilvl + -38410054.008068)
-			end,
-			[267] = function(dps, ilvl)
-				return 100 * dps / (40349.363706564 * ilvl + -36747776.840154)
-			end,
-			[265] = function(dps, ilvl)
-				return 100 * dps / (32823.85276918 * ilvl + -29535249.030954)
-			end,
-		},
-		["DEMONHUNTER"] = {
-			[577] = function(dps, ilvl)
-				return 100 * dps / (34563.213139499 * ilvl + -31132948.379883)
-			end,
-			[581] = function(dps, ilvl)
-				return 100 * dps / (19780.831627196 * ilvl + -17950882.28602)
-			end,
-		},
-		["PALADIN"] = {
-			[70] = function(dps, ilvl)
-				return 100 * dps / (31751.632936213 * ilvl + -28519742.718385)
-			end,
-			[65] = function(dps, ilvl)
-				return 100 * dps / (19621.850800362 * ilvl + -17616822.15977)
-			end,
-			[66] = function(dps, ilvl)
-				return 100 * dps / (17711.148790323 * ilvl + -16049969.458871)
-			end,
-		},
-		["DRUID"] = {
-			[103] = function(dps, ilvl)
-				return 100 * dps / (33894.051289696 * ilvl + -30608631.895324)
-			end,
-			[104] = function(dps, ilvl)
-				return 100 * dps / (18419.097262502 * ilvl + -16853914.935177)
-			end,
-			[102] = function(dps, ilvl)
-				return 100 * dps / (31989.306134335 * ilvl + -28849952.619069)
-			end,
-			[105] = function(dps, ilvl)
-				return 100 * dps / (22593.629527591 * ilvl + -20413581.521244)
-			end,
-		},
-		["MONK"] = {
-			[269] = function(dps, ilvl)
-				return 100 * dps / (36335.511008326 * ilvl + -32566256.301203)
-			end,
-			[270] = function(dps, ilvl)
-				return 100 * dps / (19835.76149834 * ilvl + -17759163.790422)
-			end,
-			[268] = function(dps, ilvl)
-				return 100 * dps / (21855.255126181 * ilvl + -19966694.31009)
-			end,
-		},
-		["ROGUE"] = {
-			[260] = function(dps, ilvl)
-				return 100 * dps / (36720.040378784 * ilvl + -33356439.446005)
-			end,
-			[261] = function(dps, ilvl)
-				return 100 * dps / (39589.111531191 * ilvl + -36099622.68431)
-			end,
-			[259] = function(dps, ilvl)
-				return 100 * dps / (33306.774237391 * ilvl + -29888763.951978)
+				return 100 * dps / (378.83121657754 * ilvl + -115325.45855615)
 			end,
 		},
 	},
