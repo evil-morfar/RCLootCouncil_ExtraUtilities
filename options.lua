@@ -44,12 +44,12 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_traits_desc"],
                      },
-                     upgrades = {
-                        name = LE["Upgrades"],
-                        order = 3,
-                        type = "toggle",
-                        desc = LE["opt_upgrades_desc"],
-                     },
+                     -- upgrades = {
+                     --    name = LE["Upgrades"],
+                     --    order = 3,
+                     --    type = "toggle",
+                     --    desc = LE["opt_upgrades_desc"],
+                     -- },
                      sockets = {
                         name = LE["Sockets"],
                         order = 4,
@@ -68,18 +68,18 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_forged_desc"],
                      },
-                     legendaries = {
-                        name = LE["Legendaries"],
-                        order = 7,
-                        type = "toggle",
-                        desc = LE["opt_legendaries_desc"],
-                     },
-                     ilvlUpgrade = {
-                        name = LE["ilvl Upgrades"],
-                        order = 8,
-                        type = "toggle",
-                        desc = LE["opt_ilvlupgrades_desc"],
-                     },
+                     -- legendaries = {
+                     --    name = LE["Legendaries"],
+                     --    order = 7,
+                     --    type = "toggle",
+                     --    desc = LE["opt_legendaries_desc"],
+                     -- },
+                     -- ilvlUpgrade = {
+                     --    name = LE["ilvl Upgrades"],
+                     --    order = 8,
+                     --    type = "toggle",
+                     --    desc = LE["opt_ilvlupgrades_desc"],
+                     -- },
                      spec = {
                         name = LE["Spec Icon"],
                         order = 9,

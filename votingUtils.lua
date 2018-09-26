@@ -29,13 +29,13 @@ function EU:OnInitialize()
       profile = {
          columns = {
             traits =          { enabled = false, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
-            upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
+         --   upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
             pawn =            { enabled = false, pos = -3, width = 50, func = self.SetCellPawn,     name = "Pawn"},
             sockets =         { enabled = false, pos = 11, width = 45, func = self.SetCellSocket,   name = LE["Sockets"]},
          -- setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},
             titanforged =     { enabled = false, pos = 10, width = 40, func = self.SetCellForged,   name = LE["Forged"]},
-            legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
-            ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
+         --   legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
+         --   ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
             bonus =           { enabled = false, pos = 100, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
@@ -125,7 +125,7 @@ function EU:OnInitialize()
       }
    }
    -- The order of which the new cols appear in the advanced options
-   self.optionsColOrder = {"pawn", "traits","upgrades","sockets",--[["setPieces",]] "titanforged","legendaries","ilvlUpgrade", "spec","bonus","guildNotes","rcscore"}
+   self.optionsColOrder = {"pawn", "traits","sockets","titanforged","spec","bonus","guildNotes","rcscore"}
    -- The order of which the normal cols appear ANYWHERE in the options
    self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
 
@@ -424,14 +424,19 @@ function EU:BuildData()
          score[session].equipped = addon.round((score2 and score1 > score2) and score2 or score1 or 0, 3)
       end
    end
+   local hoaLocation = _G.C_AzeriteItem.FindActiveAzeriteItem()
+   local hoalvl = 0
+   if hoaLocation then
+      hoalvl = C_AzeriteItem.GetPowerLevel(hoaLocation)
+   end
    return {
       forged = forged,
-      traits = select(6,C_ArtifactUI.GetEquippedArtifactInfo()),
+      traits = hoalvl,
       --setPieces = 0,
       sockets = sockets,
-      upgrades = upgrades,
-      legend = legend,
-      upgradeIlvl = ilvl,
+      --upgrades = upgrades,
+      --legend = legend,
+      --upgradeIlvl = ilvl,
       specID = spec,
       pawn = {unpack(score)}
    }
@@ -439,8 +444,8 @@ end
 
 function EU:GetEquippedItemData()
    local forgedTable = {
-      [3336] = "Warforged",
-      [3337] = "Titanforged",   }
+      [4783] = "Warforged",
+      [4784] = "Titanforged",   }
 
    local titanforged, setPieces, sockets, legend = 0, 0, 0, 0
    local upgradeIlvl, upg, upgMax = 0, 0, 0
@@ -715,7 +720,7 @@ function EU.SetCellBonusRoll(rowFrame, frame, data, cols, row, realrow, column, 
    		f:Show()
       else
          f:SetScript("OnEnter", function() addon:CreateTooltip("Gold", type, link) end)
-         addon:Debug("BonusRoll was gold", type, link)
+         --addon:Debug("BonusRoll was gold", type, link)
       end
    else
       f:Hide()
