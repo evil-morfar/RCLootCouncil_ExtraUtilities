@@ -7,7 +7,7 @@
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
-EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0")
+local EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")

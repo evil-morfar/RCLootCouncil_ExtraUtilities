@@ -1,3 +1,11 @@
+### 0.8.0
+---
+* Updated for Battle for Azeroth.
+* Removed Legendaries, Upgrades, and Ilvl Upgrade columns as those are no longer in the game.
+* Updated Artifact Traits column to show Heart of Azeroth level.
+* Updated Forged column to reflect BfA Warforged/Titanforged items.
+
+
 ### 0.7.0 (patch 8.0)
 ---
 * Updated .toc for patch 8.0.
