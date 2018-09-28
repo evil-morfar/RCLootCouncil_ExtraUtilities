@@ -7,7 +7,7 @@
 ]]
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
-EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0")
+local EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
@@ -156,7 +156,7 @@ end
 
 function EU:OnEnable()
    addon:DebugLog("Using ExtraUtilities", self.version)
-   addon.db.profile.responses["BONUSROLL"] = { color = {1,0.8,0,1},	sort = 510,		text = LE["Bonus Rolls"],}
+   addon.db.profile.responses.default["BONUSROLL"] = { color = {1,0.8,0,1},	sort = 510,		text = LE["Bonus Rolls"],}
    -- Get the voting frame
    self.votingFrame = addon:GetActiveModule("votingframe")
    -- Crap a copy of the cols
@@ -204,12 +204,9 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
 
          elseif command == "lt_add" then
-            local l = unpack(data)
-            addon:Debug(l)
-            -- for i = #lootTable, #l do
-            --    lootTable[i] = l[i]
-            -- end
-            addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
+            if PawnVersion then -- Currently only Pawn has session specific data
+               addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
+            end
 
          elseif command == "extraUtilData" then
             -- We received our EU data
@@ -236,7 +233,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             playerData[name].bonusLink = link
             playerData[name].bonusReference = addon.bossName
             self.votingFrame:Update()
-            if self.db.bonusRollsHistory and addon.isMasterLooter and type == "item" then
+            if self.db.bonusRollsHistory and addon.isMasterLooter and type == "item" and not addon.testMode then
                addon:GetActiveModule("masterlooter"):TrackAndLogLoot(name,link,"BONUSROLL", addon.bossName,0)
             end
          end
@@ -576,6 +573,7 @@ end
 ---------------------------------------------
 function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
+   if not playerData[name] then return end -- Might now be received
    -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
    -- We can calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
    local score
@@ -597,7 +595,7 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
    -- Or just calculate it ourself
    elseif lootTable[session] and lootTable[session].link then
       local class = EU.votingFrame:GetCandidateData(session, name, "class")
-      local specID = playerData[name] and playerData[name].specID
+      local specID = EU.votingFrame:GetCandidateData(session, name, "specID")
       if specID then -- SpecID might not be received yet, so don't bother checking further
          score = EU:GetPawnScore(lootTable[session].link, class, specID)
          if not EU.db.pawnNormalMode then -- % mode
