@@ -1,3 +1,12 @@
+### 0.8.1
+---
+* Pawn scores are now again calculated even if other's doesn't have EU installed.
+
+
+##### Bugfixes
+* *Fixed a bug introduced in the last update.*
+
+
 ### 0.8.0
 ---
 * Updated for Battle for Azeroth.
