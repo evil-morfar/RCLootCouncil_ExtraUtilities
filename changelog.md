@@ -1,3 +1,8 @@
+### 0.8.2
+---
+* Updated .toc for patch 8.1.
+
+
 ### 0.8.1
 ---
 * Pawn scores are now again calculated even if other's doesn't have EU installed.
