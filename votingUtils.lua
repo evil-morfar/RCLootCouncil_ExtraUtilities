@@ -231,7 +231,7 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
             playerData[name].bonusReference = addon.bossName
             self.votingFrame:Update()
             if self.db.bonusRollsHistory and addon.isMasterLooter and type == "item" and not addon.testMode then
-               addon:GetActiveModule("masterlooter"):TrackAndLogLoot(name,link,"BONUSROLL", addon.bossName,0)
+               addon:GetActiveModule("masterlooter"):TrackAndLogLoot(name,link,"BONUSROLL", addon.bossName)
             end
          end
       end
