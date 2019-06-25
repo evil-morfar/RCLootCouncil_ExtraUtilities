@@ -566,7 +566,6 @@ end
 ---------------------------------------------
 function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
    local name = data[realrow].name
-   --if not playerData[name] then return end -- Might now be received
    -- We know which session we're on, we have the item link from lootTable, and we have access to Set/Get candidate data
    -- We can calculate the Pawn score here for each item/candidate and store the result in votingFrames' data
    local score
@@ -609,6 +608,7 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column, fShow
             end
          end
          EU.votingFrame:SetCandidateData(session, name, "pawn", score)
+         if not playerData[name] then playerData[name] = {} end
          if not playerData[name].pawn then playerData[name].pawn = {} end -- Just to be sure
          playerData[name].pawn[session] = {own = true}
       end
