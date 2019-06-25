@@ -1,3 +1,9 @@
+### 0.9.0
+---
+* Updated .toc for patch 8.2
+* Enhanced pawn scores calculations.
+
+
 ### 0.8.2
 ---
 * Updated .toc for patch 8.1.
