@@ -391,11 +391,7 @@ function EU:UpdateColumnPosition(name, pos)
 end
 
 function EU:GetScrollColIndexFromName(name)
-   for i,v in ipairs(self.votingFrame.scrollCols) do
-      if v.colName == name then
-         return i
-      end
-   end
+   return self.votingFrame:GetColumnIndexFromName(name)
 end
 
 function EU:BuildData()
