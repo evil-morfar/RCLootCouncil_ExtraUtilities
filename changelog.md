@@ -1,3 +1,11 @@
+### 0.10.0
+---
+* Updated for patch 8.3.
+
+##### Bugfixes
+* *Fixed an issue with old columns causing problems when resetting to defaults.*
+
+
 ### 0.9.0
 ---
 * Updated .toc for patch 8.2

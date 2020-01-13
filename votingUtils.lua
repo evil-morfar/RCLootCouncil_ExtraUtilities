@@ -55,6 +55,7 @@ function EU:OnInitialize()
             votes =  { enabled = "", name = L.Votes, width = 40},
             vote =   { enabled = "", name = L.Vote, width = 60},
             note =   { enabled = "", name = L.Notes, width = 40},
+            corruption = {enabled = "", name = "Corruption", width = 30},
          },
          bonusRollsHistory = false,
          acceptPawn = true, -- Allow Pawn scores sent from candidates
@@ -126,10 +127,11 @@ function EU:OnInitialize()
    -- The order of which the new cols appear in the advanced options
    self.optionsColOrder = {"pawn", "traits","sockets","titanforged","spec","bonus","guildNotes",--[["rcscore"]]}
    -- The order of which the normal cols appear ANYWHERE in the options
-   self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
+   self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll","corruption"}
 
    addon.db:RegisterNamespace("ExtraUtilities", self.defaults)
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
+   self:FixOldOptions()
    self:Enable()
 
    -- Setup chat command for options
@@ -849,4 +851,12 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
       frame.text:SetText("")
       data[realrow].cols[column].value = 0
    end
+end
+
+function EU:FixOldOptions ()
+   -- Remnants of removed columns can cause issues if they're still present in the SV
+   self.db.columns.legendaries = nil
+   self.db.columns.upgrades = nil
+   self.db.columns.setPieces = nil
+   self.db.columns.ilvlUpgrade = nil
 end
