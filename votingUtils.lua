@@ -482,7 +482,7 @@ function EU:UpdateGuildInfo()
 end
 
 function EU:StripTextures()
-   if not self.votingFrame.frame:IsVisible() then return end
+   if not (self.votingFrame.frame and self.votingFrame.frame:IsVisible()) then return end
    for k,v in ipairs(self.votingFrame.scrollCols) do
       for row = 1, self.votingFrame.frame.st.displayRows do
          local frame = self.votingFrame.frame.st.rows[row].cols[k]
