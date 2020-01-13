@@ -1,5 +1,5 @@
 ## Author: Potdisc
-## Interface: 80200
+## Interface: 80300
 ## Notes: An RCLootCouncil module for more advanced utilities.
 ## Title: RCLootCouncil - Extra Utilities
 ## Version: 0.9.0
