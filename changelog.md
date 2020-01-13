@@ -1,6 +1,7 @@
 ### 0.10.0
 ---
 * Updated for patch 8.3.
+* Added the Corruption column from RCLootCouncil v2.17.0 to the options, allowing it to be moved, resized, and removed.
 
 ##### Bugfixes
 * *Fixed an issue with old columns causing problems when resetting to defaults.*

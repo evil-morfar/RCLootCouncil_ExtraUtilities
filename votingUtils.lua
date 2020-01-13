@@ -47,6 +47,7 @@ function EU:OnInitialize()
             ilvl =   { enabled = true, name = _G.ITEM_LEVEL_ABBR, width = 45,},
             diff =   { enabled = true, name = L.Diff, width = 40},
             roll =   { enabled = true, name = _G.ROLL, width = 30},
+            corruption = {enabled = true, name = "Corruption", width = 30},
 
             name =   { enabled = "", name = _G.NAME, width = 120},
             response={ enabled = "", name = L.Response, width = 240,},
@@ -55,7 +56,6 @@ function EU:OnInitialize()
             votes =  { enabled = "", name = L.Votes, width = 40},
             vote =   { enabled = "", name = L.Vote, width = 60},
             note =   { enabled = "", name = L.Notes, width = 40},
-            corruption = {enabled = "", name = "Corruption", width = 30},
          },
          bonusRollsHistory = false,
          acceptPawn = true, -- Allow Pawn scores sent from candidates
