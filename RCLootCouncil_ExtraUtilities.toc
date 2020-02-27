@@ -1,9 +1,15 @@
 ## Author: Potdisc
-## Interface: 80300
 ## Notes: An RCLootCouncil module for more advanced utilities.
 ## Title: RCLootCouncil - Extra Utilities
 ## Version: 0.10.0
+#@retail@
+## Interface: 80300
 ## Dependencies: RCLootCouncil
+#@end-retail@
+#@non-retail@
+# ## Interface: 11303
+# ## Dependencies: RCLootCouncil_Classic
+#@end-non-retail@
 
 Locale\Locales.xml
 Libs\LibItemUpgradeInfo-1.0\Core.lua
