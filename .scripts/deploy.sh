@@ -1,4 +1,4 @@
-#!usr/bin/sh
+#!/bin/bash
 # This file will copy files located in the toplevel folder of the caller, and paste them in WoW Addon directory.
 # Assumes a ".env" located next to this file or at top level which contains a variable "WOW_LOCATION" pointing
 # to the WoW install location. It also assumes the toplevel folder is named after the addon.
@@ -52,21 +52,15 @@ fi
 TEMP_DEST=".tmp/$ADDON"
 DEST="$WOW_LOCATION$WOWEDITION/Interface/AddOns/$ADDON"
 
-if [ "$is_classic" = "true" ]; then
-	# Classic version needs replacements, so deploy it with release.sh
-	"./.scripts/release.sh" -olzd -r "$(pwd)/.tmp" -g 1.13.3
-	# Copy libs, as we had to skip them to avoid file replacements
-	robocopy "$ADDON_LOC/Libs" "$TEMP_DEST/Libs" //s //purge
-else
-	# Copy to temp folder:
-	# cp "$ADDON_LOC" "$TEMP_DEST" -ruv
-	robocopy "$ADDON_LOC" "$TEMP_DEST" //s //purge //xo //XD .* __*  .tmp //XF ?.* __*
-fi
+# Copy to temp folder:
+# cp "$ADDON_LOC" "$TEMP_DEST" -ruv
+robocopy "$ADDON_LOC" "$TEMP_DEST" //s //purge //XD .* __* $(sed "s/^/  /" .gitignore) //XF ?.* __*
 
-# Do file additional replacements we don't want release.sh to handle.
+# Do file replacements.
 . "./.scripts/replace.sh" "$TEMP_DEST" "$is_classic"
 
-robocopy "$TEMP_DEST" "$DEST" //s //purge //XD .* __*  //XF ?.* __*
+robocopy "$TEMP_DEST" "$DEST" //s //purge //XD .* __*  //XF ?.* __* //NFL //NDL //NJH
 
-# rm -r ".tmp/"
+rm -r ".tmp/"
 echo "Finished deploying $ADDON"
+read
