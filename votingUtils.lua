@@ -5,9 +5,16 @@
 
 --[[ TODO:
 ]]
+--@retail@
+
+--@end-retail@
+
+--@non-retail@
+
+--@end-non-retail@
 
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
-local EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0")
+EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
@@ -16,7 +23,7 @@ local playerData = {} -- Table containing all EU data received, format playerDat
 local lootTable = {}
 local session = 0
 local guildInfo = {}
-local debugPawn = false
+local debugPawn = true
 local debugRCScore = true
 
 local unpack, pairs, ipairs, UnitGUID = unpack, pairs, ipairs, UnitGUID
@@ -26,7 +33,14 @@ function EU:OnInitialize()
    self.version = GetAddOnMetadata("RCLootCouncil_ExtraUtilities", "Version")
    self.defaults = {
       profile = {
-         columns = {
+         columns = addon.isClassic
+         and { -- Classic
+            pawn =            { enabled = false, pos = -3, width = 50, func = self.SetCellPawn,     name = "Pawn"},
+            setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},
+            legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
+            guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
+         }
+         or { -- Retail
             traits =          { enabled = false, pos = 10, width = 40, func = self.SetCellTraits,   name = LE["Traits"]},
          --   upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
             pawn =            { enabled = false, pos = -3, width = 50, func = self.SetCellPawn,     name = "Pawn"},
@@ -38,101 +52,165 @@ function EU:OnInitialize()
             spec =            { enabled = false, pos = 1,  width = 20, func = self.SetCellSpecIcon, name = ""},
             bonus =           { enabled = false, pos = 100, width = 40, func = self.SetCellBonusRoll, name = LE["Bonus"]},
             guildNotes =      { enabled = false, pos = -1, width = 45, func = self.SetCellGuildNote, name = LE["GuildNote"]},
-            rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
+            -- rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
          },
-         normalColumns = {
-            class =  { enabled = true, name = LE.Class, width = 20},
-            rank =   { enabled = true, name = _G.RANK, width = 95,},
-            role =   { enabled = true, name = _G.ROLE, width = 55},
-            ilvl =   { enabled = true, name = _G.ITEM_LEVEL_ABBR, width = 45,},
-            diff =   { enabled = true, name = L.Diff, width = 40},
-            roll =   { enabled = true, name = _G.ROLL, width = 30},
-            corruption = {enabled = true, name = "Corruption", width = 30},
+         normalColumns = (function()
+            local ret = {
+               class =  { enabled = true, name = LE.Class, width = 20},
+               rank =   { enabled = true, name = _G.RANK, width = 95,},
+               role =   { enabled = true, name = _G.ROLE, width = 55},
+               ilvl =   { enabled = true, name = _G.ITEM_LEVEL_ABBR, width = 45,},
+               diff =   { enabled = true, name = L.Diff, width = 40},
+               roll =   { enabled = true, name = _G.ROLL, width = 30},
+               corruption = {enabled = true, name = "Corruption", width = 30},
 
-            name =   { enabled = "", name = _G.NAME, width = 120},
-            response={ enabled = "", name = L.Response, width = 240,},
-            gear1 =  { enabled = "", name = L.g1, width = 20},
-            gear2 =  { enabled = "", name = L.g2, width = 20},
-            votes =  { enabled = "", name = L.Votes, width = 40},
-            vote =   { enabled = "", name = L.Vote, width = 60},
-            note =   { enabled = "", name = L.Notes, width = 40},
-         },
+               name =   { enabled = "", name = _G.NAME, width = 120},
+               response={ enabled = "", name = L.Response, width = 240,},
+               gear1 =  { enabled = "", name = L.g1, width = 20},
+               gear2 =  { enabled = "", name = L.g2, width = 20},
+               votes =  { enabled = "", name = L.Votes, width = 40},
+               vote =   { enabled = "", name = L.Vote, width = 60},
+               note =   { enabled = "", name = L.Notes, width = 40},
+            }
+            if addon.isClassic then
+               ret.corruption = nil
+               ret.role = nil
+            end
+            return ret
+         end)(),
          bonusRollsHistory = false,
          acceptPawn = true, -- Allow Pawn scores sent from candidates
          pawnNormalMode = false, -- Scoring mode, % or normal
-         pawn = { -- Default Pawn scales
-            WARRIOR = {
-               [71] = '"MrRobot":WARRIOR1', -- Arms
-               [72] = '"MrRobot":WARRIOR2', -- Fury
-               [73] = '"MrRobot":WARRIOR3', -- Protection
-            },
-         	DEATHKNIGHT = {
-               [250] = '"MrRobot":DEATHKNIGHT1', -- Blood
-               [251] = '"MrRobot":DEATHKNIGHT2', -- Frost
-               [252] = '"MrRobot":DEATHKNIGHT3', -- Unholy
-            },
-         	PALADIN = {
-               [65] = '"MrRobot":PALADIN1', -- Holy
-               [66] = '"MrRobot":PALADIN2', -- Protection
-               [70] = '"MrRobot":PALADIN3', -- Retribution
-            },
-         	MONK = {
-               [268] = '"MrRobot":MONK1', -- Brewmaster
-               [269] = '"MrRobot":MONK2', -- Windwalker
-               [270] = '"MrRobot":MONK3', -- Mistweaver
-            },
-         	PRIEST = {
-               [256] = '"MrRobot":PRIEST1', -- Discipline
-               [257] = '"MrRobot":PRIEST2', -- Holy
-               [258] = '"MrRobot":PRIEST3', -- Shadow
-            },
-         	SHAMAN = {
-               [262] = '"MrRobot":SHAMAN1', -- Elemental
-               [263] = '"MrRobot":SHAMAN2', -- Enhancement
-               [264] = '"MrRobot":SHAMAN3', -- Restoration
-            },
-         	DRUID = {
-               [102] = '"MrRobot":DRUID1', -- Balance
-               [103] = '"MrRobot":DRUID2', -- Feral
-               [104] = '"MrRobot":DRUID3', -- Guardian
-               [105] = '"MrRobot":DRUID4', -- Restoration
-            },
-         	ROGUE = {
-               [259] = '"MrRobot":ROGUE1', -- Assassination
-               [260] = '"MrRobot":ROGUE2', -- Outlaw
-               [261] = '"MrRobot":ROGUE3', -- Subtlety
-            },
-         	MAGE = {
-               [62] = '"MrRobot":MAGE1', -- Arcane
-               [63] = '"MrRobot":MAGE2', -- Fire
-               [64] = '"MrRobot":MAGE3', -- Frost
-            },
-         	WARLOCK = {
-               [265] = '"MrRobot":WARLOCK1', -- Affliction
-               [266] = '"MrRobot":WARLOCK2', -- Demonology
-               [267] = '"MrRobot":WARLOCK3', -- Destruction
-            },
-         	HUNTER = {
-               [253] = '"MrRobot":HUNTER1', -- Beast Mastery
-               [254] = '"MrRobot":HUNTER2', -- Marksmanship
-               [255] = '"MrRobot":HUNTER3', -- Survival
-            },
-         	DEMONHUNTER = {
-               [577] = '"MrRobot":DEMONHUNTER1', -- Havoc
-               [581] = '"MrRobot":DEMONHUNTER2', -- Vengeance
-            },
-         }
+         pawn =   -- Default Pawn scales
+         (function()
+            if addon.isClassic then
+               return { -- Classic doesn't have specs per say, so use the same index as pawn does
+                  WARRIOR = {
+                     '"Classic":WARRIOR1', -- Arms
+                     '"Classic":WARRIOR2', -- Fury
+                     '"Classic":WARRIOR3', -- Protection
+                  },
+               	PALADIN = {
+                     '"Classic":PALADIN1', -- Holy
+                     '"Classic":PALADIN2', -- Protection
+                     '"Classic":PALADIN3', -- Retribution
+                  },
+               	PRIEST = {
+                     '"Classic":PRIEST1', -- Discipline
+                     '"Classic":PRIEST2', -- Holy
+                     '"Classic":PRIEST3', -- Shadow
+                  },
+               	SHAMAN = {
+                     '"Classic":SHAMAN1', -- Elemental
+                     '"Classic":SHAMAN2', -- Enhancement
+                     '"Classic":SHAMAN3', -- Restoration
+                  },
+               	DRUID = {
+                     '"Classic":DRUID1', -- Balance
+                     '"Classic":DRUID2', -- Feral
+                     '"Classic":DRUID3', -- Guardian
+                     '"Classic":DRUID4', -- Restoration
+                  },
+               	ROGUE = {
+                     '"Classic":ROGUE1', -- Assassination
+                     '"Classic":ROGUE2', -- Combat
+                     '"Classic":ROGUE3', -- Subtlety
+                  },
+               	MAGE = {
+                     '"Classic":MAGE1', -- Arcane
+                     '"Classic":MAGE2', -- Fire
+                     '"Classic":MAGE3', -- Frost
+                  },
+               	WARLOCK = {
+                     '"Classic":WARLOCK1', -- Affliction
+                     '"Classic":WARLOCK2', -- Demonology
+                     '"Classic":WARLOCK3', -- Destruction
+                  },
+               	HUNTER = {
+                     '"Classic":HUNTER1', -- Beast Mastery
+                     '"Classic":HUNTER2', -- Marksmanship
+                     '"Classic":HUNTER3', -- Survival
+                  },
+               }
+            else
+               return {
+                  WARRIOR = {
+                     [71] = '"MrRobot":WARRIOR1', -- Arms
+                     [72] = '"MrRobot":WARRIOR2', -- Fury
+                     [73] = '"MrRobot":WARRIOR3', -- Protection
+                  },
+               	DEATHKNIGHT = {
+                     [250] = '"MrRobot":DEATHKNIGHT1', -- Blood
+                     [251] = '"MrRobot":DEATHKNIGHT2', -- Frost
+                     [252] = '"MrRobot":DEATHKNIGHT3', -- Unholy
+                  },
+               	PALADIN = {
+                     [65] = '"MrRobot":PALADIN1', -- Holy
+                     [66] = '"MrRobot":PALADIN2', -- Protection
+                     [70] = '"MrRobot":PALADIN3', -- Retribution
+                  },
+               	MONK = {
+                     [268] = '"MrRobot":MONK1', -- Brewmaster
+                     [269] = '"MrRobot":MONK2', -- Windwalker
+                     [270] = '"MrRobot":MONK3', -- Mistweaver
+                  },
+               	PRIEST = {
+                     [256] = '"MrRobot":PRIEST1', -- Discipline
+                     [257] = '"MrRobot":PRIEST2', -- Holy
+                     [258] = '"MrRobot":PRIEST3', -- Shadow
+                  },
+               	SHAMAN = {
+                     [262] = '"MrRobot":SHAMAN1', -- Elemental
+                     [263] = '"MrRobot":SHAMAN2', -- Enhancement
+                     [264] = '"MrRobot":SHAMAN3', -- Restoration
+                  },
+               	DRUID = {
+                     [102] = '"MrRobot":DRUID1', -- Balance
+                     [103] = '"MrRobot":DRUID2', -- Feral
+                     [104] = '"MrRobot":DRUID3', -- Guardian
+                     [105] = '"MrRobot":DRUID4', -- Restoration
+                  },
+               	ROGUE = {
+                     [259] = '"MrRobot":ROGUE1', -- Assassination
+                     [260] = '"MrRobot":ROGUE2', -- Outlaw
+                     [261] = '"MrRobot":ROGUE3', -- Subtlety
+                  },
+               	MAGE = {
+                     [62] = '"MrRobot":MAGE1', -- Arcane
+                     [63] = '"MrRobot":MAGE2', -- Fire
+                     [64] = '"MrRobot":MAGE3', -- Frost
+                  },
+               	WARLOCK = {
+                     [265] = '"MrRobot":WARLOCK1', -- Affliction
+                     [266] = '"MrRobot":WARLOCK2', -- Demonology
+                     [267] = '"MrRobot":WARLOCK3', -- Destruction
+                  },
+               	HUNTER = {
+                     [253] = '"MrRobot":HUNTER1', -- Beast Mastery
+                     [254] = '"MrRobot":HUNTER2', -- Marksmanship
+                     [255] = '"MrRobot":HUNTER3', -- Survival
+                  },
+               	DEMONHUNTER = {
+                     [577] = '"MrRobot":DEMONHUNTER1', -- Havoc
+                     [581] = '"MrRobot":DEMONHUNTER2', -- Vengeance
+                  },
+               }
+            end
+         end)(),
+
       }
    }
    -- The order of which the new cols appear in the advanced options
-   self.optionsColOrder = {"pawn", "traits","sockets","titanforged","spec","bonus","guildNotes",--[["rcscore"]]}
+   self.optionsColOrder = addon.isClassic and {"pawn","setPieces","legendaries","guildNotes"}
+      or {"pawn", "traits","sockets","titanforged","spec","bonus","guildNotes",--[["rcscore"]]}
    -- The order of which the normal cols appear ANYWHERE in the options
-   self.optionsNormalColOrder = {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll","corruption"}
+   self.optionsNormalColOrder = addon.isClassic
+   and {"class","name","rank","response","ilvl","diff","gear1","gear2","votes","vote","note","roll"}
+   or {"class","name","rank","role","response","ilvl","diff","gear1","gear2","votes","vote","note","roll","corruption"}
 
    addon.db:RegisterNamespace("ExtraUtilities", self.defaults)
    self.db = addon.db:GetNamespace("ExtraUtilities").profile
    self:FixOldOptions()
-   self:Enable()
 
    -- Setup chat command for options
    if addon:VersionCompare(addon.version, "2.7.6") then
@@ -141,7 +219,7 @@ function EU:OnInitialize()
       addon:ModuleChatCmd(self, "OpenOptions", nil, LE["chat_cmd_desc"], "eu", "extrautilities")
    end
 
-   self:RegisterEvent("BONUS_ROLL_RESULT")
+   self:ScheduleTimer("Enable", 1) -- Delay a bit
 end
 
 function EU:OpenOptions()
@@ -155,7 +233,11 @@ end
 
 function EU:OnEnable()
    addon:DebugLog("Using ExtraUtilities", self.version)
-   addon.db.profile.responses.default["BONUSROLL"] = { color = {1,0.8,0,1},	sort = 510,		text = LE["Bonus Rolls"],}
+   if not addon.isClassic then
+      self:RegisterEvent("BONUS_ROLL_RESULT")
+      addon.db.profile.responses.default["BONUSROLL"] = { color = {1,0.8,0,1},	sort = 510,		text = LE["Bonus Rolls"],}
+   end
+
    -- Get the voting frame
    self.votingFrame = addon:GetActiveModule("votingframe")
    -- Crap a copy of the cols
@@ -268,7 +350,7 @@ function EU:HandleExternalRequirements()
       addon:Print(LE["Pawn column was disabled as Pawn isn't installed."])
    end
    -- RCScore
-   if self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
+   if self.db.columns.rcscore and self.db.columns.rcscore.enabled and not (Details or Recount or Skada) then
       self.db.columns.rcscore.enabled = false
       addon:Print(LE["RCScore column was disabled as no damage meter is installed."])
    end
@@ -396,11 +478,9 @@ function EU:GetScrollColIndexFromName(name)
    return self.votingFrame:GetColumnIndexFromName(name)
 end
 
-function EU:BuildData()
-   local forged,_,sockets, upgrades, legend, ilvl = self:GetEquippedItemData()
-   local spec = (GetSpecializationInfo(GetSpecialization()))
+local function calcPawnScore(spec)
    local score = {}
-   -- Calculate pawn scores
+   -- Calculate pawn scoresg
    if PawnVersion then
       for session, v in ipairs(lootTable) do
          score[session] = {}
@@ -412,22 +492,39 @@ function EU:BuildData()
          score[session].equipped = addon.round((score2 and score1 > score2) and score2 or score1 or 0, 3)
       end
    end
-   local hoaLocation = _G.C_AzeriteItem.FindActiveAzeriteItem()
-   local hoalvl = 0
-   if hoaLocation then
-      hoalvl = C_AzeriteItem.GetPowerLevel(hoaLocation)
+   return score
+end
+
+function EU:BuildData()
+   local forged,setPieces,sockets, upgrades, legend, ilvl = self:GetEquippedItemData()
+
+   if addon.isClassic then
+      return {
+         setPieces = 0,
+         legend = legend,
+         pawn = calcPawnScore(0)
+      }
+   else
+      local spec = (GetSpecializationInfo(GetSpecialization()))
+      -- Heart of Azeroth
+      local hoaLocation = _G.C_AzeriteItem.FindActiveAzeriteItem()
+      local hoalvl = 0
+      if hoaLocation then
+         hoalvl = C_AzeriteItem.GetPowerLevel(hoaLocation)
+      end
+
+      return {
+         forged = forged,
+         traits = hoalvl,
+         --setPieces = 0,
+         sockets = sockets,
+         --upgrades = upgrades,
+         --legend = legend,
+         --upgradeIlvl = ilvl,
+         specID = spec,
+         pawn = calcPawnScore(spec)
+      }
    end
-   return {
-      forged = forged,
-      traits = hoalvl,
-      --setPieces = 0,
-      sockets = sockets,
-      --upgrades = upgrades,
-      --legend = legend,
-      --upgradeIlvl = ilvl,
-      specID = spec,
-      pawn = {unpack(score)}
-   }
 end
 
 function EU:GetEquippedItemData()
@@ -464,6 +561,10 @@ function EU:GetEquippedItemData()
                      titanforged = titanforged + 1
                   end
                end
+            end
+
+            if (select(16, GetItemInfo(link))) then
+               setPieces = setPieces + 1
             end
          end
       end
@@ -519,9 +620,10 @@ function EU:GetPawnScore(link, class, spec)
    if not (item and class and spec) then
       return --addon:Debug("Error in :GetPawnScore", link, item, class, spec)
    end
+   local scaleName = addon.isClassic and PawnFindScaleForSpec(addon.classTagNameToID[class]) or self.db.pawn[class][spec]
    -- Normalize
-   PawnCommon.Scales[self.db.pawn[class][spec]].NormalizationFactor = 1
-   local score = PawnGetSingleValueFromItem(item, self.db.pawn[class][spec])
+   PawnCommon.Scales[scaleName].NormalizationFactor = 1
+   local score = PawnGetSingleValueFromItem(item, scaleName)
    return score
 end
 
@@ -854,6 +956,7 @@ function EU.SetCellRCScore(rowFrame, frame, data, cols, row, realrow, column, fS
 end
 
 function EU:FixOldOptions ()
+   if addon.isClassic then return end -- We need them here :P
    -- Remnants of removed columns can cause issues if they're still present in the SV
    self.db.columns.legendaries = nil
    self.db.columns.upgrades = nil

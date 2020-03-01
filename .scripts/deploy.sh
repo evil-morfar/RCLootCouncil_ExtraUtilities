@@ -63,4 +63,3 @@ robocopy "$TEMP_DEST" "$DEST" //s //purge //XD .* __*  //XF ?.* __* //NFL //NDL 
 
 rm -r ".tmp/"
 echo "Finished deploying $ADDON"
-read

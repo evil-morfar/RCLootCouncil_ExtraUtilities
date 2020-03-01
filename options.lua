@@ -43,6 +43,7 @@ function EU:OptionsTable()
                         order = 2,
                         type = "toggle",
                         desc = LE["opt_traits_desc"],
+                        hidden = addon.isClassic,
                      },
                      -- upgrades = {
                      --    name = LE["Upgrades"],
@@ -55,25 +56,29 @@ function EU:OptionsTable()
                         order = 4,
                         type = "toggle",
                         desc = LE["opt_sockets_desc"],
+                        hidden = addon.isClassic,
                      },
-                     --[[setPieces = {
+                     setPieces = {
                         name = LE["Set Pieces"],
                         order = 5,
                         type = "toggle",
                         desc = LE["opt_setpieces_desc"],
-                     },]]
+                        hidden = not addon.isClassic,
+                     },
                      titanforged = {
                         name = LE["Forged"],
                         order = 6,
                         type = "toggle",
                         desc = LE["opt_forged_desc"],
+                        hidden = addon.isClassic,
                      },
-                     -- legendaries = {
-                     --    name = LE["Legendaries"],
-                     --    order = 7,
-                     --    type = "toggle",
-                     --    desc = LE["opt_legendaries_desc"],
-                     -- },
+                     legendaries = {
+                        name = LE["Legendaries"],
+                        order = 7,
+                        type = "toggle",
+                        desc = LE["opt_legendaries_desc"],
+                        hidden = not addon.isClassic,
+                     },
                      -- ilvlUpgrade = {
                      --    name = LE["ilvl Upgrades"],
                      --    order = 8,
@@ -85,12 +90,14 @@ function EU:OptionsTable()
                         order = 9,
                         type = "toggle",
                         desc = LE["opt_specIcon_desc"],
+                        hidden = addon.isClassic,
                      },
                      bonus = {
                         name = LE["Bonus Rolls"],
                         order = 10,
                         type = "toggle",
                         desc = LE["opt_bonusRoll_desc"],
+                        hidden = addon.isClassic,
                      },
                      guildNotes = {
                         name = LE["Guild Notes"],
@@ -178,6 +185,7 @@ function EU:OptionsTable()
                         desc = LE["opt_bonusRollHistory_desc"],
                         get = function() return self.db.bonusRollsHistory end,
                         set = function() self.db.bonusRollsHistory = not self.db.bonusRollsHistory end,
+                        hidden = addon.isClassic,
                      },
                   },
                }
@@ -347,6 +355,7 @@ function EU:OptionsTable()
    i = 0
    for _, name in ipairs(self.optionsColOrder) do
       local entry = self.db.columns[name]
+      addon:Debug("Doing col ", name, entry)
       i = i + 1 * 2
       options.args.widthOptions.args.columns.args[name.."Pos"] = {
          order = i,
@@ -430,7 +439,12 @@ function EU:CreatePawnScaleOptions(options)
       }
       local j = 0
       for specID, scale in pairs(opt) do
-         local _, name, description, icon = GetSpecializationInfoByID(specID)
+         local _, name, description, icon
+         if addon.isClassic  then
+            _, name, description, icon = PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class], specID)
+         else
+            _, name, description, icon = GetSpecializationInfoByID(specID)
+         end
          options.args.pawnOptions.args.scalesGroup.args[class].args[""..specID] = {
             order = j * 2 + 1,
             name = hex..name,
