@@ -10,6 +10,7 @@
 # ## Interface: 11304
 # ## Dependencies: RCLootCouncil_Classic
 #@end-non-retail@
+## X-Curse-Project-ID: 257427
 
 Locale\Locales.xml
 Libs\LibItemUpgradeInfo-1.0\Core.lua

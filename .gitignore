@@ -2,3 +2,4 @@ InspectHandler.lua
 WarcraftLogs
 .env
 .tmp
+.release
