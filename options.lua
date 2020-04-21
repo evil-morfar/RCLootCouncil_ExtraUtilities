@@ -178,15 +178,6 @@ function EU:OptionsTable()
                         get = function() return addon_db.iLvlDecimal end,
                         set = function(_, val) addon_db.iLvlDecimal = val end,
                      },
-                     bonusRollsHistory = {
-                        name = LE["Bonus Rolls to History"],
-                        order = 2,
-                        type = "toggle",
-                        desc = LE["opt_bonusRollHistory_desc"],
-                        get = function() return self.db.bonusRollsHistory end,
-                        set = function() self.db.bonusRollsHistory = not self.db.bonusRollsHistory end,
-                        hidden = addon.isClassic,
-                     },
                   },
                }
             },

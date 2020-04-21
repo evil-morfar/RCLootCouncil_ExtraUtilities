@@ -78,7 +78,6 @@ function EU:OnInitialize()
             end
             return ret
          end)(),
-         bonusRollsHistory = false,
          acceptPawn = true, -- Allow Pawn scores sent from candidates
          pawnNormalMode = false, -- Scoring mode, % or normal
          pawn =   -- Default Pawn scales
@@ -233,10 +232,6 @@ end
 
 function EU:OnEnable()
    addon:DebugLog("Using ExtraUtilities", self.version)
-   if not addon.isClassic then
-      self:RegisterEvent("BONUS_ROLL_RESULT")
-      addon.db.profile.responses.default["BONUSROLL"] = { color = {1,0.8,0,1},	sort = 510,		text = LE["Bonus Rolls"],}
-   end
 
    -- Get the voting frame
    self.votingFrame = addon:GetActiveModule("votingframe")
@@ -307,40 +302,16 @@ function EU:OnCommReceived(prefix, serializedMsg, distri, sender)
          elseif command == "extraUtilDataRequest" then
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
 
-         elseif command == "EUBonusRoll" then
+         elseif command == "bonus_roll" then
             local name, type, link = unpack(data)
             if not playerData[name] then playerData[name] = {} end
             playerData[name].bonusType = type
             playerData[name].bonusLink = link
             playerData[name].bonusReference = addon.bossName
             self.votingFrame:Update()
-            if self.db.bonusRollsHistory and addon.isMasterLooter and type == "item" and not addon.testMode then
-               addon:GetActiveModule("masterlooter"):TrackAndLogLoot(name,link,"BONUSROLL", addon.bossName)
-            end
          end
       end
    end
-end
-
-function EU:BONUS_ROLL_RESULT(event, rewardType, rewardLink, ...)--rewardQuantity, rewardSpecID)
-   addon:SendCommand("group", "EUBonusRoll", addon.playerName, rewardType, rewardLink)
-   --addon:Debug("BONUS_ROLL_RESULT", rewardType, rewardLink, rewardQuantity, rewardSpecID)
-   addon:Debug(event, rewardType, rewardLink, ...)
-   --[[ Results:
-      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0)
-      BONUS_ROLL_RESULT (item) (|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r) (1) (257)
-      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0)
-      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
-      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
-      BONUS_ROLL_RESULT (artifact_power) (|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r) (1) (0) (2) (false)
-      BONUS_ROLL_RESULT (item) (|cffa335ee|Hitem:140804::::::::110:256::5:3:3516:1492:3336:::|h[Star Gate]|h|r) (1) (256) (3) (false)
-      BONUS_ROLL_RESULT (item) (||cffa335ee||Hitem:140851::::::::110:256::3:3:3443:1467:1813:::||h[Nighthold Custodian's Hood]||h||r)
-
-      Tests:
-      /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "artifact_power", "|cff0070dd|Hitem:144297::::::::110:256:8388608:3::26:::|h[Talisman of Victory]|h|r")
-      /run EU:BONUS_ROLL_RESULT("BONUS_ROLL_RESULT", "item", "|cffa335ee|Hitem:140851::::::::110:256::3:3:3443:1467:1813:::|h[Nighthold Custodian's Hood]|h|r")
-
-   ]]
 end
 
 function EU:HandleExternalRequirements()

@@ -1,5 +1,9 @@
 ### 0.10.0
 ---
+## Changes
+### Bonus Rolls
+Bonus roll detection and saving to the History is part of the Core addon from v2.19.0. The corresponding settings and handling has been removed from this module.
+
 * Updated for patch 8.3.
 * Added the Corruption column from RCLootCouncil v2.17.0 to the options, allowing it to be moved, resized, and removed.
 
