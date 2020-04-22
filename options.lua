@@ -1,6 +1,5 @@
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
 local EU = addon:GetModule("RCExtraUtilities")
-local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 
 ------ Options ------
@@ -429,12 +428,12 @@ function EU:CreatePawnScaleOptions(options)
          args = {},
       }
       local j = 0
-      for specID, scale in pairs(opt) do
-         local _, name, description, icon
+      for specID in pairs(opt) do
+         local _, name, icon
          if addon.isClassic  then
-            _, name, description, icon = PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class], specID)
+            _, name, _, icon = PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class], specID)
          else
-            _, name, description, icon = GetSpecializationInfoByID(specID)
+            _, name, _, icon = GetSpecializationInfoByID(specID)
          end
          options.args.pawnOptions.args.scalesGroup.args[class].args[""..specID] = {
             order = j * 2 + 1,
