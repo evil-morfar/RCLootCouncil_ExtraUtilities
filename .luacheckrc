@@ -3,7 +3,9 @@ max_line_length = false
 allow_defined_top = true
 exclude_files = {
    ".luacheckrc",
-   "Libs/**"
+   "Libs/**",
+   "WarcraftLogs/",
+   "InspectHandler.lua"
 }
 
 files[".specs/**/*.spec.lua"].std = "+busted"
@@ -48,6 +50,7 @@ globals = {
 	"BigWigsLoader",
 	"BugGrabber",
 	"DBM",
+   "Details",
 	"ElvUIPlayerNamePlateAnchor",
 	"GTFO",
 	"IndentationLib",
@@ -59,6 +62,10 @@ globals = {
    "MSA_DROPDOWNMENU_MENU_VALUE",
    "MSA_DropDownMenu_SetSelectedName",
    "MSA_ToggleDropDownMenu",
+   "PawnCommon",
+   "PawnVersion",
+   "Recount",
+   "Skada",
 
 	-- FrameXML misc
 	"C_Timer",

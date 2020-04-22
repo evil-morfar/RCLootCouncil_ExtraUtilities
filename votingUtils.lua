@@ -481,7 +481,7 @@ else
    local hoaLocation = _G.C_AzeriteItem.FindActiveAzeriteItem()
    local hoalvl = 0
    if hoaLocation then
-      hoalvl = C_AzeriteItem.GetPowerLevel(hoaLocation)
+      hoalvl = _G.C_AzeriteItem.GetPowerLevel(hoaLocation)
    end
 
    return {
@@ -509,7 +509,7 @@ for i = 1, 17 do
    if i ~= 4 then
       local link = GetInventoryItemLink("player", i)
       if link then
-         local upgrade, max, delta = ItemUpgradeInfo:GetItemUpgradeInfo(item or " ")
+         local upgrade, max, delta = ItemUpgradeInfo:GetItemUpgradeInfo(link or " ")
          if upgrade then
             upg = upg + upgrade
             upgMax = upgMax + max
@@ -586,14 +586,14 @@ local colorGradient = {
 -- mathcing the class and spec
 function EU:GetPawnScore(link, class, spec)
 if debugPawn then addon:Debug("GetPawnScore", link, class, spec) end
-local item = PawnGetItemData(link)
+local item = _G.PawnGetItemData(link)
 if not (item and class and spec) then
    return --addon:Debug("Error in :GetPawnScore", link, item, class, spec)
 end
-local scaleName = addon.isClassic and PawnFindScaleForSpec(addon.classTagNameToID[class]) or self.db.pawn[class][spec]
+local scaleName = addon.isClassic and _G.PawnFindScaleForSpec(addon.classTagNameToID[class]) or self.db.pawn[class][spec]
 -- Normalize
 _G.PawnCommon.Scales[scaleName].NormalizationFactor = 1
-local score = PawnGetSingleValueFromItem(item, scaleName)
+local score = _G.PawnGetSingleValueFromItem(item, scaleName)
 return score
 end
 
@@ -831,10 +831,10 @@ if Details then
 local combat = Details:GetCurrentCombat()
 if combat then
    if role == "HEALER" then -- look for hps
-      local healingActor = combat:GetActor (DETAILS_ATTRIBUTE_HEAL, Ambiguate(name, "none"))
+      local healingActor = combat:GetActor (_G.DETAILS_ATTRIBUTE_HEAL, Ambiguate(name, "none"))
       dps = healingActor and (healingActor.total / healingActor:Tempo()) or 0
    else -- Look for dps
-      local damageActor = combat:GetActor (DETAILS_ATTRIBUTE_DAMAGE, Ambiguate(name, "none"))
+      local damageActor = combat:GetActor (_G.DETAILS_ATTRIBUTE_DAMAGE, Ambiguate(name, "none"))
       dps = damageActor and (damageActor.total / damageActor:Tempo()) or 0
    end
 end

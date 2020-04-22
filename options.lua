@@ -431,7 +431,7 @@ function EU:CreatePawnScaleOptions(options)
       for specID in pairs(opt) do
          local _, name, icon
          if addon.isClassic  then
-            _, name, _, icon = PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class], specID)
+            _, name, _, icon = _G.PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class], specID)
          else
             _, name, _, icon = GetSpecializationInfoByID(specID)
          end
