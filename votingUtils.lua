@@ -3,16 +3,6 @@
 -- CustomModule
 -- votingUtils.lua	Adds extra columns for the default voting frame
 
---[[ TODO:
-]]
---@retail@
-
---@end-retail@
-
---@non-retail@
-
---@end-non-retail@
-
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
 EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0", "AceHook-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")

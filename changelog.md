@@ -1,3 +1,8 @@
+### 0.11.0
+---
+## Changes
+Ported to Classic!
+
 ### 0.10.0
 ---
 ## Changes
