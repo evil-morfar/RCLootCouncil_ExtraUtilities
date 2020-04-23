@@ -1,3 +1,9 @@
+### 0.11.1
+---
+##### Bugfixes
+* *Fixed issue with the new build system introduced in v0.11.0.*
+
+
 ### 0.11.0
 ---
 ## Changes
