@@ -21,7 +21,7 @@ targets:
       sh: false
       args:
          - "-c"
-   EU-Release:
+   EU-Release-Test:
       name: "EU:Release"
       cmd: ".scripts/build.sh"
       sh: false
