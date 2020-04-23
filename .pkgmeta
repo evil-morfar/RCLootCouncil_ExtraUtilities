@@ -1,5 +1,10 @@
 package-as: RCLootCouncil_ExtraUtilities
 
+externals:
+    Libs/LibItemUpgradeInfo-1.0:
+      url: https://repos.curseforge.com/wow/libitemupgradeinfo-1-0
+      tag: latest
+
 manual-changelog:
     filename: changelog.md
     markup-type: markdown
