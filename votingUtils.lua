@@ -269,6 +269,16 @@ if prefix == "RCLootCouncil" then
          -- Send out our data
          addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
 
+         -- Clear old bonus references
+         for _,v in pairs(playerData) do
+            if v.bonusReference and v.bonusReference ~= addon.bossName then
+               v.bonusType = nil
+               v.bonusLink = nil
+               v.bonusReference = nil
+            end
+         end
+         self.votingFrame:Update()
+
       elseif command == "lt_add" then
          if PawnVersion then -- Currently only Pawn has session specific data
             addon:SendCommand("group", "extraUtilData", addon.playerName, self:BuildData())
@@ -280,12 +290,6 @@ if prefix == "RCLootCouncil" then
          playerData[name] = playerData[name] or {}
          for k, v in pairs(data) do
             playerData[name][k] = v
-         end
-         if playerData[name].bonusReference and playerData[name].bonusReference ~= addon.bossName then
-            -- The bonus data belongs to an earlier session
-            playerData[name].bonusType = nil
-            playerData[name].bonusLink = nil
-            playerData[name].bonusReference = nil
          end
          self.votingFrame:Update()
 

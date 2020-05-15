@@ -1,3 +1,6 @@
+## Bugfixes
+*Previous bonus rolls are now reset with each session.*
+
 ### 0.11.1
 ---
 ##### Bugfixes
