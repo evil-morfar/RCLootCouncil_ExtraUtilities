@@ -538,12 +538,12 @@ return titanforged, setPieces, sockets, upg.."/"..upgMax, legend, upgradeIlvl
 end
 
 function EU:UpdateGuildInfo()
-addon:Debug("EU:UpdateGuildInfo")
-C_GuildInfo.GuildRoster()
-for i = 1, GetNumGuildMembers() do
-   local name, _, _, _, _, _, note, officernote = GetGuildRosterInfo(i)
-   guildInfo[name] = {note, officernote}
-end
+   addon:Debug("EU:UpdateGuildInfo")
+   addon.Utils:GuildRoster()
+   for i = 1, GetNumGuildMembers() do
+      local name, _, _, _, _, _, note, officernote = GetGuildRosterInfo(i)
+      guildInfo[name] = {note, officernote}
+   end
 end
 
 function EU:StripTextures()
