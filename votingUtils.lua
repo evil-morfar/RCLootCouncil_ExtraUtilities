@@ -539,7 +539,7 @@ end
 
 function EU:UpdateGuildInfo()
 addon:Debug("EU:UpdateGuildInfo")
-GuildRoster()
+C_GuildInfo.GuildRoster()
 for i = 1, GetNumGuildMembers() do
    local name, _, _, _, _, _, note, officernote = GetGuildRosterInfo(i)
    guildInfo[name] = {note, officernote}
@@ -753,32 +753,35 @@ end
 end
 
 function EU.SetCellBonusRoll(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
-local name = data[realrow].name
-local f = frame.bonusBtn or CreateFrame("Button", nil, frame)
-f:SetSize(table.rowHeight, table.rowHeight)
-f:SetPoint("CENTER", frame, "CENTER")
-if playerData[name] and playerData[name].bonusType then
-   local type, link = playerData[name].bonusType, playerData[name].bonusLink
-   if type == "item" or type == "artifact_power" then
-      local texture = select(10, GetItemInfo(link))
-      f:SetNormalTexture(texture)
-      f:SetScript("OnEnter", function() addon:CreateHypertip(link) end)
-      f:SetScript("OnLeave", function() addon:HideTooltip() end)
-      f:SetScript("OnClick", function()
-         if IsModifiedClick() then
-         HandleModifiedItemClick(link);
+   local name = data[realrow].name
+   local f = frame.bonusBtn or CreateFrame("Button", nil, frame)
+   f:SetSize(table.rowHeight, table.rowHeight)
+   f:SetPoint("CENTER", frame, "CENTER")
+   if playerData[name] and playerData[name].bonusType then
+      local type, link = playerData[name].bonusType, playerData[name].bonusLink
+      if type == "item" or type == "artifact_power" then
+         local texture = select(10, GetItemInfo(link))
+         f:SetNormalTexture(texture)
+         f:SetScript("OnEnter", function() addon:CreateHypertip(link) end)
+         f:SetScript("OnLeave", function() addon:HideTooltip() end)
+         f:SetScript("OnClick", function()
+            if IsModifiedClick() then
+               HandleModifiedItemClick(link);
+            end
+         end)
+      elseif type == "coin" then
+         -- link is gold string
+         f:SetNormalTexture("Interface/Buttons/UI-GroupLoot-Coin-Up")
+         f:SetScript("OnEnter", function() addon:CreateTooltip("Gold", type, link) end)
+         f:SetScript("OnLeave", function() addon:HideTooltip() end)
+         --addon:Debug("BonusRoll was gold", type, link)
       end
-   end)
-   f:Show()
-else
-   f:SetScript("OnEnter", function() addon:CreateTooltip("Gold", type, link) end)
-   --addon:Debug("BonusRoll was gold", type, link)
-end
-else
-f:Hide()
-f:SetScript("OnEnter", nil)
-end
-frame.bonusBtn = f
+      f:Show()
+   else
+      f:Hide()
+      f:SetScript("OnEnter", nil)
+   end
+   frame.bonusBtn = f
 end
 
 function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
