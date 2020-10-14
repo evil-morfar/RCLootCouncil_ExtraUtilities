@@ -535,7 +535,7 @@ end
 
 function EU:UpdateGuildInfo()
 addon:Debug("EU:UpdateGuildInfo")
-GuildRoster()
+C_GuildInfo.GuildRoster()
 for i = 1, GetNumGuildMembers() do
    local name, _, _, _, _, _, note, officernote = GetGuildRosterInfo(i)
    guildInfo[name] = {note, officernote}
