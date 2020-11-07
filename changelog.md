@@ -1,3 +1,7 @@
+# 1.0.0
+## Changes
+* Updated for Shadowlands and RCLootCouncil v3.0.
+
 ## Bugfixes
 *Previous bonus rolls are now reset with each session.*
 

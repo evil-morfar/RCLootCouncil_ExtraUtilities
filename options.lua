@@ -345,7 +345,7 @@ function EU:OptionsTable()
    i = 0
    for _, name in ipairs(self.optionsColOrder) do
       local entry = self.db.columns[name]
-      addon:Debug("Doing col ", name, entry)
+      self.Log:D("Doing col ", name, entry)
       i = i + 1 * 2
       options.args.widthOptions.args.columns.args[name.."Pos"] = {
          order = i,
@@ -420,7 +420,7 @@ function EU:CreatePawnScaleOptions(options)
    local i = 1
    for class, opt in pairs(self.db.pawn) do
       local c = addon:GetClassColor(class)
-      local hex = "|cFF"..addon:RGBToHex(c.r,c.g,c.b)
+      local hex = "|cFF"..addon.Utils:RGBToHex(c.r,c.g,c.b)
       options.args.pawnOptions.args.scalesGroup.args[class] = {
          order = i,
          type = "group",
