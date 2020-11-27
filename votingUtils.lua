@@ -70,13 +70,6 @@ function EU:OnInitialize()
 					name = LE["GuildNote"]
 				}
 			} or { -- Retail
-				traits = {
-					enabled = false,
-					pos = 10,
-					width = 40,
-					func = self.SetCellTraits,
-					name = LE["Traits"]
-				},
 				--   upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
 				pawn = {
 					enabled = false,
@@ -93,14 +86,7 @@ function EU:OnInitialize()
 					name = LE["Sockets"]
 				},
 				-- setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},
-				titanforged = {
-					enabled = false,
-					pos = 10,
-					width = 40,
-					func = self.SetCellForged,
-					name = LE["Forged"]
-				},
-				--   legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
+            legendaries =     { enabled = false, pos = 11, width = 55, func = self.SetCellLegend,   name = LE["Legendaries"]},
 				--   ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
 				spec = {
 					enabled = false,
@@ -122,7 +108,8 @@ function EU:OnInitialize()
 					width = 45,
 					func = self.SetCellGuildNote,
 					name = LE["GuildNote"]
-				}
+				},
+
 				-- rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
 			},
 			normalColumns = (function()
@@ -272,7 +259,7 @@ function EU:OnInitialize()
                        					and {
 						"pawn", "setPieces", "legendaries", "guildNotes"
 					} or {
-		"pawn", "traits", "sockets", "titanforged", "spec", "bonus", "guildNotes" --[["rcscore"]]
+		"pawn", "legendaries", "sockets", "spec", "bonus", "guildNotes" --[["rcscore"]]
 	}
 	-- The order of which the normal cols appear ANYWHERE in the options
 	self.optionsNormalColOrder = addon.isClassic and {
@@ -321,6 +308,9 @@ function EU:OnEnable()
 		session = s
 	end)
 
+   -- Hook addon.OnLootTableReceived, as we can't yet guarantee the comms callback order.
+   self:SecureHook(addon, "OnLootTableReceived", "OnLootTableReceived")
+
 	-- Translate sortNext into colNames
 	self.sortNext = {}
 	for _, v in ipairs(self.votingFrame.scrollCols) do
@@ -341,14 +331,12 @@ function EU:OnDisable()
 	self.votingFrame.scrollCols = self.originalCols
 	self:UnregisterAllComm()
 	self:UnregisterAllEvents()
+   self:UnhookAll()
 end
 
 function EU:SetupComms (args)
    -- RCLootCouncil Comms:
    Comms:BulkSubscribe(addon.PREFIXES.MAIN, {
-      lootTable = function(data)
-         self:OnLootTableReceived(unpack(data))
-      end,
       lt_add = function ()
          if PawnVersion then -- Currently only Pawn has session specific data
 				self:Send("group", "data", self:BuildData())
@@ -371,9 +359,10 @@ function EU:SetupComms (args)
    })
 end
 
-function EU:OnLootTableReceived (lt)
+function EU:OnLootTableReceived ()
+   self.Log:D("OnLootTableReceived")
    -- And grap a copy
-	lootTable = unpack(lt)
+	lootTable = addon:GetLootTable()
 	-- Send out our data
 	self:Send("group", "data",	self:BuildData())
 
@@ -559,6 +548,7 @@ function EU:GetScrollColIndexFromName(name)
 end
 
 local function calcPawnScore(spec)
+   EU.Log:D("calcPawnScore for ", spec)
 	local score = {}
 	-- Calculate pawn scoresg
 	if PawnVersion then
@@ -570,10 +560,13 @@ local function calcPawnScore(spec)
 			-- Find the lowest score and use that
 			local score1 = EU:GetPawnScore(item1, addon.playerClass, spec)
 			local score2 = EU:GetPawnScore(item2, addon.playerClass, spec)
+         EU.Log:D("Scores:", score1, score2)
 			score[session].equipped = addon.round(
                           							(score2 and score1 > score2) and score2
                           											or score1 or 0, 3)
+         EU.Log:D("Pawn score:", session, score[session].equipped)
 		end
+
 	end
 	return score
 end
@@ -585,14 +578,8 @@ function EU:BuildData()
 		return {setPieces = 0, legend = legend, pawn = calcPawnScore(0)}
 	else
 		local spec = (GetSpecializationInfo(GetSpecialization()))
-		-- Heart of Azeroth
-		local hoaLocation = _G.C_AzeriteItem.FindActiveAzeriteItem()
-		local hoalvl = 0
-		if hoaLocation then hoalvl = _G.C_AzeriteItem.GetPowerLevel(hoaLocation) end
-
 		return {
 			forged = forged,
-			traits = hoalvl,
 			-- setPieces = 0,
 			sockets = sockets,
 			-- upgrades = upgrades,
@@ -701,7 +688,7 @@ function EU:GetPawnScore(link, class, spec)
 	if debugPawn then self.Log:D("GetPawnScore", link, class, spec) end
 	local item = _G.PawnGetItemData(link)
 	if not (item and class and spec) then
-		return -- self.Log:D("Error in :GetPawnScore", link, item, class, spec)
+		return self.Log:E("GetPawnScore", link, item, class, spec)
 	end
 	local scaleName = addon.isClassic
                   					and _G.PawnFindScaleForSpec(addon.classTagNameToID[class])
@@ -819,13 +806,6 @@ end
 function EU.SetCellForged(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
 	local name = data[realrow].name
 	local val = playerData[name] and playerData[name].forged or 0
-	frame.text:SetText(val)
-	data[realrow].cols[column].value = val
-end
-
-function EU.SetCellTraits(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
-	local name = data[realrow].name
-	local val = playerData[name] and playerData[name].traits or 0
 	frame.text:SetText(val)
 	data[realrow].cols[column].value = val
 end
@@ -1065,8 +1045,9 @@ end
 function EU:FixOldOptions()
 	if addon.isClassic then return end -- We need them here :P
 	-- Remnants of removed columns can cause issues if they're still present in the SV
-	self.db.columns.legendaries = nil
 	self.db.columns.upgrades = nil
 	self.db.columns.setPieces = nil
 	self.db.columns.ilvlUpgrade = nil
+   self.db.columns.traits = nil
+   self.db.columns.titanforged = nil
 end

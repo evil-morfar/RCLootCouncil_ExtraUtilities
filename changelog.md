@@ -2,6 +2,14 @@
 ## Changes
 * Updated for Shadowlands and RCLootCouncil v3.0.
 
+### Added
+Legendaries column has been readded to retail.
+
+### Removed
+The following columns no longer makes sense in retail and has been removed:
+* Traits
+* Titanforged
+
 ## Bugfixes
 *Previous bonus rolls are now reset with each session.*
 

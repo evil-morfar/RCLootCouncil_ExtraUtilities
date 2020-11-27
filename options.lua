@@ -37,13 +37,6 @@ function EU:OptionsTable()
                         desc = LE["opt_pawn_desc"],
                         tristate = true,
                      },
-                     traits = {
-                        name = LE["Artifact Traits"],
-                        order = 2,
-                        type = "toggle",
-                        desc = LE["opt_traits_desc"],
-                        hidden = addon.isClassic,
-                     },
                      -- upgrades = {
                      --    name = LE["Upgrades"],
                      --    order = 3,
@@ -64,19 +57,11 @@ function EU:OptionsTable()
                         desc = LE["opt_setpieces_desc"],
                         hidden = not addon.isClassic,
                      },
-                     titanforged = {
-                        name = LE["Forged"],
-                        order = 6,
-                        type = "toggle",
-                        desc = LE["opt_forged_desc"],
-                        hidden = addon.isClassic,
-                     },
                      legendaries = {
                         name = LE["Legendaries"],
                         order = 7,
                         type = "toggle",
                         desc = LE["opt_legendaries_desc"],
-                        hidden = not addon.isClassic,
                      },
                      -- ilvlUpgrade = {
                      --    name = LE["ilvl Upgrades"],
@@ -407,6 +392,7 @@ function EU:ColGet(info)
          if not (Details or Recount or Skada) then return nil end
       end
    end
+   if not self.db.columns[info[#info]] then self.Log:E(self.db.columns[info[#info]], "doesn't exist!"); return false end
    return self.db.columns[info[#info]].enabled
 end
 
