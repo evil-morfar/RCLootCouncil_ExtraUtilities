@@ -7,6 +7,7 @@
          lootTable
          lt_add
          bonus_roll
+         cov
       RCLCeu:
          data         - Candidate sends EU data packet.
          dataR        - Candidate requests EU data packet.
@@ -21,7 +22,10 @@ local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
 
 local Log = addon.Require "Log"
 local Comms = addon.Require "Services.Comms"
+--- @type Data.Player
 local Player = addon.Require "Data.Player"
+---@type Cache
+local Cache = addon.Require "Data.Cache":GetNewCache(86400) -- 1 day cache time
 
 local commsPrefix = "RCLCeu"
 
@@ -29,8 +33,8 @@ local playerData = {} -- Table containing all EU data received, format playerDat
 local lootTable = {}
 local session = 0
 local guildInfo = {}
-local debugPawn = true
-local debugRCScore = true
+local debugPawn = false
+local debugRCScore = false
 
 local unpack, pairs, ipairs, UnitGUID = unpack, pairs, ipairs, UnitGUID
 
@@ -73,7 +77,7 @@ function EU:OnInitialize()
 				--   upgrades =        { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"]},
 				pawn = {
 					enabled = false,
-					pos = -3,
+					pos = 7,
 					width = 50,
 					func = self.SetCellPawn,
 					name = "Pawn"
@@ -109,6 +113,14 @@ function EU:OnInitialize()
 					func = self.SetCellGuildNote,
 					name = LE["GuildNote"]
 				},
+
+				covenant = {
+					enabled = true,
+					pos = 8,
+					width = 45,
+					func = self.SetCellCovenant,
+					name = "Covenant"
+				}
 
 				-- rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
 			},
@@ -259,7 +271,7 @@ function EU:OnInitialize()
                        					and {
 						"pawn", "setPieces", "legendaries", "guildNotes"
 					} or {
-		"pawn", "legendaries", "sockets", "spec", "bonus", "guildNotes" --[["rcscore"]]
+		"pawn", "legendaries", "sockets", "spec", "bonus", "guildNotes", "covenant" --[["rcscore"]]
 	}
 	-- The order of which the normal cols appear ANYWHERE in the options
 	self.optionsNormalColOrder = addon.isClassic and {
@@ -336,17 +348,22 @@ end
 
 function EU:SetupComms (args)
    -- RCLootCouncil Comms:
-   Comms:BulkSubscribe(addon.PREFIXES.MAIN, {
-      lt_add = function ()
-         if PawnVersion then -- Currently only Pawn has session specific data
+	Comms:BulkSubscribe(addon.PREFIXES.MAIN, {
+		lt_add = function ()
+			if PawnVersion then -- Currently only Pawn has session specific data
 				self:Send("group", "data", self:BuildData())
 			end
-      end,
+		end,
 
-      bonus_roll = function (data, sender)
-         local type, link = unpack(data)
-         self:OnBonusRollReceived(sender, type, link)
-      end
+		bonus_roll = function (data, sender)
+			local type, link = unpack(data)
+			self:OnBonusRollReceived(sender, type, link)
+		end,
+
+		cov = function(data, sender)
+			self:OnCovenantDataReceived(sender, unpack(data))
+		end
+
    })
    -- EU Comms:
    Comms:BulkSubscribe(commsPrefix, {
@@ -366,14 +383,43 @@ function EU:OnLootTableReceived ()
 	-- Send out our data
 	self:Send("group", "data",	self:BuildData())
 
+   -- Setup player data if it doesn't exist yet
+   if not next(playerData) then
+	  for name in addon:GroupIterator() do
+		playerData[name] = {}
+	  end
+   end
 	-- Clear old bonus references
-	for _, v in pairs(playerData) do
+	for name, v in pairs(playerData) do
 		if v.bonusReference and v.bonusReference ~= addon.bossName then
 			v.bonusType = nil
 			v.bonusLink = nil
 			v.bonusReference = nil
 		end
+		if not v.covenantID then
+         self.Log:D("No covenantID for ", name)
+			local id = Cache:Get(name.."covenantID")
+			if id then
+            self.Log:D("Found cached ", id)
+				v.covenantID = id
+			else
+            self.Log:D("Requsting ID")
+				Comms:Send {
+               prefix = addon.PREFIXES.MAIN,
+               taget = Player:Get(name),
+               command = "getCov"
+            }
+			end
+		end
 	end
+	self.votingFrame:Update()
+end
+
+function EU:OnCovenantDataReceived(name, covenantID)
+   self.Log:D("OnCovenantDataReceived", name, covenantID)
+	Cache:Set(name .. "covenantID", covenantID)
+	if not playerData[name] then playerData[name] = {} end
+	playerData[name].covenantID = covenantID
 	self.votingFrame:Update()
 end
 
@@ -579,11 +625,11 @@ function EU:BuildData()
 	else
 		local spec = (GetSpecializationInfo(GetSpecialization()))
 		return {
-			forged = forged,
+			--forged = forged,
 			-- setPieces = 0,
 			sockets = sockets,
 			-- upgrades = upgrades,
-			-- legend = legend,
+			legend = legend,
 			-- upgradeIlvl = ilvl,
 			specID = spec,
 			pawn = calcPawnScore(spec)
@@ -916,6 +962,42 @@ function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column, 
 		data[realrow].cols[column].value = 0
 	end
 	frame.noteBtn = f
+end
+
+local covenantCache = {}
+
+local getCovenantData = function (id)
+   if covenantCache[id] then return covenantCache[id] end
+   if not C_Covenants then return nil end
+   local data = C_Covenants.GetCovenantData(id)
+   covenantCache[id] = data
+   return data
+end
+
+function EU.SetCellCovenant(rowFrame, frame, data, cols, row, realrow, column, fShow, table, ...)
+	local name = data[realrow].name
+	local covenantID = playerData[name] and playerData[name].covenantID or 0
+
+	if not covenantID or covenantID == 0 then
+		if frame.tex then
+			frame.tex:Hide()
+		end
+		frame.text:SetText(_G.NONE)
+		return
+	end
+	local data = getCovenantData(covenantID)
+	if not data then return end -- Failsafe
+	if not frame.tex then
+		frame.tex = frame:CreateTexture()
+		local width = frame:GetWidth()
+		frame.tex:SetPoint("TOPLEFT", frame, "TOPLEFT", width / 4, 0)
+		frame.tex:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -width / 4, 0)
+		function frame.tex.GetObjectType () return "Texture" end -- Needed in TextureUtil with below call
+	end
+	SetupTextureKitOnFrame(data.textureKit, frame.tex, "CovenantChoice-Celebration-%sSigil",TextureKitConstants.SetVisibility, TextureKitConstants.UseAtlasSize)
+	frame:SetScript("OnEnter", function() addon:CreateTooltip(data.name) end)
+	frame:SetScript("OnLeave", function() addon:HideTooltip() end)
+	frame.text:SetText("")
 end
 
 -- Max percentile: (MOD(ilvl,893)/3+1)*101068+614274

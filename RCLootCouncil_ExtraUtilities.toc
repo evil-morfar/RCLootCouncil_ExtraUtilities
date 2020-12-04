@@ -3,7 +3,7 @@
 ## Title: RCLootCouncil - Extra Utilities
 ## Version: 1.0.0
 #@retail@
-## Interface: 90001
+## Interface: 90002
 ## Dependencies: RCLootCouncil
 #@end-retail@
 #@non-retail@
@@ -14,6 +14,8 @@
 
 Locale\Locales.xml
 Libs\LibItemUpgradeInfo-1.0\Core.lua
+
+Classes\Cache.lua
 
 votingUtils.lua
 options.lua

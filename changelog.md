@@ -3,7 +3,9 @@
 * Updated for Shadowlands and RCLootCouncil v3.0.
 
 ### Added
-Legendaries column has been readded to retail.
+Legendaries column has been readded to retail.  
+Covenant column added to retail.
+
 
 ### Removed
 The following columns no longer makes sense in retail and has been removed:
