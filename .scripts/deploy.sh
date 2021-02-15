@@ -22,13 +22,15 @@ WOWEDITION="_retail_"
 is_classic=false
 
 # Commandline inputs
-while getopts ":cp" opt; do
+while getopts ":cpb" opt; do
 	case $opt in
       c)
          WOWEDITION="_classic_"
 			is_classic=true;;
       p)
          WOWEDITION="_ptr_";;
+      b)
+         WOWEDITION="_beta_";;
       /?)
          usage ;;
    esac
