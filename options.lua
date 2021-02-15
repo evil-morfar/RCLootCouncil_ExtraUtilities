@@ -178,7 +178,7 @@ function EU:OptionsTable()
             type = "group",
             name = "Pawn",
             desc = LE["Pawn specific options"],
-            disabled = function() return not PawnVersion end,
+            disabled = function() return not _G.PawnVersion end,
             childGroups = "tab",
             args = {
                acceptPawn = {
@@ -381,9 +381,9 @@ function EU:ColSet(info, val)
    if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
    if info.option.tristate then
       if info[#info] == "pawn" then
-         if not PawnVersion then return addon:Print(info.option.name, LE["opt_addon_requirement"]) end
+         if not _G.PawnVersion then return addon:Print(info.option.name, LE["opt_addon_requirement"]) end
       elseif info[#info] == "rcscore" then
-         if not (Details or Recount or Skada) then return addon:Print("A damage meter", LE["opt_addon_requirement"]) end
+         if not (_G.Details or _G.Recount or _G.Skada) then return addon:Print("A damage meter", LE["opt_addon_requirement"]) end
       end
    end
    -- v0.5.0: we can't use val anymore as we have tristates, so just invert stuff
@@ -394,9 +394,9 @@ end
 function EU:ColGet(info)
    if info.option.tristate then
       if info[#info] == "pawn" then
-         if not PawnVersion then return nil end
+         if not _G.PawnVersion then return nil end
       elseif info[#info] == "rcscore" then
-         if not (Details or Recount or Skada) then return nil end
+         if not (_G.Details or _G.Recount or _G.Skada) then return nil end
       end
    end
    if not self.db.columns[info[#info]] then self.Log:E(self.db.columns[info[#info]], "doesn't exist!"); return false end
@@ -405,9 +405,9 @@ end
 
 -- Seperate Pawn scales for sanity
 function EU:CreatePawnScaleOptions(options)
-   if not PawnVersion then return options end -- Just in case
+   if not _G.PawnVersion then return options end -- Just in case
    local scales = {}
-   for k in pairs(PawnCommon.Scales) do
+   for k in pairs(_G.PawnCommon.Scales) do
       scales[k] = k
    end
    local i = 1

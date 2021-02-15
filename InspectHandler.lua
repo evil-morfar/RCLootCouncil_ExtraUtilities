@@ -13,7 +13,6 @@ module.InspectHandler = {}
 local callback -- The callback function
 local pool = { size = 0} -- Inspect pool
 local isInspecting = false
-local inspectIndex = 1
 local cache = {}
 
 --[[
