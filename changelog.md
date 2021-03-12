@@ -1,3 +1,9 @@
+# 1.0.1
+
+## Changes 
+
+Updated toc for patch 9.0.5.
+
 # 1.0.0
 ## Changes
 * Updated for Shadowlands and RCLootCouncil v3.0.
