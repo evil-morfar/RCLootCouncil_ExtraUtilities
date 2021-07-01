@@ -19,7 +19,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
 
-local Log = addon.Require "Log"
+local Log = addon.Require "Utils.Log"
 local Comms = addon.Require "Services.Comms"
 --- @type Data.Player
 local Player = addon.Require "Data.Player"
@@ -39,7 +39,7 @@ local unpack, pairs, ipairs, UnitGUID = unpack, pairs, ipairs, UnitGUID
 
 function EU:OnInitialize()
     self.version = GetAddOnMetadata("RCLootCouncil_ExtraUtilities", "Version")
-    self.tVersion = "Alpha.1"
+    self.tVersion = nil
     self.Log = Log:New "EU"
     self.defaults = {
         profile = {
