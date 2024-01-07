@@ -12,7 +12,9 @@
          data         - Candidate sends EU data packet.
          dataR        - Candidate requests EU data packet.
 
-]] local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
+]] 
+--- @class RCLootCouncil
+local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
 EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0",
                      "AceHook-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
@@ -119,13 +121,13 @@ function EU:OnInitialize()
                     name = LE["GuildNote"]
                 },
 
-                covenant = {
-                    enabled = true,
-                    pos = 8,
-                    width = 45,
-                    func = self.SetCellCovenant,
-                    name = "Covenant"
-                }
+                -- covenant = {
+                --     enabled = true,
+                --     pos = 8,
+                --     width = 45,
+                --     func = self.SetCellCovenant,
+                --     name = "Covenant"
+                -- }
 
                 -- rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
             },
@@ -268,6 +270,11 @@ function EU:OnInitialize()
                         DEMONHUNTER = {
                             [577] = '"MrRobot":DEMONHUNTER1', -- Havoc
                             [581] = '"MrRobot":DEMONHUNTER2' -- Vengeance
+                        },
+                        EVOKER = {
+                            [1467] = '"MrRobot":EVOKER1', -- Devastation
+                            [1468] = '"MrRobot":EVOKER2', -- Preservation
+                            [1473] = '"MrRobot":EVOKER3', -- Augmentation
                         }
                     }
                 end
@@ -281,7 +288,7 @@ function EU:OnInitialize()
             "pawn", "setPieces", "legendaries", "guildNotes"
         } or {
         "pawn", "legendaries", "sockets", "spec", "bonus", "guildNotes",
-        "covenant" --[["rcscore"]]
+        --[["covenant"]] --[["rcscore"]]
     }
     -- The order of which the normal cols appear ANYWHERE in the options
     self.optionsNormalColOrder = addon.isClassic and {
@@ -367,9 +374,9 @@ function EU:SetupComms(args)
             self:OnBonusRollReceived(sender, type, link)
         end,
 
-        cov = function(data, sender)
-            self:OnCovenantDataReceived(sender, unpack(data))
-        end
+        -- cov = function(data, sender)
+        --     self:OnCovenantDataReceived(sender, unpack(data))
+        -- end
 
     })
     -- EU Comms:
@@ -401,32 +408,32 @@ function EU:OnLootTableReceived()
             v.bonusLink = nil
             v.bonusReference = nil
         end
-        if not v.covenantID then
-            self.Log:D("No covenantID for ", name)
-            local id = Cache:Get(name .. "covenantID")
-            if id then
-                self.Log:D("Found cached ", id)
-                v.covenantID = id
-            else
-                self.Log:D("Requsting ID")
-                Comms:Send{
-                    prefix = addon.PREFIXES.MAIN,
-                    taget = Player:Get(name),
-                    command = "getCov"
-                }
-            end
-        end
+        -- if not v.covenantID then
+        --     self.Log:D("No covenantID for ", name)
+        --     local id = Cache:Get(name .. "covenantID")
+        --     if id then
+        --         self.Log:D("Found cached ", id)
+        --         v.covenantID = id
+        --     else
+        --         self.Log:D("Requsting ID")
+        --         Comms:Send{
+        --             prefix = addon.PREFIXES.MAIN,
+        --             taget = Player:Get(name),
+        --             command = "getCov"
+        --         }
+        --     end
+        -- end
     end
     self.votingFrame:Update()
 end
 
-function EU:OnCovenantDataReceived(name, covenantID)
-    self.Log:D("OnCovenantDataReceived", name, covenantID)
-    Cache:Set(name .. "covenantID", covenantID)
-    if not playerData[name] then playerData[name] = {} end
-    playerData[name].covenantID = covenantID
-    self.votingFrame:Update()
-end
+-- function EU:OnCovenantDataReceived(name, covenantID)
+--     self.Log:D("OnCovenantDataReceived", name, covenantID)
+--     Cache:Set(name .. "covenantID", covenantID)
+--     if not playerData[name] then playerData[name] = {} end
+--     playerData[name].covenantID = covenantID
+--     self.votingFrame:Update()
+-- end
 
 function EU:OnBonusRollReceived(name, type, link)
     if not playerData[name] then playerData[name] = {} end
@@ -670,8 +677,19 @@ function EU:GetEquippedItemData()
 
                 if color == "ff8000" then legend = legend + 1 end
 
-                if (gemID1 > 0 or gemID2 > 0) and i ~= 16 then -- Avoid artifact as it has relics in its' gemIDs
-                    sockets = sockets + 1
+                if i ~= 16 then -- Avoid artifact as it has relics in its' gemIDs
+                    if gemID1 > 0 then
+                        sockets = sockets + 1
+                    end
+                    if gemID2 > 0 then
+                        sockets = sockets + 1
+                    end
+                    if gemID3 > 0 then
+                        sockets = sockets + 1
+                    end
+                    if gemID4 > 0 then
+                        sockets = sockets + 1
+                    end
                 end
 
                 if numBonuses > 0 then
@@ -755,7 +773,9 @@ function EU:GetPawnScore(link, class, spec)
                           _G.PawnFindScaleForSpec(addon.classTagNameToID[class]) or
                           self.db.pawn[class][spec]
     -- Normalize
-    _G.PawnCommon.Scales[scaleName].NormalizationFactor = 1
+    if _G.PawnCommon.Scales[scaleName] then
+        _G.PawnCommon.Scales[scaleName].NormalizationFactor = 1
+    end
     local score = _G.PawnGetSingleValueFromItem(item, scaleName)
     return score
 end
@@ -993,43 +1013,43 @@ function EU.SetCellGuildNote(rowFrame, frame, data, cols, row, realrow, column,
     frame.noteBtn = f
 end
 
-local covenantCache = {}
+-- local covenantCache = {}
 
-local getCovenantData = function(id)
-    if covenantCache[id] then return covenantCache[id] end
-    if not C_Covenants then return nil end
-    local data = C_Covenants.GetCovenantData(id)
-    covenantCache[id] = data
-    return data
-end
+-- local getCovenantData = function(id)
+--     if covenantCache[id] then return covenantCache[id] end
+--     if not C_Covenants then return nil end
+--     local data = C_Covenants.GetCovenantData(id)
+--     covenantCache[id] = data
+--     return data
+-- end
 
-function EU.SetCellCovenant(rowFrame, frame, data, cols, row, realrow, column,
-                            fShow, table, ...)
-    local name = data[realrow].name
-    local covenantID = playerData[name] and playerData[name].covenantID or 0
+-- function EU.SetCellCovenant(rowFrame, frame, data, cols, row, realrow, column,
+--                             fShow, table, ...)
+--     local name = data[realrow].name
+--     local covenantID = playerData[name] and playerData[name].covenantID or 0
 
-    if not covenantID or covenantID == 0 then
-        if frame.tex then frame.tex:Hide() end
-        frame.text:SetText(_G.NONE)
-        return
-    end
-    local data = getCovenantData(covenantID)
-    if not data then return end -- Failsafe
-    if not frame.tex then
-        frame.tex = frame:CreateTexture()
-        local width = frame:GetWidth()
-        frame.tex:SetPoint("TOPLEFT", frame, "TOPLEFT", width / 4, 0)
-        frame.tex:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -width / 4, 0)
-        function frame.tex.GetObjectType() return "Texture" end -- Needed in TextureUtil with below call
-    end
-    SetupTextureKitOnFrame(data.textureKit, frame.tex,
-                           "CovenantChoice-Celebration-%sSigil",
-                           TextureKitConstants.SetVisibility,
-                           TextureKitConstants.UseAtlasSize)
-    frame:SetScript("OnEnter", function() addon:CreateTooltip(data.name) end)
-    frame:SetScript("OnLeave", function() addon:HideTooltip() end)
-    frame.text:SetText("")
-end
+--     if not covenantID or covenantID == 0 then
+--         if frame.tex then frame.tex:Hide() end
+--         frame.text:SetText(_G.NONE)
+--         return
+--     end
+--     local data = getCovenantData(covenantID)
+--     if not data then return end -- Failsafe
+--     if not frame.tex then
+--         frame.tex = frame:CreateTexture()
+--         local width = frame:GetWidth()
+--         frame.tex:SetPoint("TOPLEFT", frame, "TOPLEFT", width / 4, 0)
+--         frame.tex:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -width / 4, 0)
+--         function frame.tex.GetObjectType() return "Texture" end -- Needed in TextureUtil with below call
+--     end
+--     SetupTextureKitOnFrame(data.textureKit, frame.tex,
+--                            "CovenantChoice-Celebration-%sSigil",
+--                            TextureKitConstants.SetVisibility,
+--                            TextureKitConstants.UseAtlasSize)
+--     frame:SetScript("OnEnter", function() addon:CreateTooltip(data.name) end)
+--     frame:SetScript("OnLeave", function() addon:HideTooltip() end)
+--     frame.text:SetText("")
+-- end
 
 -- Max percentile: (MOD(ilvl,893)/3+1)*101068+614274
 -- local function getDPSRCScore(dps, ilvl)

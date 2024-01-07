@@ -89,13 +89,13 @@ function EU:OptionsTable()
                         type = "toggle",
                         desc = LE["opt_guildNotes_desc"],
                      },
-                     covenant = {
-                        name = "Covenant",
-                        order = 12,
-                        type = "toggle",
-                        desc = "Enables a column showing which covenant the candidate has chosen.",
-                        hidden = addon.isClassic,
-                     },
+                     -- covenant = {
+                     --    name = "Covenant",
+                     --    order = 12,
+                     --    type = "toggle",
+                     --    desc = "Enables a column showing which covenant the candidate has chosen.",
+                     --    hidden = addon.isClassic,
+                     -- },
                      -- rcscore = {
                      --    name = "RC Score",
                      --    order = 12,
