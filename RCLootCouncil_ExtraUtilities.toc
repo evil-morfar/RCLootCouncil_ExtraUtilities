@@ -2,14 +2,8 @@
 ## Notes: An RCLootCouncil module for more advanced utilities.
 ## Title: RCLootCouncil - Extra Utilities
 ## Version: 1.2.0
-#@retail@
-## Interface: 90105
+## Interface: 110000, 100207
 ## Dependencies: RCLootCouncil
-#@end-retail@
-#@non-retail@
-# ## Interface: 11304
-# ## Dependencies: RCLootCouncil_Classic
-#@end-non-retail@
 ## X-Curse-Project-ID: 257427
 
 Locale\Locales.xml

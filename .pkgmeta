@@ -6,7 +6,7 @@ externals:
       tag: latest
 
 manual-changelog:
-    filename: changelog.md
+    filename: changes.md
     markup-type: markdown
 
 ignore:
