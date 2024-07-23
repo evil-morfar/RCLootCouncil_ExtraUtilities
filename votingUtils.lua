@@ -49,7 +49,7 @@ function EU:OnInitialize()
                     pos = -3,
                     width = 50,
                     func = self.SetCellPawn,
-                    name = "Pawn"
+                    name = "Pawn",
                 },
                 setPieces = {
                     enabled = true,
@@ -299,7 +299,7 @@ function EU:OnInitialize()
 
     Comms:RegisterPrefix(commsPrefix)
     self.Send = Comms:GetSender(commsPrefix)
-    self:ScheduleTimer("Enable", 1) -- Delay a bit
+    self:ScheduleTimer("Enable", 0) -- Delay a bit
 end
 
 function EU:OpenOptions()
@@ -466,7 +466,7 @@ function EU:UpdateColumn(name, add)
         end
         tinsert(self.votingFrame.scrollCols, pos, {
             name = col.name,
-            align = "CENTER",
+            align = col.align or "LEFT",
             width = col.width,
             DoCellUpdate = col.func,
             colName = name,
@@ -512,7 +512,7 @@ function EU:SetupColumns()
             temp = self.db.columns[v.name]
             tinsert(newCols, {
                 name = temp.name,
-                align = temp.align or "CENTER",
+                align = temp.align or "LEFT",
                 width = temp.width,
                 DoCellUpdate = temp.func,
                 colName = v.name,
@@ -541,20 +541,25 @@ function EU:UpdateSortNext()
             self.votingFrame.scrollCols[index].sortNext = exists
         end
     end
+    self:UpdateVotingFrameColumns()
+end
+
+function EU:UpdateVotingFrameColumns()
+    if self.votingFrame.frame then
+        -- Update the width of the cols
+        self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
+        -- Now update the frame width
+        self.votingFrame.frame:SetWidth(self.votingFrame.frame.st.frame:GetWidth() + 20)
+    end
 end
 
 function EU:UpdateColumnWidth(name, width)
     -- Our storage has now been updated, but we still need to edit it in the scrollCols table:
     local i = self:GetScrollColIndexFromName(name)
+    if not self.votingFrame.scrollCols[i] then return end
     self.votingFrame.scrollCols[i].width = width
     -- The frame might not yet be created, so check before altering anything
-    if self.votingFrame.frame then
-        -- Update the width of the cols
-        self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
-        -- Now update the frame width
-        self.votingFrame.frame:SetWidth(
-            self.votingFrame.frame.st.frame:GetWidth() + 20)
-    end
+    self:UpdateVotingFrameColumns()
 end
 
 function EU:UpdateColumnPosition(name, pos)

@@ -1,3 +1,11 @@
+# 1.2.0
+
+Updated for patch 11.0.0
+
+## Changes
+
+Position and width options are now disabled if the column itself is disabled.
+
 # 1.1.1
 
 ## Changes
