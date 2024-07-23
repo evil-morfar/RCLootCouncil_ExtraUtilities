@@ -23,8 +23,6 @@ local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
 
 local Log = addon.Require "Utils.Log"
 local Comms = addon.Require "Services.Comms"
---- @type Data.Player
-local Player = addon.Require "Data.Player"
 
 local commsPrefix = "RCLCeu"
 
