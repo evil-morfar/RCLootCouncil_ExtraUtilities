@@ -15,6 +15,7 @@
 ]]
 --- @class RCLootCouncil
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
+---@class RCExtraUtilities : AceModule, AceComm-3.0, AceConsole-3.0, AceHook-3.0, AceEvent-3.0, AceTimer-3.0
 EU = addon:NewModule("RCExtraUtilities", "AceComm-3.0", "AceConsole-3.0",
     "AceHook-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("RCLootCouncil")
@@ -84,6 +85,7 @@ function EU:OnInitialize()
                     pos = 11,
                     width = 45,
                     func = self.SetCellSocket,
+                    align = "CENTER",
                     name = LE["Sockets"]
                 },
                 -- setPieces =       { enabled = true, pos = 11, width = 40, func = self.SetCellPieces,   name = LE["Set Pieces"]},

@@ -1,4 +1,6 @@
+---@class RCLootCouncil
 local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
+---@class RCExtraUtilities
 local EU = addon:GetModule("RCExtraUtilities")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 
