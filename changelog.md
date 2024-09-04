@@ -1,3 +1,9 @@
+# 1.2.2
+
+## Bugfixes
+
+- *Now preserves columns added by other addons.*
+
 # 1.2.1
 
 Updated for patch 11.0.2

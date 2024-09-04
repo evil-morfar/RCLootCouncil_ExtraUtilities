@@ -492,6 +492,21 @@ function EU:SetupColumns()
                 name = name,
                 pos = v.pos and v.pos or self:GetScrollColIndexFromName(name)
             })
+        else
+            self.votingFrame:RemoveColumn(name)
+        end
+    end
+    for i, v in ipairs(self.votingFrame.scrollCols) do
+        local found = false
+        for _, y in ipairs(cols) do
+            if v.name:lower() == y.name or y.name ==  v.colName then
+                found = true
+            end
+        end
+        if not found then   
+            self.Log:D("Found 3rd party col:", v.colName)
+            tinsert(cols, v)
+            cols[#cols].pos = i
         end
     end
     -- Now we know which columns to add, but we need to "translate" any negative or 0 positions
@@ -518,9 +533,13 @@ function EU:SetupColumns()
                     self:GetScrollColIndexFromName("reponse")
             })
         else -- Handle default column
-            local i = self:GetScrollColIndexFromName(v.name)
+            local i = self:GetScrollColIndexFromName(v.colName or v.name)
             temp = self.votingFrame.scrollCols[i]
-            temp.width = self.db.normalColumns[v.name].width
+            if not self.db.normalColumns[v.name] then
+                temp.width = v.width
+            else
+                temp.width = self.db.normalColumns[v.name].width
+            end
             tinsert(newCols, temp)
         end
     end
