@@ -1,7 +1,7 @@
 ## Author: Potdisc
 ## Notes: An RCLootCouncil module for more advanced utilities.
 ## Title: RCLootCouncil - Extra Utilities
-## Version: 1.2.1
+## Version: 1.2.2
 ## Interface: 110002
 ## Dependencies: RCLootCouncil
 ## X-Curse-Project-ID: 257427
