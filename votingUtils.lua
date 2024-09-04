@@ -321,6 +321,7 @@ function EU:OnEnable()
     self.Log("Enabled", self.version)
     self:SetupComms()
     -- Get the voting frame
+    ---@class RCVotingFrame
     self.votingFrame = addon:GetActiveModule("votingframe")
     -- Crap a copy of the cols
     self.originalCols = { unpack(self.votingFrame.scrollCols) }
@@ -505,7 +506,7 @@ function EU:SetupColumns()
                 found = true
             end
         end
-        if not found then   
+        if not found then
             self.Log:D("Found 3rd party col:", v.colName)
             tinsert(cols, v)
             cols[#cols].pos = i
