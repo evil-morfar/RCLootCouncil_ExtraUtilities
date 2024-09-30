@@ -623,7 +623,7 @@ local function calcPawnScore(spec)
             local score2 = EU:GetPawnScore(item2, addon.playerClass, spec)
             EU.Log:D("Scores:", score1, score2)
             score[session].equipped = addon.round(
-                (score2 and score1 > score2) and
+                (score2 and score1 and score1 > score2) and
                 score2 or score1 or 0, 3)
             EU.Log:D("Pawn score:", session, score[session].equipped)
         end
