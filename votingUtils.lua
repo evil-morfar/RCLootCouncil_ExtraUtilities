@@ -770,6 +770,13 @@ function EU:GetPawnScore(link, class, spec)
     local scaleName = addon.isClassic and
         _G.PawnFindScaleForSpec(addon.classTagNameToID[class]) or
         self.db.pawn[class][spec]
+    -- Ensure this actually exists
+    if not scaleName then
+        if class and class ~= "" then
+            -- Pick the first scale in case we don't have a spec or specID is default
+            scaleName = select(2, next(self.db.pawn[class]))
+        end
+    end
     -- Normalize
     if _G.PawnCommon.Scales[scaleName] then
         _G.PawnCommon.Scales[scaleName].NormalizationFactor = 1
