@@ -1,3 +1,9 @@
+# 1.2.3
+
+## Changes
+
+Updated for patch 11.0.5.
+
 # 1.2.2
 
 ## Bugfixes
