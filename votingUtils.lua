@@ -674,7 +674,7 @@ function EU:GetEquippedItemData()
                 gemID3, gemID4, suffixID, uniqueID, linkLevel,            -- luacheck: no unused
                 specializationID, upgradeTypeID, upgradeID,               -- luacheck: no unused
                 instanceDifficultyID, numBonuses, bonusIDs =              -- luacheck: no unused
-                unpack(data) -- luacheck: no unused 
+                unpack(data) -- luacheck: no unused
 
                 if color == "ff8000" then legend = legend + 1 end
 
@@ -712,7 +712,6 @@ function EU:GetEquippedItemData()
         upgradeIlvl
 end
 function EU:DecodeItemLink(itemLink)
-    print"self decode"
     local bonusIDs = {}
 
     local linkType, itemID, enchantID, gemID1, gemID2, gemID3, gemID4, suffixID, uniqueID, linkLevel, specializationID,

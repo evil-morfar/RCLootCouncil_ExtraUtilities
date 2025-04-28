@@ -194,6 +194,7 @@ globals = {
 	"C_PlayerInfo",
 	"C_System",
 	"C_Unit",
+	"ColorManager",
 
 	-- API functions
 	"AbandonSkill",
