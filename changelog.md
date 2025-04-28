@@ -1,3 +1,11 @@
+# 1.3.1
+
+Updated for patch 11.1.5.
+
+## Bugfixes
+
+- *No longer counts the wrong number of sockets.*
+
 # 1.3.0
 
 Updated for patch 11.1.0.

@@ -24,6 +24,7 @@ local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
 
 local Log = addon.Require "Utils.Log"
 local Comms = addon.Require "Services.Comms"
+local ItemUtils = addon.Require "Utils.Item"
 
 local commsPrefix = "RCLCeu"
 
@@ -667,11 +668,13 @@ function EU:GetEquippedItemData()
                     upgMax = upgMax + max
                     upgradeIlvl = upgradeIlvl + delta
                 end
+                -- Didn't catch this before updating main addon, so reimplement here for now
+                local data = self.version == "1.3.1" and {self:DecodeItemLink(link)} or {addon:DecodeItemLink(link)}
                 local color, itemType, itemID, enchantID, gemID1, gemID2, -- luacheck: no unused
                 gemID3, gemID4, suffixID, uniqueID, linkLevel,            -- luacheck: no unused
                 specializationID, upgradeTypeID, upgradeID,               -- luacheck: no unused
                 instanceDifficultyID, numBonuses, bonusIDs =              -- luacheck: no unused
-                    addon:DecodeItemLink(link)                            -- luacheck: no unused
+                unpack(data) -- luacheck: no unused 
 
                 if color == "ff8000" then legend = legend + 1 end
 
@@ -707,6 +710,53 @@ function EU:GetEquippedItemData()
 
     return titanforged, setPieces, sockets, upg .. "/" .. upgMax, legend,
         upgradeIlvl
+end
+function EU:DecodeItemLink(itemLink)
+    print"self decode"
+    local bonusIDs = {}
+
+    local linkType, itemID, enchantID, gemID1, gemID2, gemID3, gemID4, suffixID, uniqueID, linkLevel, specializationID,
+    upgradeTypeID, instanceDifficultyID, numBonuses, affixes = string.split(":",
+        ItemUtils:GetItemStringFromLink(itemLink), 15)
+
+    -- clean it up
+    local color = string.match(itemLink, "|?c?f?f?(%x*)")
+    if not color or color == "" then -- probably new custom color link type
+        local quality = string.match(itemLink, "|cnIQ(.)")
+        color = ColorManager.GetColorDataForItemQuality(quality and tonumber(quality) or 0).color:GenerateHexColor()
+    end
+    -- local linkType = string.match(itemLink, "|H(.*):")
+    itemID = tonumber(itemID) or 0
+    enchantID = tonumber(enchantID) or 0
+    gemID1 = tonumber(gemID1) or 0
+    gemID2 = tonumber(gemID2) or 0
+    gemID3 = tonumber(gemID3) or 0
+    gemID4 = tonumber(gemID4) or 0
+    suffixID = tonumber(suffixID) or 0
+    uniqueID = tonumber(uniqueID) or 0
+    linkLevel = tonumber(linkLevel) or 0
+    specializationID = tonumber(specializationID) or 0
+    upgradeTypeID = tonumber(upgradeTypeID) or 0
+    instanceDifficultyID = tonumber(instanceDifficultyID) or 0
+    numBonuses = tonumber(numBonuses) or 0
+
+    if numBonuses >= 1 then
+        for i = 1, numBonuses do
+            local bonusID = select(i, string.split(":", affixes))
+            table.insert(bonusIDs, tonumber(bonusID))
+        end
+    end
+
+    -- more clean up
+    local upgradeID
+    if affixes then
+        upgradeID = select(numBonuses + 1, string.split(":", affixes)) or 0
+        upgradeID = string.match(upgradeID, "%d*")
+        upgradeID = tonumber(upgradeID) or 0
+    end
+
+    return color, linkType, itemID, enchantID, gemID1, gemID2, gemID3, gemID4, suffixID, uniqueID, linkLevel,
+        specializationID, upgradeTypeID, upgradeID, instanceDifficultyID, numBonuses, bonusIDs
 end
 
 function EU:UpdateGuildInfo()

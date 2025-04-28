@@ -1,16 +1,4 @@
 {
-    "Lua.runtime.version": "Lua 5.1",
-    "Lua.runtime.builtin": {
-        "basic": "disable",
-        "debug": "disable",
-        "io": "disable",
-        "math": "disable",
-        "os": "disable",
-        "package": "disable",
-        "string": "disable",
-        "table": "disable",
-        "utf8": "disable"
-    },
     "Lua.diagnostics.globals": [
         "lfs",
         "Settings",
@@ -32,6 +20,24 @@
         "INT_SPELL_DURATION_SEC",
         "INT_SPELL_DURATION_HOURS",
         "TIME_UNIT_DELIMITER",
-        "INT_SPELL_DURATION_MIN"
+        "INT_SPELL_DURATION_MIN",
+        "LOCALIZED_CLASS_NAMES_MALE",
+        "INVSLOT_LAST_EQUIPPED",
+        "RAID_CLASS_COLORS",
+        "ITEM_ACCOUNTBOUND_UNTIL_EQUIP",
+        "UIParent",
+        "WOW_PROJECT_MAINLINE",
+        "WOW_PROJECT_ID",
+        "GameTooltip",
+        "getglobal",
+        "tIndexOf",
+        "tInvert",
+        "GetClassColorObj",
+        "tContains",
+        "Item",
+        "CreateAtlasMarkup",
+        "tCompare",
+        "GetUnitName",
+        "Clamp"
     ]
 }
