@@ -1,3 +1,7 @@
+# 1.3.2
+
+Updated for patch 11.1.7.
+
 # 1.3.1
 
 Updated for patch 11.1.5.
