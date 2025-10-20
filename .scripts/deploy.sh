@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This file will copy files located in the toplevel folder of the caller, and paste them in WoW Addon directory.
 # Assumes a ".env" located next to this file or at top level which contains a variable "WOW_LOCATION" pointing
 # to the WoW install location. It also assumes the toplevel folder is named after the addon.
@@ -11,26 +11,28 @@ echo "Executing $0" >&2
 
 # Process command-line options
 usage() {
-	echo "Usage: test.sh [-cp]" >&2
+	echo "Usage: test.sh [-bcpx]" >&2
+	echo "  -b               Pack to _beta_ WoW edition." >&2
 	echo "  -c               Pack to _classic_ WoW edition." >&2
 	echo "  -p               Pack to _ptr_ WoW edition." >&2
+	echo "  -x               Pack to _xptr_ WoW edition." >&2
 }
 
 ADDON_LOC="$(pwd)"
 ADDON="$(basename $ADDON_LOC)"
 WOWEDITION="_retail_"
-is_classic=false
 
 # Commandline inputs
-while getopts ":cpb" opt; do
+while getopts ":bcpx" opt; do
 	case $opt in
-      c)
-         WOWEDITION="_classic_"
-			is_classic=true;;
-      p)
-         WOWEDITION="_ptr_";;
       b)
          WOWEDITION="_beta_";;
+      c)
+         WOWEDITION="_classic_";;
+      p)
+         WOWEDITION="_ptr_";; 
+      x)
+         WOWEDITION="_xptr_";;
       /?)
          usage ;;
    esac
@@ -56,7 +58,7 @@ DEST="$WOW_LOCATION$WOWEDITION/Interface/AddOns/$ADDON"
 
 # Copy to temp folder:
 # cp "$ADDON_LOC" "$TEMP_DEST" -ruv
-robocopy "$ADDON_LOC" "$TEMP_DEST" //s //purge //XD .* __* $(sed "s/^/  /" .gitignore) //XF ?.* __*
+robocopy "$ADDON_LOC" "$TEMP_DEST" //s //purge //XD .* __* $(sed "s/^/  /" .gitignore) //XF ?.* __* //NFL //NDL //NJH //NJS
 
 # Do file replacements.
 . "./.scripts/replace.sh" "$TEMP_DEST" "$is_classic"

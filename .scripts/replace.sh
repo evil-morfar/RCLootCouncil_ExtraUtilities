@@ -1,4 +1,4 @@
-#!/bin/bash
+#!usr/bin/env bash
 
 # Because I'm lazy I don't want release.sh to run on every single dev build.
 # Basic replacements can be done much faster here.
