@@ -260,7 +260,8 @@ function EU:OnInitialize()
                             },
                             DEMONHUNTER = {
                                 [577] = '"MrRobot":DEMONHUNTER1', -- Havoc
-                                [581] = '"MrRobot":DEMONHUNTER2'  -- Vengeance
+                                [581] = '"MrRobot":DEMONHUNTER2',  -- Vengeance
+                                [1480] = '"MrRobot":DEMONHUNTER3'  -- Devourer
                             },
                             EVOKER = {
                                 [1467] = '"MrRobot":EVOKER1', -- Devastation
