@@ -8,31 +8,107 @@
     },
     "tasks": [
         {
-            "label": "Deploy-Local",
-            "type": "shell",
-            "command": "sh .scripts/deploy.sh",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "label": "Deploy All",
+            "dependsOn": [
+                "Deploy All (no clean)",
+                "Clean tmp",
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
         },
         {
-            "label": "Deploy-Local-PTR",
+            "label": "Deploy All PTR",
+            "dependsOn": [
+                "Deploy All PTR (no clean)",
+                "Clean tmp",
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+        },
+        {
+            "label": "Deploy All (no clean)",
+            "dependsOn": [
+                "Deploy Classic",
+                "Deploy Anniversary",
+                "Deploy Prog",
+                "Deploy"
+            ],
+            "dependsOrder": "parallel",
+            "hide": true
+        },
+        {
+            "label": "Deploy All PTR (no clean)",
+            "dependsOn": [
+                "Deploy PTR",
+                "Deploy Prog PTR",
+                "Deploy Classic Beta",
+                "Deploy Classic PTR"
+            ],
+            "dependsOrder": "parallel",
+            "hide": true
+        },
+        {
+            "label": "Deploy Classic",
+            "type": "shell",
+            "command": "sh .scripts/deploy.sh -c",
+        },
+        {
+            "label": "Deploy Anniversary",
+            "type": "shell",
+            "command": "sh .scripts/deploy.sh -a",
+        },
+        {
+            "label": "Deploy Prog",
+            "type": "shell",
+            "command": "sh .scripts/deploy.sh -b",
+        },
+        {
+            "label": "Deploy",
             "type": "shell",
             "command": "sh .scripts/deploy.sh",
-            "args": [
-                "-p"
-            ],
+        },
+        {
+            "label": "Deploy PTR",
+            "type": "shell",
+            "command": "sh .scripts/deploy.sh -p",
             "group": "build"
         },
         {
-            "label": "Deploy-Local-Beta",
+            "label": "Deploy Prog PTR",
             "type": "shell",
-            "command": "sh .scripts/deploy.sh",
+            "command": "sh",
             "args": [
-                "-b"
+                ".scripts/deploy.sh",
+                "-z"
+            ]
+        },
+        {
+            "label": "Deploy Classic PTR",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                ".scripts/deploy.sh",
+                "-x"
+            ]
+        },
+        {
+            "label": "Deploy Classic Beta",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                ".scripts/deploy.sh",
+                "-d"
+            ]
+        },
+        {
+            "label": "Clean tmp",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "-rf",
+                ".tmp"
             ],
-            "group": "build"
-        }
+            "hide": true
+        },
     ]
 }

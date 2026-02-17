@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!usr/bin/sh
 # This file will copy files located in the toplevel folder of the caller, and paste them in WoW Addon directory.
 # Assumes a ".env" located next to this file or at top level which contains a variable "WOW_LOCATION" pointing
 # to the WoW install location. It also assumes the toplevel folder is named after the addon.
@@ -11,11 +11,14 @@ echo "Executing $0" >&2
 
 # Process command-line options
 usage() {
-	echo "Usage: test.sh [-bcpx]" >&2
-	echo "  -b               Pack to _beta_ WoW edition." >&2
-	echo "  -c               Pack to _classic_ WoW edition." >&2
+	echo "Usage: test.sh [-abcdzxp]" >&2
+	echo "  -a               Pack to _anniversary_ WoW edition. (TBC)" >&2
+	echo "  -b               Pack to _classic_ WoW edition. (Prog)" >&2
+	echo "  -c               Pack to _classic_era_ WoW edition. (Classic)" >&2
+	echo "  -d               Pack to _classic_beta_ WoW edition." >&2
+	echo "  -z               Pack to _classic_ptr_ WoW edition. (Prog PTR)" >&2
+	echo "  -x               Pack to _classic_era_ptr_ WoW edition. (Classic PTR)" >&2
 	echo "  -p               Pack to _ptr_ WoW edition." >&2
-	echo "  -x               Pack to _xptr_ WoW edition." >&2
 }
 
 ADDON_LOC="$(pwd)"
@@ -23,16 +26,22 @@ ADDON="$(basename $ADDON_LOC)"
 WOWEDITION="_retail_"
 
 # Commandline inputs
-while getopts ":bcpx" opt; do
+while getopts ":acbdzxp" opt; do
 	case $opt in
-      b)
-         WOWEDITION="_beta_";;
+      a)
+         WOWEDITION="_anniversary_";;
       c)
-         WOWEDITION="_classic_";;
-      p)
-         WOWEDITION="_ptr_";; 
+         WOWEDITION="_classic_era_";;
+      b)
+         WOWEDITION="_classic_";; 
+      d)
+         WOWEDITION="_classic_beta_";;
+      z)
+         WOWEDITION="_classic_ptr_";;
       x)
-         WOWEDITION="_xptr_";;
+         WOWEDITION="_classic_era_ptr_";;
+      p)
+         WOWEDITION="_ptr_";;
       /?)
          usage ;;
    esac
@@ -53,7 +62,7 @@ if [ -z "$WOW_LOCATION" ]; then
    exit;
 fi
 
-TEMP_DEST=".tmp/$ADDON"
+TEMP_DEST="$ADDON_LOC/.tmp/$ADDON/$WOWEDITION"
 DEST="$WOW_LOCATION$WOWEDITION/Interface/AddOns/$ADDON"
 
 # Copy to temp folder:
@@ -63,7 +72,7 @@ robocopy "$ADDON_LOC" "$TEMP_DEST" //s //purge //XD .* __* $(sed "s/^/  /" .giti
 # Do file replacements.
 . "./.scripts/replace.sh" "$TEMP_DEST" "$is_classic"
 
-robocopy "$TEMP_DEST" "$DEST" //s //purge //XD .* __*  //XF ?.* __* //NFL //NDL //NJH
+robocopy "$TEMP_DEST" "$DEST" //s //purge //XD .* __*  //XF ?.* __* sed* //NFL //NDL //NJH
 
-rm -r ".tmp/"
-echo "Finished deploying $ADDON"
+rm -r "$TEMP_DEST"
+echo "Finished deploying $ADDON classic: $is_classic"
