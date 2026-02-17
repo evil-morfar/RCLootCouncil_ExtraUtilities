@@ -29,17 +29,23 @@ WOWEDITION="_retail_"
 while getopts ":acbdzxp" opt; do
 	case $opt in
       a)
-         WOWEDITION="_anniversary_";;
+         WOWEDITION="_anniversary_"
+         is_classic="true";;
       c)
-         WOWEDITION="_classic_era_";;
+         WOWEDITION="_classic_era_"
+         is_classic="true";;
       b)
-         WOWEDITION="_classic_";; 
+         WOWEDITION="_classic_"
+         is_classic="true";; 
       d)
-         WOWEDITION="_classic_beta_";;
+         WOWEDITION="_classic_beta_"
+         is_classic="true";;
       z)
-         WOWEDITION="_classic_ptr_";;
+         WOWEDITION="_classic_ptr_"
+         is_classic="true";;
       x)
-         WOWEDITION="_classic_era_ptr_";;
+         WOWEDITION="_classic_era_ptr_"
+         is_classic="true";;
       p)
          WOWEDITION="_ptr_";;
       /?)
