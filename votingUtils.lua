@@ -645,11 +645,11 @@ local function calcPawnScore(spec)
             -- Find the lowest score and use that
             local score1 = EU:GetPawnScore(item1, addon.playerClass, spec)
             local score2 = EU:GetPawnScore(item2, addon.playerClass, spec)
-            EU.Log:D("Scores:", score1, score2)
+            if debugPawn then EU.Log:D("Scores:", score1, score2) end
             score[session].equipped = addon.round(
                 (score2 and score1 and score1 > score2) and
                 score2 or score1 or 0, 3)
-            EU.Log:D("Pawn score:", session, score[session].equipped)
+            EU.Log:D("Pawn scores:", session, score[session].new, score[session].equipped)
         end
     end
     return score
@@ -859,7 +859,9 @@ function EU:GetPawnScore(link, class, spec)
     if _G.PawnCommon.Scales[scaleName] then
         _G.PawnCommon.Scales[scaleName].NormalizationFactor = 1
     end
-    local score = _G.PawnGetSingleValueFromItem(item, scaleName)
+    local a, b = _G.PawnGetSingleValueFromItem(item, scaleName)
+    local score = a > b and a or b
+    if debugPawn then self.Log:D("GetPawnScore", scaleName, score) end
     return score
 end
 
@@ -884,7 +886,9 @@ function EU:GetPawnScoreColor(score, mode)
                     lootTable[session].pawnMax = score
                 end
                 local val = score / lootTable[session].pawnMax
-                if val > 0.1 then
+                if score <= 0 then
+                    g, b = 0, 0
+                elseif val > 0.1 then
                     r, g, b = 1 - val, val, 0
                 else -- Greyout the 10th percentile
                     r, g, b = 0.7, 0.7, 0.7
@@ -913,7 +917,7 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column,
         playerData[name].pawn[session] and playerData[name].pawn[session].new then
         -- For this we rely on our own storage:
         if EU.db.pawnNormalMode then
-            score = playerData[name].pawn[session].new
+            score = playerData[name].pawn[session].new - playerData[name].pawn[session].equipped
         elseif playerData[name].pawn[session].equipped > 0 and
             playerData[name].pawn[session].new > 0 then
             score = (playerData[name].pawn[session].new /
@@ -930,29 +934,28 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column,
 
         -- Or just calculate it ourself
     elseif lootTable[session] and lootTable[session].link then
+        EU.Log:D("Calculating Pawn score for candidate", name, "session", session)
         local class = EU.votingFrame:GetCandidateData(session, name, "class")
         local specID = EU.votingFrame:GetCandidateData(session, name, "specID")
         if specID then                       -- SpecID might not be received yet, so don't bother checking further
             score = EU:GetPawnScore(lootTable[session].link, class, specID)
-            if not EU.db.pawnNormalMode then -- % mode
-                if score then
-                    local item1 = EU.votingFrame:GetCandidateData(session, name,
-                        "gear1")
-                    local item2 = EU.votingFrame:GetCandidateData(session, name,
-                        "gear2")
-                    local score1 = item1 and
-                        EU:GetPawnScore(item1, class, specID)
-                    local score2 = item2 and
-                        EU:GetPawnScore(item2, class, specID)
-                    if score1 then
-                        if not score2 or score1 < score2 then
-                            score = (score / score1 - 1) * 100
-                        else
-                            score = (score / score2 - 1) * 100
-                        end
-                    else            -- We haven't received the candidate's gear yet
-                        score = nil -- Nullify it
+            if score then
+                local item1 = EU.votingFrame:GetCandidateData(session, name,
+                    "gear1")
+                local item2 = EU.votingFrame:GetCandidateData(session, name,
+                    "gear2")
+                local score1 = item1 and
+                    EU:GetPawnScore(item1, class, specID)
+                local score2 = item2 and
+                    EU:GetPawnScore(item2, class, specID)
+                if score1 then
+                    if not score2 or score1 < score2 then
+                        score = EU.db.pawnNormalMode and score - score1 or (score / score1 - 1) * 100
+                    else
+                        score = EU.db.pawnNormalMode and score - score2 or (score / score2 - 1) * 100
                     end
+                else            -- We haven't received the candidate's gear yet
+                    score = nil -- Nullify it
                 end
             end
             EU.votingFrame:SetCandidateData(session, name, "pawn", score)

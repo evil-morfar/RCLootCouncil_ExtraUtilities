@@ -4,13 +4,19 @@ Updated for patch 12.0.1 & all Classic versions!
 
 ## Changes
 
+### Classic
+
+Several options are removed depending on which version you're playing, e.g. sockets in vanilla, or bonus rolls pre mists.
+
 ### Set Pieces
 
 Readded `Set Pieces` - tracks the number of equipped items that's part of a set (tier or other).
 
-### Classic
+### Pawn
 
-Several options are removed depending on which version you're playing, e.g. sockets in vanilla, or bonus rolls pre mists.
+Percentage calculations now use Pawn's base score for the item (like Pawn itself).
+
+Raw score now shows the raw score gain, i.e.: `newItem - equippedItem`.
 
 # 1.3.4
 
