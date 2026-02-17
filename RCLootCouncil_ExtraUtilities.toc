@@ -2,7 +2,10 @@
 ## Notes: An RCLootCouncil module for more advanced utilities.
 ## Title: RCLootCouncil - Extra Utilities
 ## Version: 1.4.0
-## Interface: 120001, 11508, 20505, 50503
+## Interface: 120001
+## Interface-Mists: 50503
+## Interface-tbc: 20505
+## Interface-Classic: 11508
 #@retail@
 ## Dependencies: RCLootCouncil
 #@end-retail@
