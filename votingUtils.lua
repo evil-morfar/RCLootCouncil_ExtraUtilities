@@ -122,74 +122,74 @@ function EU:OnInitialize()
                 (function()
                     if not addon.isClassic then
                         return {
-                        WARRIOR = {
-                            [71] = '"MrRobot":WARRIOR1', -- Arms
-                            [72] = '"MrRobot":WARRIOR2', -- Fury
-                            [73] = '"MrRobot":WARRIOR3'  -- Protection
-                        },
-                        DEATHKNIGHT = {
-                            [250] = '"MrRobot":DEATHKNIGHT1', -- Blood
-                            [251] = '"MrRobot":DEATHKNIGHT2', -- Frost
-                            [252] = '"MrRobot":DEATHKNIGHT3'  -- Unholy
-                        },
-                        PALADIN = {
-                            [65] = '"MrRobot":PALADIN1', -- Holy
-                            [66] = '"MrRobot":PALADIN2', -- Protection
-                            [70] = '"MrRobot":PALADIN3'  -- Retribution
-                        },
-                        MONK = {
-                            [268] = '"MrRobot":MONK1', -- Brewmaster
-                            [269] = '"MrRobot":MONK2', -- Windwalker
-                            [270] = '"MrRobot":MONK3'  -- Mistweaver
-                        },
-                        PRIEST = {
-                            [256] = '"MrRobot":PRIEST1', -- Discipline
-                            [257] = '"MrRobot":PRIEST2', -- Holy
-                            [258] = '"MrRobot":PRIEST3'  -- Shadow
-                        },
-                        SHAMAN = {
-                            [262] = '"MrRobot":SHAMAN1', -- Elemental
-                            [263] = '"MrRobot":SHAMAN2', -- Enhancement
-                            [264] = '"MrRobot":SHAMAN3'  -- Restoration
-                        },
-                        DRUID = {
-                            [102] = '"MrRobot":DRUID1', -- Balance
-                            [103] = '"MrRobot":DRUID2', -- Feral
-                            [104] = '"MrRobot":DRUID3', -- Guardian
-                            [105] = '"MrRobot":DRUID4'  -- Restoration
-                        },
-                        ROGUE = {
-                            [259] = '"MrRobot":ROGUE1', -- Assassination
-                            [260] = '"MrRobot":ROGUE2', -- Outlaw
-                            [261] = '"MrRobot":ROGUE3'  -- Subtlety
-                        },
-                        MAGE = {
-                            [62] = '"MrRobot":MAGE1', -- Arcane
-                            [63] = '"MrRobot":MAGE2', -- Fire
-                            [64] = '"MrRobot":MAGE3'  -- Frost
-                        },
-                        WARLOCK = {
-                            [265] = '"MrRobot":WARLOCK1', -- Affliction
-                            [266] = '"MrRobot":WARLOCK2', -- Demonology
-                            [267] = '"MrRobot":WARLOCK3'  -- Destruction
-                        },
-                        HUNTER = {
-                            [253] = '"MrRobot":HUNTER1', -- Beast Mastery
-                            [254] = '"MrRobot":HUNTER2', -- Marksmanship
-                            [255] = '"MrRobot":HUNTER3'  -- Survival
-                        },
-                        DEMONHUNTER = {
-                            [577] = '"MrRobot":DEMONHUNTER1', -- Havoc
-                            [581] = '"MrRobot":DEMONHUNTER2', -- Vengeance
-                            [1480] = '"MrRobot":DEMONHUNTER3' -- Devourer
-                        },
-                        EVOKER = {
-                            [1467] = '"MrRobot":EVOKER1', -- Devastation
-                            [1468] = '"MrRobot":EVOKER2', -- Preservation
-                            [1473] = '"MrRobot":EVOKER3', -- Augmentation
+                            WARRIOR = {
+                                [71] = '"MrRobot":WARRIOR1', -- Arms
+                                [72] = '"MrRobot":WARRIOR2', -- Fury
+                                [73] = '"MrRobot":WARRIOR3' -- Protection
+                            },
+                            DEATHKNIGHT = {
+                                [250] = '"MrRobot":DEATHKNIGHT1', -- Blood
+                                [251] = '"MrRobot":DEATHKNIGHT2', -- Frost
+                                [252] = '"MrRobot":DEATHKNIGHT3' -- Unholy
+                            },
+                            PALADIN = {
+                                [65] = '"MrRobot":PALADIN1', -- Holy
+                                [66] = '"MrRobot":PALADIN2', -- Protection
+                                [70] = '"MrRobot":PALADIN3' -- Retribution
+                            },
+                            MONK = {
+                                [268] = '"MrRobot":MONK1', -- Brewmaster
+                                [269] = '"MrRobot":MONK2', -- Windwalker
+                                [270] = '"MrRobot":MONK3' -- Mistweaver
+                            },
+                            PRIEST = {
+                                [256] = '"MrRobot":PRIEST1', -- Discipline
+                                [257] = '"MrRobot":PRIEST2', -- Holy
+                                [258] = '"MrRobot":PRIEST3' -- Shadow
+                            },
+                            SHAMAN = {
+                                [262] = '"MrRobot":SHAMAN1', -- Elemental
+                                [263] = '"MrRobot":SHAMAN2', -- Enhancement
+                                [264] = '"MrRobot":SHAMAN3' -- Restoration
+                            },
+                            DRUID = {
+                                [102] = '"MrRobot":DRUID1', -- Balance
+                                [103] = '"MrRobot":DRUID2', -- Feral
+                                [104] = '"MrRobot":DRUID3', -- Guardian
+                                [105] = '"MrRobot":DRUID4' -- Restoration
+                            },
+                            ROGUE = {
+                                [259] = '"MrRobot":ROGUE1', -- Assassination
+                                [260] = '"MrRobot":ROGUE2', -- Outlaw
+                                [261] = '"MrRobot":ROGUE3' -- Subtlety
+                            },
+                            MAGE = {
+                                [62] = '"MrRobot":MAGE1', -- Arcane
+                                [63] = '"MrRobot":MAGE2', -- Fire
+                                [64] = '"MrRobot":MAGE3' -- Frost
+                            },
+                            WARLOCK = {
+                                [265] = '"MrRobot":WARLOCK1', -- Affliction
+                                [266] = '"MrRobot":WARLOCK2', -- Demonology
+                                [267] = '"MrRobot":WARLOCK3' -- Destruction
+                            },
+                            HUNTER = {
+                                [253] = '"MrRobot":HUNTER1', -- Beast Mastery
+                                [254] = '"MrRobot":HUNTER2', -- Marksmanship
+                                [255] = '"MrRobot":HUNTER3' -- Survival
+                            },
+                            DEMONHUNTER = {
+                                [577] = '"MrRobot":DEMONHUNTER1', -- Havoc
+                                [581] = '"MrRobot":DEMONHUNTER2', -- Vengeance
+                                [1480] = '"MrRobot":DEMONHUNTER3' -- Devourer
+                            },
+                            EVOKER = {
+                                [1467] = '"MrRobot":EVOKER1', -- Devastation
+                                [1468] = '"MrRobot":EVOKER2', -- Preservation
+                                [1473] = '"MrRobot":EVOKER3', -- Augmentation
+                            }
                         }
-                    }
-                end
+                    end
                     local t = {
                         WARRIOR = {
                             '"Classic":WARRIOR1', -- Arms
@@ -250,7 +250,7 @@ function EU:OnInitialize()
                         DEMONHUNTER = {
                             '"Classic":DEMONHUNTER1', -- Havoc
                             '"Classic":DEMONHUNTER2', -- Vengeance
-                            '"Classic":DEMONHUNTER3' -- Devourer
+                            '"Classic":DEMONHUNTER3'  -- Devourer
                         },
                         EVOKER = {
                             '"Classic":EVOKER1', -- Devastation
@@ -937,7 +937,7 @@ function EU.SetCellPawn(rowFrame, frame, data, cols, row, realrow, column,
         EU.Log:D("Calculating Pawn score for candidate", name, "session", session)
         local class = EU.votingFrame:GetCandidateData(session, name, "class")
         local specID = EU.votingFrame:GetCandidateData(session, name, "specID")
-        if specID then                       -- SpecID might not be received yet, so don't bother checking further
+        if specID then -- SpecID might not be received yet, so don't bother checking further
             score = EU:GetPawnScore(lootTable[session].link, class, specID)
             if score then
                 local item1 = EU.votingFrame:GetCandidateData(session, name,

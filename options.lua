@@ -70,7 +70,7 @@ function EU:OptionsTable()
                            order = 7,
                            type = "toggle",
                            desc = LE["opt_legendaries_desc"],
-                        },                     
+                        },
                         spec = {
                            name = LE["Spec Icon"],
                            order = 9,
@@ -109,7 +109,8 @@ function EU:OptionsTable()
                            type = "execute",
                            confirm = true,
                            func = function()
-                              if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+                              if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(
+                                 LE["You can't change these settings while the voting frame is showing."]) end
                               for k in pairs(self.db.columns) do
                                  self.db.columns[k] = self.defaults.profile.columns[k]
                                  -- Now apply the changes
@@ -158,7 +159,8 @@ function EU:OptionsTable()
                         type = "execute",
                         confirm = true,
                         func = function()
-                           if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+                           if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE
+                              ["You can't change these settings while the voting frame is showing."]) end
                            for k in pairs(self.db.normalColumns) do
                               self.db.normalColumns[k] = self.defaults.profile.normalColumns[k]
                               -- Now apply the changes
@@ -307,7 +309,8 @@ function EU:OptionsTable()
             type = "toggle",
             desc = format(LE["opt_normalcolumn_desc"], entry.name),
             set = function()
-               if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+               if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE
+                  ["You can't change these settings while the voting frame is showing."]) end
                entry.enabled = not entry.enabled
                self:UpdateColumn(name, entry.enabled)
             end,
@@ -315,7 +318,7 @@ function EU:OptionsTable()
          }
       end
       -- Position
-      options.args.widthOptions.args.normalColumns.args[name.."Pos"] = {
+      options.args.widthOptions.args.normalColumns.args[name .. "Pos"] = {
          order = i,
          name = entry.name,
          desc = format(LE["opt_position_desc"], entry.name),
@@ -331,7 +334,7 @@ function EU:OptionsTable()
          end,
       }
       -- Width
-      options.args.widthOptions.args.normalColumns.args[name.."Width"] = {
+      options.args.widthOptions.args.normalColumns.args[name .. "Width"] = {
          order = i + 0.1,
          name = entry.name,
          desc = format(LE["column_width_desc"], entry.name),
@@ -355,7 +358,7 @@ function EU:OptionsTable()
       local entry = self.db.columns[name]
       self.Log:D("Doing col ", name, entry)
       i = i + 1 * 2
-      options.args.widthOptions.args.columns.args[name.."Pos"] = {
+      options.args.widthOptions.args.columns.args[name .. "Pos"] = {
          order = i,
          name = name == "spec" and "Spec" or entry.name, -- Special case with spec
          desc = format(LE["opt_position_desc"], entry.name),
@@ -370,7 +373,7 @@ function EU:OptionsTable()
             self:StripTextures()
          end,
       }
-      options.args.widthOptions.args.columns.args[name.."Width"] = {
+      options.args.widthOptions.args.columns.args[name .. "Width"] = {
          order = i + 1,
          name = name == "spec" and "Spec" or entry.name, -- Special case with spec
          desc = format(LE["column_width_desc"], entry.name),
@@ -392,16 +395,19 @@ function EU:OptionsTable()
    options = self:CreatePawnScaleOptions(options)
 
    LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("RCLootCouncil - Extra Utilities", options)
-   self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("RCLootCouncil - Extra Utilities", "Extra Utilities", "RCLootCouncil")
+   self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("RCLootCouncil - Extra Utilities",
+      "Extra Utilities", "RCLootCouncil")
 end
 
 function EU:ColSet(info, val)
-   if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+   if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE
+      ["You can't change these settings while the voting frame is showing."]) end
    if info.option.tristate then
       if info[#info] == "pawn" then
          if not _G.PawnVersion then return addon:Print(info.option.name, LE["opt_addon_requirement"]) end
       elseif info[#info] == "rcscore" then
-         if not (_G.Details or _G.Recount or _G.Skada) then return addon:Print("A damage meter", LE["opt_addon_requirement"]) end
+         if not (_G.Details or _G.Recount or _G.Skada) then return addon:Print("A damage meter",
+               LE["opt_addon_requirement"]) end
       end
    end
    -- v0.5.0: we can't use val anymore as we have tristates, so just invert stuff
@@ -417,7 +423,9 @@ function EU:ColGet(info)
          if not (_G.Details or _G.Recount or _G.Skada) then return nil end
       end
    end
-   if not self.db.columns[info[#info]] then self.Log:E(self.db.columns[info[#info]], "doesn't exist!"); return false end
+   if not self.db.columns[info[#info]] then
+      self.Log:E(self.db.columns[info[#info]], "doesn't exist!"); return false
+   end
    return self.db.columns[info[#info]].enabled
 end
 
@@ -431,32 +439,33 @@ function EU:CreatePawnScaleOptions(options)
    local i = 1
    for class, opt in pairs(self.db.pawn) do
       local c = addon:GetClassColor(class)
-      local hex = "|cFF"..addon.Utils:RGBToHex(c.r,c.g,c.b)
+      local hex = "|cFF" .. addon.Utils:RGBToHex(c.r, c.g, c.b)
       options.args.pawnOptions.args.scalesGroup.args[class] = {
          order = i,
          type = "group",
-         name = hex..LOCALIZED_CLASS_NAMES_MALE[class],
+         name = hex .. LOCALIZED_CLASS_NAMES_MALE[class],
          args = {},
       }
       local j = 0
       for specID in pairs(opt) do
          local _, name, icon
-         if addon.isClassic  then
+         if addon.isClassic then
             -- Hooks may not have fired, so extra check for druids
-            _, name, _, icon = _G.PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class] or (class == "DRUID" and 11), specID)
+            _, name, _, icon = _G.PawnGetSpecializationInfoForClassID(
+            addon.classTagNameToID[class] or (class == "DRUID" and 11), specID)
          else
             _, name, _, icon = GetSpecializationInfoByID(specID)
          end
-         options.args.pawnOptions.args.scalesGroup.args[class].args[""..specID] = {
+         options.args.pawnOptions.args.scalesGroup.args[class].args["" .. specID] = {
             order = j * 2 + 1,
-            name = hex..name,
+            name = hex .. name,
             type = "description",
             fontSize = "large",
             image = icon,
             imageWidth = 26,
             imageHeight = 26,
          }
-         options.args.pawnOptions.args.scalesGroup.args[class].args[specID.."scale"] = {
+         options.args.pawnOptions.args.scalesGroup.args[class].args[specID .. "scale"] = {
             order = j * 2 + 2,
             type = "select",
             name = "",
