@@ -1,6 +1,6 @@
 # 1.4.0
 
-Updated for patch 12.0.1 & all Classic versions!
+Updated for Midnight & all Classic versions!
 
 ## Changes
 
