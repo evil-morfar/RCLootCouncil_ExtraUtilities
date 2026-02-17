@@ -7,6 +7,7 @@ local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
 ------ Options ------
 function EU:OptionsTable()
    local addon_db = addon:Getdb()
+   local Classic = addon.isClassic and addon:GetModule("RCClassic", true)
    local options = {
       name = "Extra Utilities",
       order = 1,
@@ -31,101 +32,112 @@ function EU:OptionsTable()
                   handler = EU,
                   set = "ColSet",
                   get = "ColGet",
-                  args = {
-                     pawn = {
-                        name = "Pawn",
-                        order = 1,
-                        type = "toggle",
-                        desc = LE["opt_pawn_desc"],
-                        tristate = true,
-                     },
-                     -- upgrades = {
-                     --    name = LE["Upgrades"],
-                     --    order = 3,
-                     --    type = "toggle",
-                     --    desc = LE["opt_upgrades_desc"],
-                     -- },
-                     sockets = {
-                        name = LE["Sockets"],
-                        order = 4,
-                        type = "toggle",
-                        desc = LE["opt_sockets_desc"],
-                        hidden = addon.isClassic,
-                     },
-                     setPieces = {
-                        name = LE["Set Pieces"],
-                        order = 5,
-                        type = "toggle",
-                        desc = LE["opt_setpieces_desc"],
-                        hidden = not addon.isClassic,
-                     },
-                     legendaries = {
-                        name = LE["Legendaries"],
-                        order = 7,
-                        type = "toggle",
-                        desc = LE["opt_legendaries_desc"],
-                     },
-                     -- ilvlUpgrade = {
-                     --    name = LE["ilvl Upgrades"],
-                     --    order = 8,
-                     --    type = "toggle",
-                     --    desc = LE["opt_ilvlupgrades_desc"],
-                     -- },
-                     spec = {
-                        name = LE["Spec Icon"],
-                        order = 9,
-                        type = "toggle",
-                        desc = LE["opt_specIcon_desc"],
-                        hidden = addon.isClassic,
-                     },
-                     bonus = {
-                        name = LE["Bonus Rolls"],
-                        order = 10,
-                        type = "toggle",
-                        desc = LE["opt_bonusRoll_desc"],
-                        hidden = addon.isClassic,
-                     },
-                     guildNotes = {
-                        name = LE["Guild Notes"],
-                        order = 11,
-                        type = "toggle",
-                        desc = LE["opt_guildNotes_desc"],
-                     },
-                     -- covenant = {
-                     --    name = "Covenant",
-                     --    order = 12,
-                     --    type = "toggle",
-                     --    desc = "Enables a column showing which covenant the candidate has chosen.",
-                     --    hidden = addon.isClassic,
-                     -- },
-                     -- rcscore = {
-                     --    name = "RC Score",
-                     --    order = 12,
-                     --    type = "toggle",
-                     --    desc = "A performance metric based on hps/dps and item levels.",
-                     --    tristate = true,
-                     -- },
-                     header = {
-                        order = -1,
-                        name = "",
-                        type = "header",
-                     },
-                     reset = {
-                        name = _G.RESET_TO_DEFAULT,
-                        order = -1,
-                        --width = "full",
-                        type = "execute",
-                        confirm = true,
-                        func = function()
-                           if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
-                           for k in pairs(self.db.columns) do
-                              self.db.columns[k] = self.defaults.profile.columns[k]
-                              -- Now apply the changes
-                              self:UpdateColumn(k, self.db.columns[k].enabled)
-                           end
-                        end,
-                     },
-                  },
+                  args = (function()
+                     local ret = {
+                        pawn = {
+                           name = "Pawn",
+                           order = 1,
+                           type = "toggle",
+                           desc = LE["opt_pawn_desc"],
+                           tristate = true,
+                        },
+                        sockets = {
+                           name = LE["Sockets"],
+                           order = 4,
+                           type = "toggle",
+                           desc = LE["opt_sockets_desc"],
+                        },
+                        -- upgrades = {
+                        --    name = LE["Upgrades"],
+                        --    order = 3,
+                        --    type = "toggle",
+                        --    desc = LE["opt_upgrades_desc"],
+                        -- },
+                        -- ilvlUpgrade = {
+                        --    name = LE["ilvl Upgrades"],
+                        --    order = 8,
+                        --    type = "toggle",
+                        --    desc = LE["opt_ilvlupgrades_desc"],
+                        -- },
+                        setPieces = {
+                           name = LE["Set Pieces"],
+                           order = 5,
+                           type = "toggle",
+                           desc = LE["opt_setpieces_desc"],
+                        },
+                        legendaries = {
+                           name = LE["Legendaries"],
+                           order = 7,
+                           type = "toggle",
+                           desc = LE["opt_legendaries_desc"],
+                        },                     
+                        spec = {
+                           name = LE["Spec Icon"],
+                           order = 9,
+                           type = "toggle",
+                           desc = LE["opt_specIcon_desc"],
+                        },
+                        guildNotes = {
+                           name = LE["Guild Notes"],
+                           order = 11,
+                           type = "toggle",
+                           desc = LE["opt_guildNotes_desc"],
+                        },
+                        -- covenant = {
+                        --    name = "Covenant",
+                        --    order = 12,
+                        --    type = "toggle",
+                        --    desc = "Enables a column showing which covenant the candidate has chosen.",
+                        --    hidden = addon.isClassic,
+                        -- },
+                        -- rcscore = {
+                        --    name = "RC Score",
+                        --    order = 12,
+                        --    type = "toggle",
+                        --    desc = "A performance metric based on hps/dps and item levels.",
+                        --    tristate = true,
+                        -- },
+                        header = {
+                           order = -1,
+                           name = "",
+                           type = "header",
+                        },
+                        reset = {
+                           name = _G.RESET_TO_DEFAULT,
+                           order = -1,
+                           --width = "full",
+                           type = "execute",
+                           confirm = true,
+                           func = function()
+                              if self.votingFrame.frame and self.votingFrame.frame:IsVisible() then return addon:Print(LE["You can't change these settings while the voting frame is showing."]) end
+                              for k in pairs(self.db.columns) do
+                                 self.db.columns[k] = self.defaults.profile.columns[k]
+                                 -- Now apply the changes
+                                 self:UpdateColumn(k, self.db.columns[k].enabled)
+                              end
+                           end,
+                        },
+                     }
+
+                     -- Classic changes
+                     if addon.isClassic then
+                        if Classic:IsClassicEra() then
+                           ret.sockets = nil
+                        end
+                        if Classic:IsPreMists() then
+                           ret.spec = nil
+                        end
+                        if not Classic:IsPreMists() then
+                           ret.bonus = {
+                              name = LE["Bonus Rolls"],
+                              order = 10,
+                              type = "toggle",
+                              desc = LE["opt_bonusRoll_desc"],
+                           }
+                        end
+                     end
+                     return ret
+                  end)()
                },
                normalColumns = {
                   name = LE["RCLootCouncil Columns"],
@@ -430,7 +442,8 @@ function EU:CreatePawnScaleOptions(options)
       for specID in pairs(opt) do
          local _, name, icon
          if addon.isClassic  then
-            _, name, _, icon = _G.PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class], specID)
+            -- Hooks may not have fired, so extra check for druids
+            _, name, _, icon = _G.PawnGetSpecializationInfoForClassID(addon.classTagNameToID[class] or (class == "DRUID" and 11), specID)
          else
             _, name, _, icon = GetSpecializationInfoByID(specID)
          end

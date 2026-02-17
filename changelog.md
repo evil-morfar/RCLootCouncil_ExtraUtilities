@@ -1,3 +1,17 @@
+# 1.4.0
+
+Updated for patch 12.0.1 & all Classic versions!
+
+## Changes
+
+### Set Pieces
+
+Readded `Set Pieces` - tracks the number of equipped items that's part of a set (tier or other).
+
+### Classic
+
+Several options are removed depending on which version you're playing, e.g. sockets in vanilla, or bonus rolls pre mists.
+
 # 1.3.4
 
 Updated for patch 11.2.7.
