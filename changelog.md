@@ -1,3 +1,9 @@
+# 1.4.1
+
+## Bugfixes
+
+- *Fixed issue preventing it from working in Classic versions.*
+
 # 1.4.0
 
 Updated for Midnight & all Classic versions!

@@ -1,5 +1,6 @@
 ---@class RCLootCouncil
-local addon = LibStub("AceAddon-3.0"):GetAddon("RCLootCouncil")
+local addon = LibStub("AceAddon-3.0"):GetAddon(WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and "RCLootCouncil" or
+"RCLootCouncil_Classic")
 ---@class RCExtraUtilities
 local EU = addon:GetModule("RCExtraUtilities")
 local LE = LibStub("AceLocale-3.0"):GetLocale("RCExtraUtilities")
