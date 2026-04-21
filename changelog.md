@@ -1,3 +1,7 @@
+# 1.4.2
+
+Updated for patch 12.0.5.
+
 # 1.4.1
 
 ## Bugfixes
