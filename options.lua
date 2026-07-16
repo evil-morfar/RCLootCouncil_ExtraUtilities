@@ -326,11 +326,11 @@ function EU:OptionsTable()
          type = "input",
          pattern = "%d",
          usage = LE["opt_position_usage"],
-         disabled = function() return not self:GetScrollColIndexFromName(name) end,
-         get = function() return tostring(entry.pos or self:GetScrollColIndexFromName(name)) end,
+         disabled = function() return not self.votingFrame:GetColumn(name) end,
+         get = function() return tostring(entry.pos or self.votingFrame:GetColumnIndex(name)) end,
          set = function(info, txt)
             entry.pos = tonumber(txt)
-            self:UpdateColumnPosition(name, tonumber(txt))
+            self.votingFrame:MoveColumn(name, tonumber(txt))
             self:StripTextures()
          end,
       }
@@ -344,11 +344,14 @@ function EU:OptionsTable()
          min = 10,
          max = 300,
          step = 1,
-         disabled = function() return not self:GetScrollColIndexFromName(name) end,
+         disabled = function() return not self.votingFrame:GetColumn(name) end,
          get = function() return entry.width or self.originalCols[name].width end,
          set = function(_, val)
             entry.width = val
-            self:UpdateColumnWidth(name, val)
+            local col = self.votingFrame:GetColumn(name)
+            if not col then return end
+            col.width = val
+            self.votingFrame:UpdateColumn(name, col)
             self:StripTextures()
          end,
       }
@@ -366,11 +369,11 @@ function EU:OptionsTable()
          type = "input",
          pattern = "%d",
          usage = LE["opt_position_usage"],
-         disabled = function() return not self:GetScrollColIndexFromName(name) end,
+         disabled = function() return not self.votingFrame:GetColumn(name) end,
          get = function() return tostring(entry.pos) end,
-         set = function(info, txt)
-            entry.pos = tonumber(txt)
-            self:UpdateColumnPosition(name, tonumber(txt))
+         set = function(info, val)
+            entry.pos = tonumber(val)
+            self.votingFrame:MoveColumn(name, entry.pos)
             self:StripTextures()
          end,
       }
@@ -383,11 +386,14 @@ function EU:OptionsTable()
          min = 10,
          max = 300,
          step = 1,
-         disabled = function() return not self:GetScrollColIndexFromName(name) end,
+         disabled = function() return not self.votingFrame:GetColumn(name) end,
          get = function() return entry.width end,
          set = function(_, val)
             entry.width = val
-            self:UpdateColumnWidth(name, val)
+            local col = self.votingFrame:GetColumn(name)
+            if not col then return end
+            col.width = val
+            self.votingFrame:UpdateColumn(name, col)
             self:StripTextures()
          end,
       }

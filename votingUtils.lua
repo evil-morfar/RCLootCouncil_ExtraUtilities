@@ -54,7 +54,8 @@ function EU:OnInitialize()
                     width = 50,
                     func = self.SetCellPawn,
                     name = "Pawn",
-                    align = "CENTER"
+                    align = "CENTER",
+                    colName = "pawn"
                 },
                 sockets = {
                     enabled = false,
@@ -63,34 +64,38 @@ function EU:OnInitialize()
                     func = self.SetCellSocket,
                     align = "CENTER",
                     name = LE["Sockets"],
+                    colName = "sockets"
                 },
-                -- upgrades = { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"] },
-                -- ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."]},
-                setPieces = { enabled = true, pos = 11, width = 50, func = self.SetCellPieces, name = LE["Set Pieces"] },
+                -- upgrades = { enabled = false, pos = -3, width = 55, func = self.SetCellUpgrades, name = LE["Upgrades"], colName = "upgrades"}, },
+                -- ilvlUpgrade =     { enabled = false, pos = -4, width = 50, func = self.SetCellIlvlUpg,  name = LE["ilvl Upg."], colName = "ilvlUpgrade" },
+                setPieces = { enabled = true, pos = 11, width = 50, func = self.SetCellPieces, name = LE["Set Pieces"], colName = "setPieces" },
                 legendaries = {
                     enabled = false,
                     pos = 11,
                     width = 55,
                     func = self.SetCellLegend,
                     name = LE["Legendaries"],
-                    align = "CENTER"
+                    align = "CENTER",
+                    colName = "legendaries"
                 },
                 spec = {
                     enabled = false,
                     pos = 1,
                     width = 20,
                     func = self.SetCellSpecIcon,
-                    name = ""
+                    name = "",
+                    colName = "spec"
                 },
                 guildNotes = {
                     enabled = false,
                     pos = -1,
                     width = 50,
                     func = self.SetCellGuildNote,
-                    name = LE["GuildNote"]
+                    name = LE["GuildNote"],
+                    colName = "guildNotes"
                 },
 
-                -- rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score"},
+                -- rcscore =         { enabled = false, pos = 16, width = 50, func = self.SetCellRCScore, name = "RC Score", colName = "rcscore" },
             },
             normalColumns = (function()
                 local ret = {
@@ -285,7 +290,8 @@ function EU:OnInitialize()
                 pos = 100,
                 width = 40,
                 func = self.SetCellBonusRoll,
-                name = LE["Bonus"]
+                name = LE["Bonus"],
+                colName = "bonus"
             }
         end
     end
@@ -359,14 +365,6 @@ function EU:OnEnable()
     -- Hook addon.OnLootTableReceived, as we can't yet guarantee the comms callback order.
     self:SecureHook(addon, "OnLootTableReceived", "OnLootTableReceived")
 
-    -- Translate sortNext into colNames
-    self.sortNext = {}
-    for _, v in ipairs(self.votingFrame.scrollCols) do
-        if v.sortNext then
-            self.sortNext[v.colName] = self.votingFrame.scrollCols[v.sortNext]
-                .colName
-        end
-    end
     -- Make sure we handle external requirements
     self:HandleExternalRequirements()
     -- Setup our columns
@@ -469,166 +467,44 @@ function EU:UpdateColumn(name, add)
     self.Log:D("UpdateColumn", name, add)
     local col = self.db.columns[name]
     if not col then -- It's one of the default RC columns
-        -- find its' data
-        for k, v in ipairs(self.originalCols) do
-            if v.colName == name then
-                -- We got it!
-                col = v
-                col.pos = k
-                col.func = v.DoCellUpdate
-                col.width = self.db.normalColumns[name].width or v.width -- We might have overridden the orignial value
-            end
-        end
+       col = self.votingFrame:GetColumn(col.colName)
     end
     if add then
-        local pos
-        if col.pos < 0 then
-            pos = #self.votingFrame.scrollCols + col.pos -- col.pos is negative, so add it for the desired effect
-        elseif col.pos > #self.votingFrame.scrollCols then
-            pos = #self.votingFrame.scrollCols
-        else
-            pos = col.pos
-        end
-        tinsert(self.votingFrame.scrollCols, pos, {
+        local spec = {
             name = col.name,
             align = col.align or "LEFT",
             width = col.width,
             DoCellUpdate = col.func,
-            colName = name,
-            sortNext = col.sortNext
-        })
+            colName = col.colName
+        }
+        self.votingFrame:AddColumn(spec, col.pos)
     else
         self.votingFrame:RemoveColumn(name)
     end
-    if self.votingFrame.frame then -- We might need to recreate it
-        self.votingFrame.frame.UpdateSt()
-    end
-    self:UpdateSortNext()
 end
 
 --- Completely resets all columns
 function EU:SetupColumns()
-    -- First we need to know the order of the columns, so extract from both tables:
-    local cols = {}                          -- The cols we want to use
-    for name, v in pairs(self.db.columns) do -- EU cols First
-        if v.enabled then tinsert(cols, { name = name, pos = v.pos }) end
-    end
+    -- First remove existing columns we have disabled
     for name, v in pairs(self.db.normalColumns) do -- then the default
-        if v.enabled then
-            tinsert(cols, {
-                name = name,
-                pos = v.pos and v.pos or self:GetScrollColIndexFromName(name)
-            })
-        else
+        if not v.enabled then
             self.votingFrame:RemoveColumn(name)
         end
     end
-    for i, v in ipairs(self.votingFrame.scrollCols) do
-        local found = false
-        for _, y in ipairs(cols) do
-            if v.name:lower() == y.name or y.name == v.colName then
-                found = true
-            end
-        end
-        if not found then
-            self.Log:D("Found 3rd party col:", v.colName)
-            tinsert(cols, v)
-            cols[#cols].pos = i
-        end
-    end
-    -- Now we know which columns to add, but we need to "translate" any negative or 0 positions
-    for _, v in ipairs(cols) do
-        if v.pos < 0 then v.pos = #cols + v.pos end
-        if v.pos == 0 then v.pos = 1 end
-    end
-    -- Now sort the table to get the actual order:
-    table.sort(cols, function(a, b) return a.pos < b.pos end)
-    -- Now inject
-    local temp
-    local newCols = {}
-    for _, v in ipairs(cols) do
-        -- wipe(temp)
-        if self.db.columns[v.name] then -- handle EU column
-            temp = self.db.columns[v.name]
-            tinsert(newCols, {
-                name = temp.name,
-                align = temp.align or "LEFT",
-                width = temp.width,
-                DoCellUpdate = temp.func,
-                colName = v.name,
-                sortNext = temp.sortNext or
-                    self:GetScrollColIndexFromName("reponse")
-            })
-        else -- Handle default column
-            local i = self:GetScrollColIndexFromName(v.colName or v.name)
-            temp = self.votingFrame.scrollCols[i]
-            if not self.db.normalColumns[v.name] then
-                temp.width = v.width
-            else
-                temp.width = self.db.normalColumns[v.name].width
-            end
-            tinsert(newCols, temp)
+    -- Then add the new ones
+    for _, v in pairs(self.db.columns) do
+        if v.enabled then
+            local spec = {
+                name = v.name,
+                align = v.align or "LEFT",
+                width = v.width,
+                DoCellUpdate = v.func,
+                colName = v.colName,
+                sortNext = v.sortNext or "response"
+            }
+            self.votingFrame:AddColumn(spec, v.pos)
         end
     end
-    self.votingFrame.scrollCols = { unpack(newCols) }
-    self:UpdateSortNext()
-end
-
---- Updates the sortNext index on scrollCols
--- Shouldn't be called until all columns have been set up.
-function EU:UpdateSortNext()
-    for index in ipairs(self.votingFrame.scrollCols) do
-        if self.votingFrame.scrollCols[index].sortNext then
-            local exists = self:GetScrollColIndexFromName(
-                self.sortNext[self.votingFrame.scrollCols[index]
-                .colName])
-            self.votingFrame.scrollCols[index].sortNext = exists
-        end
-    end
-    self:UpdateVotingFrameColumns()
-end
-
-function EU:UpdateVotingFrameColumns()
-    if self.votingFrame.frame then
-        -- Update the width of the cols
-        self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
-        -- Now update the frame width
-        self.votingFrame.frame:SetWidth(self.votingFrame.frame.st.frame:GetWidth() + 20)
-    end
-end
-
-function EU:UpdateColumnWidth(name, width)
-    -- Our storage has now been updated, but we still need to edit it in the scrollCols table:
-    local i = self:GetScrollColIndexFromName(name)
-    if not self.votingFrame.scrollCols[i] then return end
-    self.votingFrame.scrollCols[i].width = width
-    -- The frame might not yet be created, so check before altering anything
-    self:UpdateVotingFrameColumns()
-end
-
-function EU:UpdateColumnPosition(name, pos)
-    -- Find the index in scrollCols
-    local i = self:GetScrollColIndexFromName(name)
-    -- We might need to change pos abit
-    if pos < 0 then -- "from the back, i.e. add it"
-        pos = #self.votingFrame.scrollCols + pos
-    end
-    if pos > #self.votingFrame.scrollCols then
-        pos = #self.votingFrame.scrollCols
-    end
-    if pos == 0 then pos = 1 end
-    -- Move the column and update
-    tinsert(self.votingFrame.scrollCols, pos,
-        tremove(self.votingFrame.scrollCols, i))
-    self:UpdateSortNext()
-    if self.votingFrame.frame then -- Frame might not be created
-        self.votingFrame.frame.st:SetDisplayCols(self.votingFrame.scrollCols)
-        self.votingFrame.frame.st:SortData()
-    end
-end
-
-function EU:GetScrollColIndexFromName(name)
-    return self.votingFrame:GetColumnIndexFromName(name)
 end
 
 local function calcPawnScore(spec)
@@ -800,10 +676,10 @@ function EU:StripTextures()
     if not (self.votingFrame.frame and self.votingFrame.frame:IsVisible()) then
         return
     end
-    for k in ipairs(self.votingFrame.scrollCols) do
-        for row = 1, self.votingFrame.frame.st.displayRows do
-            local frame = self.votingFrame.frame.st.rows[row].cols[k]
-            frame:SetNormalTexture("")
+    for row = 1, self.votingFrame.frame.st.displayRows do
+        for _, frame in pairs(self.votingFrame.frame.st.rows[row].cols) do
+            frame:SetText("")
+            frame:ClearNormalTexture()
             frame.text:SetTextColor(1, 1, 1, 1)
             if frame.voteBtn then
                 frame.voteBtn:Hide();
