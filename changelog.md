@@ -1,6 +1,14 @@
+# 1.5.0
+
+Updated for path 12.2.0
+
+## Column API
+
+Implements the new column API available in RCLootCouncil v3.23.0.
+
 # 1.4.3
 
-Updated ofr patch 12.0.7.
+Updated for patch 12.0.7.
 
 # 1.4.2
 
