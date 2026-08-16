@@ -500,7 +500,7 @@ function EU:SetupColumns()
                 width = v.width,
                 DoCellUpdate = v.func,
                 colName = v.colName,
-                sortNext = v.sortNext or "response"
+                sortnext = v.sortnext or "response"
             }
             self.votingFrame:AddColumn(spec, v.pos)
         end
