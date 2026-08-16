@@ -1,6 +1,6 @@
 # 1.5.0
 
-Updated for path 12.2.0
+Updated for path 12.1.0
 
 ## Column API
 
