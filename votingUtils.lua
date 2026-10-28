@@ -605,7 +605,7 @@ function EU:GetEquippedItemData()
                     end
                 end
 
-                if (select(16, GetItemInfo(link))) then
+                if (select(16, C_Item.GetItemInfo(link))) then
                     setPieces = setPieces + 1
                 end
             end
@@ -927,7 +927,7 @@ function EU.SetCellBonusRoll(rowFrame, frame, data, cols, row, realrow, column,
         local type, link = playerData[name].bonusType,
             playerData[name].bonusLink
         if type == "item" or type == "artifact_power" then
-            local texture = select(10, GetItemInfo(link))
+            local texture = select(10, C_Item.GetItemInfo(link))
             f:SetNormalTexture(texture)
             f:SetScript("OnEnter", function()
                 addon:CreateHypertip(link)
