@@ -112,11 +112,11 @@ function EU:OnInitialize()
 
                     name = { enabled = "", name = _G.NAME, width = 120 },
                     response = { enabled = "", name = L.Response, width = 240 },
-                    gear1 = { enabled = "", name = L.g1, width = 20 },
-                    gear2 = { enabled = "", name = L.g2, width = 20 },
-                    votes = { enabled = "", name = L.Votes, width = 40 },
-                    vote = { enabled = "", name = L.Vote, width = 60 },
-                    note = { enabled = "", name = L.Notes, width = 40 }
+                    gear1 = { enabled = true, name = L.g1, width = 20 },
+                    gear2 = { enabled = true, name = L.g2, width = 20 },
+                    votes = { enabled = true, name = L.Votes, width = 40 },
+                    vote = { enabled = true, name = L.Vote, width = 60 },
+                    note = { enabled = true, name = L.Notes, width = 40 }
                 }
                 if addon.isClassic and Classic:IsPreMists() then ret.role = nil end
                 return ret

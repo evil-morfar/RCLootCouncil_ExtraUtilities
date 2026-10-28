@@ -1,3 +1,11 @@
+# 1.6.0
+
+Updated for patch 12.1.5.
+
+## Columns
+
+Allowed several other default columns to be turned off.
+
 # 1.5.0
 
 Updated for path 12.1.0
