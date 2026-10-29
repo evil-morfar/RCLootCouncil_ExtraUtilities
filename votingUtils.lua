@@ -467,8 +467,9 @@ function EU:UpdateColumn(name, add)
     self.Log:D("UpdateColumn", name, add)
     local col = self.db.columns[name]
     if not col then -- It's one of the default RC columns
-       col = self.votingFrame:GetColumn(col.colName)
+        col = self.votingFrame:GetColumn(name)
     end
+    if not col then return self.Log:e("Column not found", name) end
     if add then
         local spec = {
             name = col.name,

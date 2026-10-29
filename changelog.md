@@ -1,3 +1,9 @@
+# 1.6.1
+
+## Bugfixes
+
+- *Fixed error when removing certain RCLootCouncil columns.*
+
 # 1.6.0
 
 Updated for patch 12.1.5.
